@@ -1,0 +1,21 @@
+# Environment variables
+.env
+
+# Dependencies
+node_modules/
+
+# Build output
+build/
+dist/
+
+# OS files
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# IDE
+.vscode/
+.idea/
