@@ -16,6 +16,7 @@
 
 ### Branching
 - Always create a feature branch before starting any new major feature
+- Always branch directly from `main` — no chaining branches off other feature branches
 - Never commit directly to `main`
 - Branch naming convention: `feature/description` (e.g., `feature/course-listing`, `feature/quiz-page`)
 
