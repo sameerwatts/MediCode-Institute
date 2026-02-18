@@ -32,14 +32,39 @@
 - Track personal progress and quiz scores
 
 ## Tech Stack
-- **Frontend:** React.js (start here with dummy data)
+
+### Frontend
+- **Language:** TypeScript
+- **Framework:** React.js (start here with dummy data)
 - **Styling:** Styled Components
 - **Forms:** Formik + Yup for validation
 - **State Management:** useReducer + useContext (no Redux)
 - **Dependencies:** Free to use any npm packages (e.g., react-slick for sliders)
-- **Backend (later):** Flask
-- **Database (later):** PostgreSQL
+- **Hosting:** Vercel (free)
 - **Design approach:** Mobile-first and responsive
+
+### Backend (later)
+- **Framework:** Flask + Flask-RESTful
+- **ORM:** SQLAlchemy + Flask-Migrate
+- **Hosting:** Render (free tier — 750 hrs/month)
+
+### Database (later)
+- **Database:** PostgreSQL (Render free tier — 256MB)
+
+### Authentication (later)
+- **Provider:** Firebase Authentication (free — 50k MAU)
+- Supports email/password, Google, phone OTP
+
+### Storage & Media
+- **Videos:** YouTube (embedded/linked, no local storage)
+- **Live classes:** Jitsi (free, open-source)
+- **Files (PDFs, images):** Cloudinary (free — 25GB)
+
+### Payments (later)
+- **India:** Razorpay (with route-based split for revenue sharing)
+- **Global:** Stripe
+
+### Total launch cost: $0/month
 
 ## Monetization
 - Subscription model + per-course pricing
@@ -48,7 +73,11 @@
 - Allow other instructors to publish (multi-tenant instructor model)
 
 ## Milestones
-- **MVP** — Simple frontend website without login or authentication
+- **MVP** — Simple frontend website using mentioned tech stack without login or authentication.
+  - **Header Navigation:** Home, All Courses, About, Quiz, Blogs — each with its own page route
+  - Pages: Landing page (Home), All Courses listing, About page, Quiz page, Blogs listing
+  - All pages use dummy data (no backend)
+  - Responsive layout with shared Header/Footer across all pages
 - **v1** — Add login functionality
 - **v2** — Admin can upload notes (PDF), students can read/download
 - Later versions defined as we progress
