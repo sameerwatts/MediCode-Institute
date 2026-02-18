@@ -34,6 +34,7 @@
 ## Tech Stack
 
 ### Frontend
+- **Language:** TypeScript
 - **Framework:** React.js (start here with dummy data)
 - **Styling:** Styled Components
 - **Forms:** Formik + Yup for validation
@@ -72,7 +73,11 @@
 - Allow other instructors to publish (multi-tenant instructor model)
 
 ## Milestones
-- **MVP** — Simple frontend website without login or authentication
+- **MVP** — Simple frontend website using mentioned tech stack without login or authentication.
+  - **Header Navigation:** Home, All Courses, About, Quiz, Blogs — each with its own page route
+  - Pages: Landing page (Home), All Courses listing, About page, Quiz page, Blogs listing
+  - All pages use dummy data (no backend)
+  - Responsive layout with shared Header/Footer across all pages
 - **v1** — Add login functionality
 - **v2** — Admin can upload notes (PDF), students can read/download
 - Later versions defined as we progress

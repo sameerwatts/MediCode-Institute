@@ -42,9 +42,10 @@
 
 ## 2. Key Components
 
-### 2.1 Frontend (React SPA)
+### 2.1 Frontend (React + TypeScript SPA)
 | Concern | Technology |
 |---------|-----------|
+| Language | TypeScript |
 | UI Framework | React.js |
 | Styling | Styled Components |
 | Forms | Formik + Yup |
@@ -398,6 +399,7 @@ medicode-frontend/
 │   │   └── course/                # CourseCard, LessonList, VideoPlayer
 │   ├── pages/                     # Route-level page components
 │   │   ├── Home/                  # Landing page
+│   │   ├── About/                 # About the institute
 │   │   ├── Courses/               # Course listing + Course detail
 │   │   ├── Login/                 # Login page
 │   │   ├── Register/              # Signup page
@@ -408,27 +410,30 @@ medicode-frontend/
 │   │   ├── Blog/                  # Blog listing + Blog detail
 │   │   └── NotFound/              # 404 page
 │   ├── context/                   # React Context providers
-│   │   ├── AuthContext.js         # User auth state
-│   │   └── AppContext.js          # Global app state
+│   │   ├── AuthContext.tsx        # User auth state
+│   │   └── AppContext.tsx         # Global app state
 │   ├── services/                  # API call functions
-│   │   ├── api.js                 # Axios instance with auth headers
-│   │   ├── courseService.js       # Course-related API calls
-│   │   ├── quizService.js         # Quiz-related API calls
-│   │   └── paymentService.js      # Payment-related API calls
+│   │   ├── api.ts                 # Axios instance with auth headers
+│   │   ├── courseService.ts       # Course-related API calls
+│   │   ├── quizService.ts        # Quiz-related API calls
+│   │   └── paymentService.ts     # Payment-related API calls
 │   ├── hooks/                     # Custom React hooks
-│   │   ├── useAuth.js
-│   │   └── useCourses.js
+│   │   ├── useAuth.ts
+│   │   └── useCourses.ts
 │   ├── data/                      # Dummy data for MVP (no backend)
-│   │   ├── courses.js
-│   │   ├── teachers.js
-│   │   └── blogs.js
+│   │   ├── courses.ts
+│   │   ├── teachers.ts
+│   │   └── blogs.ts
+│   ├── types/                     # TypeScript type definitions
+│   │   └── index.ts               # Shared interfaces and types
 │   ├── styles/                    # Global styles and theme
-│   │   ├── GlobalStyle.js         # Styled Components global styles
-│   │   └── theme.js               # Colors, breakpoints, typography
+│   │   ├── GlobalStyle.ts         # Styled Components global styles
+│   │   └── theme.ts               # Colors, breakpoints, typography
 │   ├── utils/                     # Helper functions
-│   │   └── helpers.js
-│   ├── App.js                     # Root component with routing
-│   └── index.js                   # Entry point
+│   │   └── helpers.ts
+│   ├── App.tsx                    # Root component with routing
+│   └── index.tsx                  # Entry point
+├── tsconfig.json
 ├── package.json
 └── .gitignore
 ```
@@ -523,3 +528,12 @@ medicode-backend/
 
 ### MVP Deployment (frontend only)
 - Just deploy React app to Vercel with dummy data — no backend needed yet
+- **MVP Pages & Routes:**
+  | Page | Route | Description |
+  |------|-------|-------------|
+  | Home | `/` | Landing page |
+  | All Courses | `/courses` | Course listing page |
+  | About | `/about` | About the institute |
+  | Quiz | `/quiz` | Quiz listing/page |
+  | Blogs | `/blogs` | Blog listing page |
+- **Header Navigation:** Shared across all pages with links to Home, All Courses, About, Quiz, Blogs

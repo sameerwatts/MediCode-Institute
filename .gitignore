@@ -19,3 +19,17 @@ venv/
 # IDE
 .vscode/
 .idea/
+
+# Testing
+coverage/
+
+# Misc
+*.tsbuildinfo
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+
+# Claude Code
+.claude/
