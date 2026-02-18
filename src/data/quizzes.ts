@@ -1,0 +1,173 @@
+import { IQuiz } from 'types';
+
+export const quizzes: IQuiz[] = [
+  {
+    id: 'q1',
+    title: 'Human Anatomy Basics',
+    description: 'Test your knowledge of bones, muscles, and organ systems. Perfect for first-year medical students.',
+    category: 'medical',
+    questionsCount: 5,
+    duration: '10 min',
+    difficulty: 'Easy',
+    questions: [
+      {
+        id: 'q1-1',
+        question: 'How many bones are in the adult human body?',
+        options: ['196', '206', '216', '226'],
+        correctAnswer: 1,
+      },
+      {
+        id: 'q1-2',
+        question: 'Which is the largest organ in the human body?',
+        options: ['Liver', 'Brain', 'Skin', 'Lungs'],
+        correctAnswer: 2,
+      },
+      {
+        id: 'q1-3',
+        question: 'The femur is located in which part of the body?',
+        options: ['Arm', 'Thigh', 'Chest', 'Skull'],
+        correctAnswer: 1,
+      },
+      {
+        id: 'q1-4',
+        question: 'Which chamber of the heart pumps blood to the lungs?',
+        options: ['Left atrium', 'Right ventricle', 'Left ventricle', 'Right atrium'],
+        correctAnswer: 1,
+      },
+      {
+        id: 'q1-5',
+        question: 'What is the basic functional unit of the kidney?',
+        options: ['Alveolus', 'Nephron', 'Neuron', 'Hepatocyte'],
+        correctAnswer: 1,
+      },
+    ],
+  },
+  {
+    id: 'q2',
+    title: 'Pharmacology Fundamentals',
+    description: 'Review drug classifications, mechanisms of action, and common side effects.',
+    category: 'medical',
+    questionsCount: 5,
+    duration: '10 min',
+    difficulty: 'Medium',
+    questions: [
+      {
+        id: 'q2-1',
+        question: 'Which class of drugs is Metformin?',
+        options: ['Sulfonylurea', 'Biguanide', 'Thiazolidinedione', 'DPP-4 inhibitor'],
+        correctAnswer: 1,
+      },
+      {
+        id: 'q2-2',
+        question: 'Aspirin primarily inhibits which enzyme?',
+        options: ['Lipoxygenase', 'Cyclooxygenase', 'Phospholipase', 'ACE'],
+        correctAnswer: 1,
+      },
+      {
+        id: 'q2-3',
+        question: 'Which antibiotic class includes Amoxicillin?',
+        options: ['Macrolides', 'Fluoroquinolones', 'Penicillins', 'Tetracyclines'],
+        correctAnswer: 2,
+      },
+      {
+        id: 'q2-4',
+        question: 'What is the antidote for Paracetamol overdose?',
+        options: ['Naloxone', 'Flumazenil', 'N-Acetylcysteine', 'Atropine'],
+        correctAnswer: 2,
+      },
+      {
+        id: 'q2-5',
+        question: 'Beta-blockers are contraindicated in which condition?',
+        options: ['Hypertension', 'Asthma', 'Heart failure', 'Angina'],
+        correctAnswer: 1,
+      },
+    ],
+  },
+  {
+    id: 'q3',
+    title: 'JavaScript Fundamentals',
+    description: 'Test your understanding of JS concepts including closures, promises, and ES6+ features.',
+    category: 'cs',
+    questionsCount: 5,
+    duration: '10 min',
+    difficulty: 'Easy',
+    questions: [
+      {
+        id: 'q3-1',
+        question: 'What does "typeof null" return in JavaScript?',
+        options: ['"null"', '"undefined"', '"object"', '"boolean"'],
+        correctAnswer: 2,
+      },
+      {
+        id: 'q3-2',
+        question: 'Which method converts JSON string to a JavaScript object?',
+        options: ['JSON.stringify()', 'JSON.parse()', 'JSON.convert()', 'JSON.toObject()'],
+        correctAnswer: 1,
+      },
+      {
+        id: 'q3-3',
+        question: 'What is the output of "[] == false"?',
+        options: ['true', 'false', 'undefined', 'TypeError'],
+        correctAnswer: 0,
+      },
+      {
+        id: 'q3-4',
+        question: 'Which keyword declares a block-scoped variable?',
+        options: ['var', 'let', 'function', 'define'],
+        correctAnswer: 1,
+      },
+      {
+        id: 'q3-5',
+        question: 'What does the spread operator (...) do?',
+        options: [
+          'Creates a deep copy',
+          'Expands iterable elements',
+          'Removes duplicates',
+          'Sorts an array',
+        ],
+        correctAnswer: 1,
+      },
+    ],
+  },
+  {
+    id: 'q4',
+    title: 'Data Structures Challenge',
+    description: 'Advanced questions on trees, graphs, and algorithm complexity analysis.',
+    category: 'cs',
+    questionsCount: 5,
+    duration: '15 min',
+    difficulty: 'Hard',
+    questions: [
+      {
+        id: 'q4-1',
+        question: 'What is the time complexity of searching in a balanced BST?',
+        options: ['O(n)', 'O(log n)', 'O(n log n)', 'O(1)'],
+        correctAnswer: 1,
+      },
+      {
+        id: 'q4-2',
+        question: 'Which data structure uses FIFO principle?',
+        options: ['Stack', 'Queue', 'Tree', 'Graph'],
+        correctAnswer: 1,
+      },
+      {
+        id: 'q4-3',
+        question: 'What is the worst-case time complexity of QuickSort?',
+        options: ['O(n log n)', 'O(n)', 'O(n^2)', 'O(log n)'],
+        correctAnswer: 2,
+      },
+      {
+        id: 'q4-4',
+        question: 'Which traversal visits the root node first?',
+        options: ['Inorder', 'Preorder', 'Postorder', 'Level-order'],
+        correctAnswer: 1,
+      },
+      {
+        id: 'q4-5',
+        question: 'A graph with no cycles is called a?',
+        options: ['Complete graph', 'DAG', 'Multigraph', 'Bipartite graph'],
+        correctAnswer: 1,
+      },
+    ],
+  },
+];
