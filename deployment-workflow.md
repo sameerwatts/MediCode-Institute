@@ -19,13 +19,18 @@ feature branch
   open PR → main
      │
      ▼
+GitHub Actions CI runs (lint → build → test)
+     │
+     ├── red → fix on branch → re-push → CI re-runs
+     │
+     ▼ green
 Vercel auto-creates Preview URL
      │
      ▼
 Claude runs automated checks (Playwright)
 — pages, console errors, nav, responsive
      │
-     ├── issues found → Claude fixes → re-push → re-check
+     ├── issues found → Claude fixes → re-push → CI + Preview rebuild
      │
      ▼
 Claude shares Preview URL + findings with owner
@@ -107,7 +112,24 @@ PR description must include:
 
 ---
 
-### 5. Vercel Preview Deployment (automatic)
+### 5. CI Runs Automatically (GitHub Actions)
+On every push to an open PR, GitHub Actions runs the CI pipeline defined in `.github/workflows/ci.yml`.
+
+**CI runs three checks in order:**
+| Step | Command | Blocks merge if… |
+|------|---------|-----------------|
+| Lint | `npm run lint` | Any lint error |
+| Build | `npm run build` | Type error or build failure |
+| Test | `npm test -- --ci` | Any failing test |
+
+- **Red (any check fails)** → fix on the feature branch → push → CI re-runs automatically
+- **Green (all checks pass)** → proceed to Vercel Preview
+
+**Never merge a PR with a red CI.** GitHub branch protection enforces this once configured.
+
+---
+
+### 6. Vercel Preview Deployment (automatic)
 When a PR is opened, Vercel automatically builds and deploys the feature branch to a unique Preview URL.
 
 - Preview URL format: `https://medicode-institute-<hash>.vercel.app`
@@ -178,7 +200,8 @@ After the production deploy completes (usually ~1–2 minutes):
 | Never force push to `main` | Destructive — prohibited |
 | No separate dev/staging branch | Vercel Preview replaces that need |
 | Branch from `main` only | Never chain feature branches off each other |
-| Pre-push checks are mandatory | Lint + build + test must all pass |
+| Pre-push checks are mandatory | Lint + build + test must all pass locally |
+| Never merge a red CI | GitHub Actions must be green before proceeding to Preview |
 | Claude validates on Preview first | Automated checks via Playwright before owner review |
 | Owner has final say on merge | Claude never merges without explicit owner approval |
 | One feature per branch | Keep PRs focused and reviewable |
@@ -201,15 +224,17 @@ To add/update env vars: Vercel Dashboard → Project → Settings → Environmen
 1.  git checkout main && git pull
 2.  git checkout -b feature/name
 3.  ... develop ...
-4.  npm run lint && npm run build && npm test
+4.  npm run lint && npm run build && npm test   ← local pre-push check
 5.  git push -u origin feature/name
 6.  Open PR → main (GitHub)
-7.  Vercel auto-generates Preview URL
-8.  Claude runs automated checks (Playwright) — pages, console, nav, responsive
-9.  Claude fixes any issues found → re-push → re-check
-10. Claude shares Preview URL + findings with owner
-11. Owner reviews and validates on Preview
-12. Owner gives approval (or feedback → Claude fixes → repeat 11)
-13. Claude merges PR → main → Production deploy
-14. Quick sanity check on Production
+7.  GitHub Actions CI runs: lint → build → test  ← automated enforcement
+8.  CI red → fix on branch → re-push → CI re-runs (repeat until green)
+9.  CI green → Vercel auto-generates Preview URL
+10. Claude runs Playwright checks — pages, console, nav, responsive
+11. Claude fixes any issues → re-push → CI + Preview rebuild → re-check
+12. Claude shares Preview URL + findings with owner
+13. Owner reviews and validates on Preview
+14. Owner gives approval (or feedback → Claude fixes → repeat 13)
+15. Claude merges PR → main → Production deploy
+16. Quick sanity check on Production
 ```
