@@ -5,7 +5,7 @@
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                         CLIENT (Browser)                        │
-│                     React SPA (Vercel)                          │
+│                   Next.js App (Vercel)                          │
 └──────────┬──────────┬──────────┬──────────┬─────────────────────┘
            │          │          │          │
            ▼          ▼          ▼          ▼
@@ -34,7 +34,7 @@
 ```
 
 **Architecture Pattern:** Three-tier (Presentation → Application → Data)
-- **Presentation:** React SPA handles all UI, talks directly to Firebase Auth, YouTube, Jitsi
+- **Presentation:** Next.js App (SSR/SSG) handles all UI, talks directly to Firebase Auth, YouTube, Jitsi
 - **Application:** Flask REST API handles business logic, data validation, authorization
 - **Data:** PostgreSQL stores all structured data; Cloudinary stores files
 
@@ -42,15 +42,15 @@
 
 ## 2. Key Components
 
-### 2.1 Frontend (React + TypeScript SPA)
+### 2.1 Frontend (Next.js + TypeScript)
 | Concern | Technology |
 |---------|-----------|
-| Language | TypeScript |
-| UI Framework | React.js |
-| Styling | Styled Components |
+| Language | TypeScript 5 (strict mode) |
+| UI Framework | Next.js 15 (App Router) |
+| Styling | Tailwind CSS |
 | Forms | Formik + Yup |
-| State | useReducer + useContext |
-| Routing | React Router v6 |
+| State | useState / useReducer + useContext; Server Components for static pages |
+| Routing | Next.js file-system routing (App Router) |
 | HTTP Client | Axios |
 | Video Player | YouTube iframe embed |
 | Live Classes | Jitsi Meet iframe API |
@@ -86,10 +86,10 @@
 
 ### 3.1 Authentication Flow
 ```
-Student/Teacher → React App → Firebase Auth SDK → Firebase
-                                    │
-                                    ▼ (ID Token)
-                              React App stores token
+Student/Teacher → Next.js App → Firebase Auth SDK → Firebase
+                                     │
+                                     ▼ (ID Token)
+                              Next.js App stores token
                                     │
                               Sends token in header
                                     │
@@ -105,12 +105,12 @@ Student/Teacher → React App → Firebase Auth SDK → Firebase
 Teacher uploads video to YouTube → Copies YouTube URL
         │
         ▼
-Teacher Dashboard (React) → Flask API → DB (stores YouTube URL + metadata)
+Teacher Dashboard (Next.js) → Flask API → DB (stores YouTube URL + metadata)
 
 Student browses courses → Flask API → Returns lesson with YouTube URL
         │
         ▼
-React embeds YouTube iframe → Student watches video
+Next.js embeds YouTube iframe → Student watches video
 ```
 **Note:** No video goes through our servers. YouTube handles all streaming.
 
@@ -119,7 +119,7 @@ React embeds YouTube iframe → Student watches video
 Teacher creates live session → Flask API → DB (stores session details + timing)
         │
         ▼
-Teacher starts class → React opens Jitsi room (teacher is moderator)
+Teacher starts class → Next.js opens Jitsi room (teacher is moderator)
 
 Student (with subscription) → Checks schedule → Joins Jitsi room via iframe
 ```
@@ -127,7 +127,7 @@ Student (with subscription) → Checks schedule → Joins Jitsi room via iframe
 
 ### 3.4 Payment Flow (Razorpay Route-Based Split)
 ```
-Student clicks "Subscribe" → React → Razorpay Checkout (80/20 split configured)
+Student clicks "Subscribe" → Next.js → Razorpay Checkout (80/20 split configured)
         │
         ▼
 Razorpay processes payment → 80% → Instructor's linked account
@@ -142,7 +142,7 @@ Student gets access to paid content (live classes, premium)
 
 ### 3.5 Notes/PDF Upload Flow
 ```
-Teacher selects PDF → React → Cloudinary Upload Widget → Cloudinary
+Teacher selects PDF → Next.js → Cloudinary Upload Widget → Cloudinary
         │                                                     │
         │                                          Returns file URL
         ▼                                                     │
@@ -156,7 +156,7 @@ Student browses notes → Flask API → Returns Cloudinary URL → Download/View
 ```
 Teacher creates quiz → Flask API → DB (stores questions, options, answers)
 
-Student takes quiz → React renders quiz form
+Student takes quiz → Next.js renders quiz form
         │
         ▼
 Student submits → Flask API → DB (stores submission + auto-grade MCQs)
@@ -386,37 +386,41 @@ Courses ──┬── 1:N ──→ Topics ──→ 1:N ──→ Lessons
 
 ```
 medicode-frontend/
+├── app/                           # Next.js App Router (file-system routing)
+│   ├── layout.tsx                 # Root layout — Navbar, Footer, metadata
+│   ├── page.tsx                   # Home page (/)
+│   ├── globals.css                # Global CSS reset + Tailwind base
+│   ├── not-found.tsx              # 404 page
+│   ├── about/
+│   │   └── page.tsx               # /about
+│   ├── blogs/
+│   │   └── page.tsx               # /blogs
+│   ├── courses/
+│   │   └── page.tsx               # /courses
+│   └── quiz/
+│       └── page.tsx               # /quiz
 ├── public/
-│   ├── index.html
 │   └── favicon.ico
 ├── src/
-│   ├── assets/                    # Static images, icons, fonts
-│   │   ├── images/
-│   │   └── icons/
 │   ├── components/                # Reusable UI components
-│   │   ├── common/                # Button, Input, Card, Modal, Loader
-│   │   ├── layout/                # Navbar, Footer, Sidebar, PageWrapper
+│   │   ├── common/                # Button, Card, SectionHeading, Loader
+│   │   ├── layout/                # Navbar, Footer, PageWrapper
 │   │   └── course/                # CourseCard, LessonList, VideoPlayer
-│   ├── pages/                     # Route-level page components
-│   │   ├── Home/                  # Landing page
-│   │   ├── About/                 # About the institute
-│   │   ├── Courses/               # Course listing + Course detail
-│   │   ├── Login/                 # Login page
-│   │   ├── Register/              # Signup page
-│   │   ├── Dashboard/             # Student dashboard
-│   │   ├── TeacherDashboard/      # Teacher dashboard
-│   │   ├── LiveSession/           # Jitsi live class page
-│   │   ├── Quiz/                  # Take quiz page
-│   │   ├── Blog/                  # Blog listing + Blog detail
-│   │   └── NotFound/              # 404 page
+│   ├── views/                     # Page-level components (imported by app/ pages)
+│   │   ├── Home/                  # Hero, Features, Stats, CTA sections
+│   │   ├── About/                 # Mission, Team, TeacherCard
+│   │   ├── Courses/               # Category filter + course grid (Client Component)
+│   │   ├── Quiz/                  # Quiz listing grid
+│   │   ├── Blog/                  # Category filter + blog grid (Client Component)
+│   │   └── NotFound/              # 404 display
 │   ├── context/                   # React Context providers
 │   │   ├── AuthContext.tsx        # User auth state
 │   │   └── AppContext.tsx         # Global app state
 │   ├── services/                  # API call functions
 │   │   ├── api.ts                 # Axios instance with auth headers
 │   │   ├── courseService.ts       # Course-related API calls
-│   │   ├── quizService.ts        # Quiz-related API calls
-│   │   └── paymentService.ts     # Payment-related API calls
+│   │   ├── quizService.ts         # Quiz-related API calls
+│   │   └── paymentService.ts      # Payment-related API calls
 │   ├── hooks/                     # Custom React hooks
 │   │   ├── useAuth.ts
 │   │   └── useCourses.ts
@@ -425,14 +429,20 @@ medicode-frontend/
 │   │   ├── teachers.ts
 │   │   └── blogs.ts
 │   ├── types/                     # TypeScript type definitions
-│   │   └── index.ts               # Shared interfaces and types
-│   ├── styles/                    # Global styles and theme
-│   │   ├── GlobalStyle.ts         # Styled Components global styles
-│   │   └── theme.ts               # Colors, breakpoints, typography
+│   │   └── index.ts               # Shared interfaces (ICourse, ITeacher, etc.)
 │   ├── utils/                     # Helper functions
 │   │   └── helpers.ts
-│   ├── App.tsx                    # Root component with routing
-│   └── index.tsx                  # Entry point
+│   ├── __mocks__/                 # Jest mocks for Next.js modules
+│   │   ├── next/
+│   │   │   ├── image.tsx
+│   │   │   ├── link.tsx
+│   │   │   └── navigation.ts
+│   │   └── styleMock.js
+│   └── setupTests.ts              # Jest setup (TextEncoder polyfill, jest-dom)
+├── tailwind.config.ts             # Tailwind design tokens (colors, typography, spacing)
+├── postcss.config.js
+├── next.config.ts
+├── jest.config.js
 ├── tsconfig.json
 ├── package.json
 └── .gitignore
@@ -498,7 +508,7 @@ medicode-backend/
 | Payment Security | Razorpay handles card data (PCI compliant), we never touch card details |
 | Webhook Verification | Verify Razorpay webhook signature before processing payments |
 | SQL Injection | SQLAlchemy ORM parameterizes all queries |
-| XSS | React auto-escapes JSX output; sanitize any user-generated HTML (blogs) |
+| XSS | Next.js/React auto-escapes JSX output; sanitize any user-generated HTML (blogs) |
 | File Uploads | Files go to Cloudinary (not our server), validated for type and size |
 
 ---
@@ -509,7 +519,7 @@ medicode-backend/
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
 │   Vercel      │     │   Render     │     │   Render     │
 │  (Frontend)   │────▶│  (Flask API) │────▶│ (PostgreSQL) │
-│  React SPA    │     │  Free Tier   │     │  Free Tier   │
+│  Next.js App  │     │  Free Tier   │     │  Free Tier   │
 └──────────────┘     └──────┬───────┘     └──────────────┘
                             │
               ┌─────────────┼─────────────┐
@@ -527,7 +537,7 @@ medicode-backend/
 4. **Environment Variables:** Set Firebase keys, Cloudinary keys, Razorpay keys in Render dashboard
 
 ### MVP Deployment (frontend only)
-- Just deploy React app to Vercel with dummy data — no backend needed yet
+- Just deploy Next.js app to Vercel with dummy data — no backend needed yet
 - **MVP Pages & Routes:**
   | Page | Route | Description |
   |------|-------|-------------|

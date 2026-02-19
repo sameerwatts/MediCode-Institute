@@ -34,11 +34,11 @@
 ## Tech Stack
 
 ### Frontend
-- **Language:** TypeScript
-- **Framework:** React.js (start here with dummy data)
-- **Styling:** Styled Components
+- **Language:** TypeScript 5 (strict mode)
+- **Framework:** Next.js 15 (App Router) — SSR, SSG, file-system routing
+- **Styling:** Tailwind CSS (zero-runtime, utility-first)
 - **Forms:** Formik + Yup for validation
-- **State Management:** useReducer + useContext (no Redux)
+- **State Management:** useState / useReducer + useContext (no Redux); Server Components for static pages
 - **Dependencies:** Free to use any npm packages (e.g., react-slick for sliders)
 - **Hosting:** Vercel (free)
 - **Design approach:** Mobile-first and responsive
