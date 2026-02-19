@@ -7,6 +7,7 @@
 - **[CHANGELOG.md](./CHANGELOG.md)** — Release changelog for tracking what changed in each version
 - **[project_status.md](./project_status.md)** — Current project status, what's done, what's next (for quick restart)
 - **[deployment-workflow.md](./deployment-workflow.md)** — Step-by-step feature → Vercel Preview → Production deployment process
+- **[vercel-deployment-plan.md](./vercel-deployment-plan.md)** — One-time Vercel account setup, env vars, domain, and dashboard guide
 - Update these files after major milestones and major additions to the project.
 
 ## Tech Stack
