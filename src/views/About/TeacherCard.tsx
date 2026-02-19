@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { ITeacher } from '@/types';
 
 interface ITeacherCardProps {
@@ -10,10 +11,12 @@ const TeacherCard: React.FC<ITeacherCardProps> = ({ teacher }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden text-center px-6 py-8 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-      <img
+      <Image
         src={teacher.avatar}
         alt={`${teacher.name} avatar`}
-        className="w-24 h-24 rounded-full object-cover mx-auto mb-4"
+        width={96}
+        height={96}
+        className="rounded-full object-cover mx-auto mb-4"
       />
       <h4 className="text-h4 text-dark mb-1">{teacher.name}</h4>
       <p className="text-sm-text text-dark-gray mb-2">{teacher.designation}</p>

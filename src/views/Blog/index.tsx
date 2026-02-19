@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { blogs } from '@/data/blogs';
 import SectionHeading from '@/components/common/SectionHeading';
 import { formatDate, truncateText } from '@/utils/helpers';
@@ -62,7 +63,9 @@ const Blog: React.FC = () => {
               key={blog.id}
               className="bg-white rounded-lg overflow-hidden shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
             >
-              <img src={blog.thumbnail} alt={blog.title} className="w-full h-[200px] object-cover" />
+              <div className="relative w-full h-[200px]">
+                <Image src={blog.thumbnail} alt={blog.title} fill className="object-cover" />
+              </div>
               <div className="px-6 pt-4 pb-6">
                 <span className={`inline-block px-3 py-1 rounded-full text-xs-text font-semibold text-white ${categoryColors[blog.category]} capitalize`}>
                   {blog.category}
