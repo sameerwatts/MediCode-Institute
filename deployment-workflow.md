@@ -22,12 +22,21 @@ feature branch
 Vercel auto-creates Preview URL
      │
      ▼
-validate on Preview
+Claude runs automated checks (Playwright)
+— pages, console errors, nav, responsive
      │
-     ├── issues found → fix on feature branch → re-push → re-validate
+     ├── issues found → Claude fixes → re-push → re-check
      │
      ▼
-merge PR into main
+Claude shares Preview URL + findings with owner
+     │
+     ▼
+Owner reviews and validates (final say)
+     │
+     ├── feedback → Claude fixes → owner re-reviews
+     │
+     ▼
+Owner approves → Claude merges PR → main
      │
      ▼
 Vercel auto-deploys to Production
@@ -110,21 +119,34 @@ No manual deploy step needed — Vercel handles it automatically.
 ---
 
 ### 6. Validate on Preview
-Test the feature thoroughly on the Preview URL before approving the merge.
+Validation is a two-part process — Claude runs automated checks first, then the owner does a final review.
 
-**Validation checklist:**
-- [ ] Feature works as expected end-to-end
-- [ ] No visual regressions on pages you didn't touch
-- [ ] Responsive — test on mobile viewport (375px) and desktop (1280px)
-- [ ] No console errors in browser DevTools
-- [ ] All navigation links work
-- [ ] Page loads without flicker or layout shift
-- [ ] Accessibility — keyboard navigation, image alt text, semantic HTML
+#### Part A — Claude's automated checks (Playwright)
+Claude navigates the Preview URL using browser tools and verifies:
+- [ ] All pages load without errors
+- [ ] No console errors in the browser
+- [ ] Navigation links work correctly
+- [ ] Interactive elements function (filters, buttons, hamburger menu, etc.)
+- [ ] Responsive layout — mobile viewport (375px) and desktop (1280px)
+- [ ] No visual regressions on pages not part of the feature
 
-**If issues are found:**
-1. Fix on the same feature branch
-2. Push the fix — Vercel auto-rebuilds the Preview
-3. Re-validate from step 6
+After checks complete, Claude shares:
+- The Preview URL
+- A summary of findings (what passed, what failed)
+- Screenshots if relevant
+
+**If issues are found during automated checks:** Claude fixes on the same feature branch → pushes → Vercel rebuilds → re-runs checks automatically.
+
+#### Part B — Owner review (final say)
+Once Claude's checks pass, the owner reviews the Preview URL for:
+- [ ] Feature matches the original intent
+- [ ] Look and feel is right
+- [ ] Any subjective UX / design judgment calls
+- [ ] Overall satisfaction before it goes to Production
+
+**If the owner has feedback:** Claude fixes on the branch → pushes → Vercel rebuilds → owner re-reviews.
+
+**Only the owner approves the merge. Claude never merges without explicit owner approval.**
 
 ---
 
@@ -157,7 +179,8 @@ After the production deploy completes (usually ~1–2 minutes):
 | No separate dev/staging branch | Vercel Preview replaces that need |
 | Branch from `main` only | Never chain feature branches off each other |
 | Pre-push checks are mandatory | Lint + build + test must all pass |
-| Validate on Preview before merge | Never merge unvalidated code into `main` |
+| Claude validates on Preview first | Automated checks via Playwright before owner review |
+| Owner has final say on merge | Claude never merges without explicit owner approval |
 | One feature per branch | Keep PRs focused and reviewable |
 
 ---
@@ -175,15 +198,18 @@ To add/update env vars: Vercel Dashboard → Project → Settings → Environmen
 ## Quick Reference
 
 ```
-1. git checkout main && git pull
-2. git checkout -b feature/name
-3. ... develop ...
-4. npm run lint && npm run build && npm test
-5. git push -u origin feature/name
-6. Open PR → main (GitHub)
-7. Check Vercel Preview URL (auto-generated)
-8. Validate feature on Preview
-9. Fix issues → push → re-validate (repeat if needed)
-10. Merge PR → main triggers Production deploy
-11. Quick sanity check on Production
+1.  git checkout main && git pull
+2.  git checkout -b feature/name
+3.  ... develop ...
+4.  npm run lint && npm run build && npm test
+5.  git push -u origin feature/name
+6.  Open PR → main (GitHub)
+7.  Vercel auto-generates Preview URL
+8.  Claude runs automated checks (Playwright) — pages, console, nav, responsive
+9.  Claude fixes any issues found → re-push → re-check
+10. Claude shares Preview URL + findings with owner
+11. Owner reviews and validates on Preview
+12. Owner gives approval (or feedback → Claude fixes → repeat 11)
+13. Claude merges PR → main → Production deploy
+14. Quick sanity check on Production
 ```
