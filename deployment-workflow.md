@@ -3,6 +3,8 @@
 This is the standard process for every feature, fix, or docs update before it reaches production.
 No separate dev/staging branch is needed — Vercel Preview Deployments serve that role.
 
+> **First time setup?** See [vercel-deployment-plan.md](./vercel-deployment-plan.md) for the one-time Vercel account setup, environment variables configuration, and custom domain steps.
+
 ---
 
 ## Overview
