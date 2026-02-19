@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyledSectionHeading, StyledTitle, StyledSubtitle } from './styles';
 
 interface ISectionHeadingProps {
   title: string;
@@ -8,10 +7,10 @@ interface ISectionHeadingProps {
 
 const SectionHeading: React.FC<ISectionHeadingProps> = ({ title, subtitle }) => {
   return (
-    <StyledSectionHeading>
-      <StyledTitle>{title}</StyledTitle>
-      {subtitle && <StyledSubtitle>{subtitle}</StyledSubtitle>}
-    </StyledSectionHeading>
+    <div className="text-center mb-12">
+      <h2 className="text-h2 font-bold text-dark mb-3">{title}</h2>
+      {subtitle && <p className="text-body text-dark-gray">{subtitle}</p>}
+    </div>
   );
 };
 

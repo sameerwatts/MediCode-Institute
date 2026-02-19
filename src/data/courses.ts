@@ -1,4 +1,4 @@
-import { ICourse } from 'types';
+import { ICourse } from '@/types';
 import { teachers } from './teachers';
 
 export const courses: ICourse[] = [

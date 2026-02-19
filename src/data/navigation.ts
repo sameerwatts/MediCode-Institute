@@ -1,4 +1,4 @@
-import { INavLink } from 'types';
+import { INavLink } from '@/types';
 
 export const navLinks: INavLink[] = [
   { label: 'Home', path: '/' },

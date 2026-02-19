@@ -1,12 +1,11 @@
 import React from 'react';
-import { StyledPageWrapper } from './styles';
 
 interface IPageWrapperProps {
   children: React.ReactNode;
 }
 
 const PageWrapper: React.FC<IPageWrapperProps> = ({ children }) => {
-  return <StyledPageWrapper>{children}</StyledPageWrapper>;
+  return <div className="max-w-[1200px] mx-auto px-4">{children}</div>;
 };
 
 export default PageWrapper;

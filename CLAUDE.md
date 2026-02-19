@@ -8,9 +8,16 @@
 - **[project_status.md](./project_status.md)** — Current project status, what's done, what's next (for quick restart)
 - Update these files after major milestones and major additions to the project.
 
+## Tech Stack
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript 5 (strict mode)
+- **Styling:** Tailwind CSS
+- **Testing:** Jest + React Testing Library
+
 ## Language
 - **TypeScript** for all frontend code (`.ts` for logic, `.tsx` for components)
 - Strict mode enabled in `tsconfig.json`
+- Use `@/*` path alias for imports (maps to `./src/*`)
 
 ## Git Workflow
 
@@ -41,20 +48,31 @@
 ### Before Pushing
 1. `npm run lint` — fix all linting errors
 2. `npm run build` — catch type errors
-3. Run all test cases
+3. `npm test` — run all test cases
 
 ## Naming Conventions
 - **Component files:** `PascalCase` (e.g., `CourseCard.tsx`, `VideoPlayer.tsx`)
 - **Hooks/utils:** `camelCase` (e.g., `useAuth.ts`, `helpers.ts`)
-- **Styled components:** Prefix with `Styled` (e.g., `StyledButton`, `StyledCard`)
 - **Types/interfaces:** `PascalCase` with `I` prefix for interfaces (e.g., `ICourse`, `IUser`, `IQuiz`)
 
-## Folder Structure Rules
-- Each page/component gets its own folder with `index.tsx`, `styles.ts`, and `*.test.tsx`
+## Folder Structure
+- `app/` — Next.js App Router pages (layout.tsx, page.tsx, route directories)
+- `src/components/` — Shared reusable components
+- `src/views/` — Page-level components imported by app/ pages
+- `src/data/` — Static data files
+- `src/types/` — TypeScript type definitions
+- `src/utils/` — Utility functions
+- Each component gets its own folder with `index.tsx` and `*.test.tsx`
 - Keep components small — if it exceeds ~150 lines, break it into smaller components
 
+## Styling
+- Use **Tailwind CSS** utility classes for all styling
+- Theme tokens defined in `tailwind.config.ts` (colors, typography, spacing, shadows)
+- No inline style objects — use Tailwind classes
+- Use `globals.css` for base styles only
+
 ## Environment-Specific Rules
-- Use `REACT_APP_` prefix for all frontend env variables
+- Use `NEXT_PUBLIC_` prefix for client-side env variables
 - Never hardcode URLs — always use env variables for API base URL, Jitsi domain, etc.
 
 ## Security
@@ -72,15 +90,18 @@
 
 ### Tools
 - **React Testing Library** for component testing
-- **Jest** as the test runner
+- **Jest** as the test runner (standalone config in `jest.config.js`)
 
 ### Test Configuration
-- `browser.jest.js` — Jest config for browser/component tests
-- `unit.jest.js` — Jest config for unit tests
+- `jest.config.js` — Jest config with Babel transforms and Next.js mocks
+- `src/setupTests.ts` — Test setup (TextEncoder polyfill, jest-dom)
+- `src/test-utils.tsx` — Custom render wrapper
+- `src/__mocks__/` — Mocks for next/link, next/image, next/navigation, CSS modules
 
 ### Expectations
 - Write tests for new features
-- Run tests before pushing to feature branch
+- Run `npm test` before pushing to feature branch
+- Import from `@/test-utils` not `@testing-library/react` directly
 
 ## Accessibility (a11y)
 - All images must have `alt` text
@@ -88,7 +109,8 @@
 - Forms must have proper `label` elements
 
 ## Performance
-- Lazy load pages with `React.lazy()` and `Suspense`
+- Server Components by default — use `"use client"` only for interactive pages
+- Use Next.js `<Image>` for optimized images (when replacing img tags)
 - Optimize images before uploading to Cloudinary
 - No large dependencies without discussion
 

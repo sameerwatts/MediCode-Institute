@@ -1,4 +1,4 @@
-import { IQuiz } from 'types';
+import { IQuiz } from '@/types';
 
 export const quizzes: IQuiz[] = [
   {
