@@ -8,12 +8,42 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-02-18
+
+### Changed
+- **Migrated from Create React App to Next.js 15** (App Router)
+- **Replaced styled-components with Tailwind CSS** (zero-runtime, SSR-safe)
+- Upgraded TypeScript from v4 to v5 (enables `moduleResolution: "bundler"`)
+- Replaced react-router-dom with Next.js file-system routing
+- Replaced `baseUrl: "src"` with `@/*` path alias
+- Renamed `src/pages/` to `src/views/` to avoid Next.js Pages Router conflict
+- All components rewritten with Tailwind utility classes
+- Navbar and Footer use `next/link` instead of react-router-dom `Link`
+- Navbar uses `usePathname` from `next/navigation` for active link
+
 ### Added
-- Project brainstorm with vision, features, tech stack, and decisions
-- Technical architecture document (system design, DB schema, API design, project structure)
-- Project guidelines (CLAUDE.md) with git workflow, security, code quality, and testing rules
-- Environment variable template (.env.example)
-- .gitignore for credential and build file protection
+- `app/` directory with App Router pages (layout.tsx, page.tsx, courses/, about/, quiz/, blogs/, not-found.tsx)
+- Root layout with metadata, Navbar, and Footer
+- Per-page metadata for SEO (title, description)
+- Tailwind config mapping full design system (colors, typography, spacing, shadows)
+- Jest standalone config with Babel transforms and Next.js mocks
+- next/link, next/image, next/navigation test mocks
+
+### Removed
+- Create React App (react-scripts)
+- styled-components and all styles.ts files
+- react-router-dom
+- web-vitals
+- ScrollToTop component (Next.js handles natively)
+- CRA public files (index.html, manifest.json, logos)
+- Old App.tsx, index.tsx entry points
+- styles/ directory (GlobalStyle, theme, media, styled.d.ts)
+
+## [0.1.1] - 2026-02-17
+
+### Added
+- 90 tests across 16 test suites (React Testing Library + Jest)
+- Project documentation updates (brainstorm, architecture, CLAUDE.md, changelog, project_status)
 
 ## [0.1.0] - 2026-02-17
 

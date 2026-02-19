@@ -1,51 +1,44 @@
 import React from 'react';
-import { ICourse } from 'types';
-import { formatPrice } from 'utils/helpers';
-import {
-  StyledCourseCard,
-  StyledThumbnail,
-  StyledBadge,
-  StyledCardBody,
-  StyledTitle,
-  StyledTeacher,
-  StyledMeta,
-  StyledPrice,
-} from './styles';
+import Image from 'next/image';
+import { ICourse } from '@/types';
+import { formatPrice } from '@/utils/helpers';
 
 interface ICourseCardProps {
   course: ICourse;
 }
 
 const CourseCard: React.FC<ICourseCardProps> = ({ course }) => {
+  const badgeColor = course.category === 'medical' ? 'bg-medical' : 'bg-cs';
+
   return (
-    <StyledCourseCard>
-      <StyledThumbnail>
-        <img src={course.thumbnail} alt={course.title} />
-        <StyledBadge $category={course.category}>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+      <div className="relative h-[180px]">
+        <Image src={course.thumbnail} alt={course.title} fill className="object-cover" />
+        <span className={`absolute top-2 left-2 px-2 py-1 ${badgeColor} text-white text-xs-text font-semibold rounded-sm uppercase`}>
           {course.category === 'medical' ? 'Medical' : 'CS'}
-        </StyledBadge>
-      </StyledThumbnail>
+        </span>
+      </div>
 
-      <StyledCardBody>
-        <StyledTitle>{course.title}</StyledTitle>
+      <div className="p-6">
+        <h3 className="text-body font-semibold text-dark mb-2">{course.title}</h3>
 
-        <StyledTeacher>
-          <img src={course.teacher.avatar} alt={course.teacher.name} />
-          <span>{course.teacher.name}</span>
-        </StyledTeacher>
+        <div className="flex items-center gap-2 mb-4">
+          <Image src={course.teacher.avatar} alt={course.teacher.name} width={28} height={28} className="rounded-full" />
+          <span className="text-sm-text text-dark-gray">{course.teacher.name}</span>
+        </div>
 
-        <StyledMeta>
+        <div className="flex justify-between items-center text-sm-text text-gray mb-4">
           <span>{course.duration}</span>
           <span>{course.lessonsCount} lessons</span>
           <span>{course.level}</span>
-        </StyledMeta>
+        </div>
 
-        <StyledPrice>
-          <span className="current">{formatPrice(course.price)}</span>
-          <span className="original">{formatPrice(course.originalPrice)}</span>
-        </StyledPrice>
-      </StyledCardBody>
-    </StyledCourseCard>
+        <div className="flex items-center gap-2">
+          <span className="text-h4 font-bold text-primary">{formatPrice(course.price)}</span>
+          <span className="text-sm-text text-gray line-through">{formatPrice(course.originalPrice)}</span>
+        </div>
+      </div>
+    </div>
   );
 };
 

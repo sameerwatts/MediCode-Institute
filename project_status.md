@@ -1,42 +1,43 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**MVP Complete** — Frontend website with 5 pages, shared navigation, responsive design, and dummy data.
+**Next.js Migration Complete** — Migrated from CRA to Next.js 15 App Router with Tailwind CSS for SSR/SSG. All 90 tests passing.
 
 ## Current Branch
-`feature/project-setup` — Contains documentation + MVP frontend code.
+`feature/nextjs-migration` — Contains CRA → Next.js migration.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
 - [x] GitHub CLI (`gh`) installed and authenticated
 - [x] brainstorm.md — Vision, features, tech stack, monetization, decisions finalized
 - [x] architecture.md — System design, DB schema, API design, project structure, security, deployment
-- [x] CLAUDE.md — Project guidelines (git workflow, naming, security, code quality, testing, a11y, performance)
+- [x] CLAUDE.md — Project guidelines
 - [x] .env.example — Environment variable template for all services
 - [x] .gitignore — Protects credentials and build artifacts
-- [x] CHANGELOG.md — Release changelog initialized
-- [x] React + TypeScript project bootstrapped (CRA)
-- [x] Dependencies installed (styled-components, react-router-dom, formik, yup, axios)
-- [x] tsconfig.json configured with strict mode and baseUrl
+- [x] CHANGELOG.md — Release changelog
+- [x] **Next.js 15 App Router** with file-system routing (app/ directory)
+- [x] **Tailwind CSS** replacing styled-components (zero runtime CSS)
+- [x] **TypeScript 5** with strict mode, bundler module resolution, @/* path alias
 - [x] Types/interfaces defined (ICourse, ITeacher, IBlog, IQuiz, INavLink)
-- [x] Theme system with colors, breakpoints, typography, spacing, shadows
+- [x] Tailwind theme mapping all design tokens (colors, typography, spacing, shadows)
 - [x] Global styles with CSS reset and Inter font
 - [x] Dummy data (4 teachers, 6 courses, 4 quizzes, 5 blogs)
 - [x] Shared components (Button, Card, SectionHeading, Loader, Navbar, Footer, PageWrapper, CourseCard)
-- [x] App shell with lazy-loaded routes and Suspense
-- [x] Home page — Hero, Features, Popular Courses, Categories, Stats, CTA sections
-- [x] Courses page — Category filter tabs + course grid
-- [x] About page — Mission/Vision, What We Offer, Team grid, Contact CTA
-- [x] Quiz page — Quiz listing grid with category/difficulty badges
-- [x] Blog page — Category filter tabs + blog card grid
+- [x] Root layout with Navbar + Footer
+- [x] Home page — Hero, Features, Popular Courses, Categories, Stats, CTA (Server Component)
+- [x] Courses page — Category filter tabs + course grid (Client Component)
+- [x] About page — Mission/Vision, What We Offer, Team grid, Contact CTA (Server Component)
+- [x] Quiz page — Quiz listing grid with category/difficulty badges (Server Component)
+- [x] Blog page — Category filter tabs + blog card grid (Client Component)
 - [x] 404 Not Found page
-- [x] Mobile-responsive Navbar with hamburger menu
-- [x] `npm run build` passes with zero errors
-- [x] `npm run lint` passes with zero errors
+- [x] Mobile-responsive Navbar with hamburger menu (Client Component)
+- [x] 90 tests passing with Jest + React Testing Library
+- [x] `npm run build` passes — all pages statically generated
+- [x] `npm test` passes — 16 test suites, 90 tests
 
 ## What's Next
-- [ ] Merge MVP branch into `main`
-- [ ] Write basic render tests for all pages
+- [ ] Merge `feature/nextjs-migration` into `main`
+- [ ] Deploy to Vercel
 - [ ] Add course detail page
 - [ ] Add quiz-taking functionality (answer questions, show score)
 - [ ] Add blog detail page
@@ -47,9 +48,9 @@
 ## Key Decisions Made
 | Decision | Choice |
 |----------|--------|
-| Frontend | React + TypeScript |
-| Styling | Styled Components |
-| State | useReducer + useContext |
+| Framework | Next.js 15 (App Router) |
+| Styling | Tailwind CSS |
+| State | useState (local), Server Components for static pages |
 | Backend | Flask + Flask-RESTful (later) |
 | Database | PostgreSQL on Render (later) |
 | Auth | Firebase Authentication (later) |
@@ -65,4 +66,4 @@
 - **Repo:** https://github.com/sameerwatts/MediCode-Institute
 
 ## Last Updated
-2026-02-17
+2026-02-18

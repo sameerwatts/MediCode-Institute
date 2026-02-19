@@ -1,4 +1,5 @@
-import { render } from 'test-utils';
+import React from 'react';
+import { render } from '@/test-utils';
 import Loader from './index';
 
 describe('Loader', () => {

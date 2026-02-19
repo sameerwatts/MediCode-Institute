@@ -1,6 +1,7 @@
-import { render, screen } from 'test-utils';
+import React from 'react';
+import { render, screen } from '@/test-utils';
 import CourseCard from './index';
-import { ICourse } from 'types';
+import { ICourse } from '@/types';
 
 const mockTeacher = {
   id: 't1',

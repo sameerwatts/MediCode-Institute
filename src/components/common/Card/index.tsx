@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyledCard, StyledCardImage, StyledCardBody } from './styles';
+import Image from 'next/image';
 
 interface ICardProps {
   image?: string;
@@ -9,10 +9,14 @@ interface ICardProps {
 
 const Card: React.FC<ICardProps> = ({ image, imageAlt = '', children }) => {
   return (
-    <StyledCard>
-      {image && <StyledCardImage src={image} alt={imageAlt} />}
-      <StyledCardBody>{children}</StyledCardBody>
-    </StyledCard>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      {image && (
+        <div className="relative w-full h-48">
+          <Image src={image} alt={imageAlt} fill className="object-cover" />
+        </div>
+      )}
+      <div className="p-6">{children}</div>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import { ITeacher } from 'types';
+import { ITeacher } from '@/types';
 
 export const teachers: ITeacher[] = [
   {
