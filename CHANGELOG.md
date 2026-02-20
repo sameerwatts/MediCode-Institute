@@ -8,6 +8,21 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-02-20
+
+### Added
+- `vercel-deployment-plan.md` — one-time Vercel account setup guide, env vars, domain config, and dashboard reference
+- GitHub Actions CI pipeline (`.github/workflows/ci.yml`) — runs lint → build → test on every PR push (Node 20, npm ci)
+- `deployment-workflow.md` — step-by-step process: feature branch → CI → Vercel Preview → owner approval → production merge
+
+### Fixed
+- Next.js `<Image>` config now allows SVG images from `placehold.co` (previously blocked by missing `dangerouslyAllowSVG` setting)
+- Replaced remaining `<img>` tags with Next.js `<Image />` to resolve lint warnings
+
+### Infrastructure
+- **Vercel production deployment live** — static site auto-deployed from `main` branch
+- **End-to-end deployment workflow validated** — feature branch → CI (3/3 green) → Vercel Preview auto-created → Playwright checks passed → PR closed without merge (test only)
+
 ## [0.2.0] - 2026-02-18
 
 ### Changed
