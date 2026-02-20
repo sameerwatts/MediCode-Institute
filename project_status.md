@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Next.js Migration Complete** — Migrated from CRA to Next.js 15 App Router with Tailwind CSS for SSR/SSG. All 90 tests passing.
+**Deployed & Workflow Validated** — Static frontend is live on Vercel. Full feature branch → CI → Preview → Production pipeline confirmed working end-to-end.
 
 ## Current Branch
-`feature/nextjs-migration` — Contains CRA → Next.js migration.
+`main` — clean, up to date, deployed to production.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -14,7 +14,12 @@
 - [x] CLAUDE.md — Project guidelines
 - [x] .env.example — Environment variable template for all services
 - [x] .gitignore — Protects credentials and build artifacts
-- [x] CHANGELOG.md — Release changelog
+- [x] CHANGELOG.md — Release changelog (updated after every PR merge)
+- [x] deployment-workflow.md — Full feature → CI → Preview → Production process
+- [x] vercel-deployment-plan.md — One-time Vercel setup guide
+- [x] **GitHub Actions CI** — lint → build → test runs automatically on every PR (Node 20)
+- [x] **Vercel production deployment** — auto-deploys on merge to `main`
+- [x] **End-to-end pipeline validated** — branch → CI (3/3 green) → Vercel Preview auto-created → Playwright checks passed
 - [x] **Next.js 15 App Router** with file-system routing (app/ directory)
 - [x] **Tailwind CSS** replacing styled-components (zero runtime CSS)
 - [x] **TypeScript 5** with strict mode, bundler module resolution, @/* path alias
@@ -31,19 +36,18 @@
 - [x] Blog page — Category filter tabs + blog card grid (Client Component)
 - [x] 404 Not Found page
 - [x] Mobile-responsive Navbar with hamburger menu (Client Component)
-- [x] 90 tests passing with Jest + React Testing Library
-- [x] `npm run build` passes — all pages statically generated
-- [x] `npm test` passes — 16 test suites, 90 tests
+- [x] 90 tests passing with Jest + React Testing Library (16 suites)
+- [x] `npm run build` passes — all 8 pages statically generated
+- [x] SVG images from placehold.co allowed in Next.js Image config
 
 ## What's Next
-- [ ] Merge `feature/nextjs-migration` into `main`
-- [ ] Deploy to Vercel
-- [ ] Add course detail page
-- [ ] Add quiz-taking functionality (answer questions, show score)
-- [ ] Add blog detail page
-- [ ] Integrate Firebase Authentication (sign up, login, protected routes)
-- [ ] Connect to Flask backend API
-- [ ] Integrate Razorpay for course payments
+- [ ] Course detail page (`/courses/[slug]`)
+- [ ] Quiz-taking functionality (answer questions, show score, review answers)
+- [ ] Blog detail page (`/blogs/[slug]`)
+- [ ] Firebase Authentication (sign up, login, protected routes)
+- [ ] Connect to Flask backend API (replace dummy data with real API calls)
+- [ ] Razorpay integration for course payments
+- [ ] Video player integration (YouTube embed)
 
 ## Key Decisions Made
 | Decision | Choice |
@@ -64,6 +68,7 @@
 
 ## GitHub
 - **Repo:** https://github.com/sameerwatts/MediCode-Institute
+- **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-02-18
+2026-02-20
