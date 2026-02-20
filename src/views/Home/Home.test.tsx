@@ -12,7 +12,7 @@ describe('Home', () => {
   });
 
   it('renders the hero CTA button', () => {
-    expect(screen.getByText('Explore Courses')).toBeInTheDocument();
+    expect(screen.getByText('Explore Courses →')).toBeInTheDocument();
   });
 
   it('renders the FeaturesSection with all 4 features', () => {

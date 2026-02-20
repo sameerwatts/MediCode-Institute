@@ -14,7 +14,7 @@ const HeroSection: React.FC = () => {
         </p>
         <Link href="/courses">
           <Button variant="secondary" size="lg">
-            Explore Courses
+            Explore Courses →
           </Button>
         </Link>
       </div>
