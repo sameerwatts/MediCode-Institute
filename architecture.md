@@ -10,33 +10,33 @@
            │          │          │          │
            ▼          ▼          ▼          ▼
      ┌──────────┐ ┌────────┐ ┌───────┐ ┌──────────┐
-     │ Firebase │ │YouTube │ │ Jitsi │ │Cloudinary│
-     │   Auth   │ │ Embed  │ │ Meet  │ │  (Files) │
+     │  Custom  │ │YouTube │ │ Jitsi │ │Cloudinary│
+     │JWT (API) │ │ Embed  │ │ Meet  │ │  (Files) │
      └────┬─────┘ └────────┘ └───────┘ └──────────┘
-          │ (token)
+          │ (Bearer token)
           ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    BACKEND API (Flask)                           │
+│                    BACKEND API (FastAPI)                         │
 │                     Render (Free Tier)                           │
 │  ┌───────────┐ ┌───────────┐ ┌──────────┐ ┌─────────────────┐  │
-│  │   Routes   │ │  Services │ │Middleware│ │ Firebase Admin  │  │
-│  │ (REST API) │ │ (Logic)   │ │(Auth,CORS)│ │ (Token Verify) │  │
+│  │   Routes   │ │  Services │ │Middleware│ │  python-jose    │  │
+│  │ (REST API) │ │ (Logic)   │ │(Auth,CORS)│ │ (JWT Verify)   │  │
 │  └───────────┘ └───────────┘ └──────────┘ └─────────────────┘  │
 └──────────────────────┬──────────────────────────────────────────┘
                        │
                        ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                   DATABASE (PostgreSQL)                          │
-│                    Render (Free Tier)                            │
+│                   Supabase (Free Tier)                           │
 │  Users │ Courses │ Topics │ Lessons │ Enrollments │ Quizzes     │
 │  Submissions │ Payments │ Blogs │ LiveSessions                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 **Architecture Pattern:** Three-tier (Presentation → Application → Data)
-- **Presentation:** Next.js App (SSR/SSG) handles all UI, talks directly to Firebase Auth, YouTube, Jitsi
-- **Application:** Flask REST API handles business logic, data validation, authorization
-- **Data:** PostgreSQL stores all structured data; Cloudinary stores files
+- **Presentation:** Next.js App (SSR/SSG) handles all UI, sends Bearer JWT tokens to FastAPI
+- **Application:** FastAPI REST API handles business logic, data validation, authorization, and JWT issuance
+- **Data:** Supabase PostgreSQL stores all structured data; Cloudinary stores files
 
 ---
 
@@ -48,33 +48,33 @@
 | Language | TypeScript 5 (strict mode) |
 | UI Framework | Next.js 15 (App Router) |
 | Styling | Tailwind CSS |
-| Forms | Formik + Yup |
+| Forms | React Hook Form + Zod |
 | State | useState / useReducer + useContext; Server Components for static pages |
 | Routing | Next.js file-system routing (App Router) |
 | HTTP Client | Axios |
 | Video Player | YouTube iframe embed |
 | Live Classes | Jitsi Meet iframe API |
 
-### 2.2 Backend (Flask API)
+### 2.2 Backend (FastAPI)
 | Concern | Technology |
 |---------|-----------|
-| Framework | Flask + Flask-RESTful |
+| Framework | FastAPI |
 | ORM | SQLAlchemy |
-| Migrations | Flask-Migrate (Alembic) |
-| Auth Verification | Firebase Admin SDK |
-| CORS | Flask-CORS |
+| Migrations | Alembic |
+| Auth | Custom JWT — python-jose (token signing/verification), bcrypt (password hashing) |
+| CORS | FastAPI CORSMiddleware |
 | File URLs | Cloudinary SDK |
 | Payments | Razorpay Python SDK |
 
-### 2.3 Database (PostgreSQL)
-- Relational database for all structured data
+### 2.3 Database (Supabase PostgreSQL)
+- Supabase-hosted PostgreSQL (free tier) for all structured data
 - Relationships: Users → Enrollments → Courses → Topics → Lessons
 - Teacher-student mapping through Enrollments table
+- Connection via SQLAlchemy using Supabase connection string
 
 ### 2.4 External Services
 | Service | Purpose | Interaction |
 |---------|---------|-------------|
-| Firebase Auth | User authentication (email, Google, phone OTP) | Direct from frontend |
 | YouTube | Video hosting and playback | Embed in frontend |
 | Jitsi | Live class video conferencing | Embed in frontend |
 | Cloudinary | PDF/image storage (notes, solutions) | Upload from frontend, URL stored in DB |
@@ -86,16 +86,23 @@
 
 ### 3.1 Authentication Flow
 ```
-Student/Teacher → Next.js App → Firebase Auth SDK → Firebase
-                                     │
-                                     ▼ (ID Token)
-                              Next.js App stores token
-                                    │
-                              Sends token in header
+Student/Teacher → Next.js App → POST /api/auth/login (email + password)
                                     │
                                     ▼
-                              Flask API → Firebase Admin SDK
-                                    │        (verifies token)
+                              FastAPI → bcrypt.verify(password, hash)
+                                    │
+                                    ▼ (on success)
+                              python-jose signs JWT (access + refresh tokens)
+                                    │
+                              Returns tokens to Next.js App
+                                    │
+                              Next.js stores tokens (httpOnly cookie / memory)
+                                    │
+                              Sends Bearer token in Authorization header
+                                    │
+                                    ▼
+                              FastAPI JWT middleware verifies token
+                                    │
                                     ▼
                               Returns user data + role (student/teacher)
 ```
@@ -176,8 +183,8 @@ Teacher reviews/grades → Flask API → Updates score → Student sees result
 | Column | Type | Description |
 |--------|------|-------------|
 | id | UUID (PK) | Unique identifier |
-| firebase_uid | VARCHAR | Firebase Auth UID |
-| email | VARCHAR | User email |
+| email | VARCHAR | User email (unique) |
+| password_hash | VARCHAR | bcrypt hash of password |
 | name | VARCHAR | Full name |
 | role | ENUM | 'student', 'teacher', 'admin' |
 | phone | VARCHAR | Phone number |
@@ -321,7 +328,10 @@ Courses ──┬── 1:N ──→ Topics ──→ 1:N ──→ Lessons
 ### Auth
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|--------|
-| POST | /api/auth/register | Register new user (after Firebase signup) | Public |
+| POST | /api/auth/register | Register new user (hash password, store in DB) | Public |
+| POST | /api/auth/login | Login — verify password, return JWT tokens | Public |
+| POST | /api/auth/refresh | Exchange refresh token for new access token | Public |
+| POST | /api/auth/logout | Invalidate refresh token | Authenticated |
 | GET | /api/auth/me | Get current user profile | Authenticated |
 | PUT | /api/auth/me | Update profile | Authenticated |
 
@@ -455,9 +465,10 @@ medicode-frontend/
 ```
 medicode-backend/
 ├── app/
-│   ├── __init__.py                # Flask app factory
+│   ├── main.py                    # FastAPI app entry point (CORS, routers)
 │   ├── config.py                  # Environment config (dev, prod)
-│   ├── models/                    # SQLAlchemy models
+│   ├── database.py                # SQLAlchemy engine + session (Supabase connection)
+│   ├── models/                    # SQLAlchemy ORM models
 │   │   ├── __init__.py
 │   │   ├── user.py
 │   │   ├── course.py
@@ -469,8 +480,11 @@ medicode-backend/
 │   │   ├── payment.py
 │   │   ├── live_session.py
 │   │   └── blog.py
-│   ├── routes/                    # API route blueprints
-│   │   ├── __init__.py
+│   ├── schemas/                   # Pydantic request/response schemas
+│   │   ├── auth.py
+│   │   ├── course.py
+│   │   └── quiz.py
+│   ├── routers/                   # FastAPI APIRouter modules
 │   │   ├── auth.py
 │   │   ├── courses.py
 │   │   ├── quizzes.py
@@ -478,19 +492,17 @@ medicode-backend/
 │   │   ├── sessions.py
 │   │   └── blogs.py
 │   ├── services/                  # Business logic layer
-│   │   ├── auth_service.py        # Firebase token verification
+│   │   ├── auth_service.py        # bcrypt hashing + JWT creation/verification
 │   │   ├── course_service.py
 │   │   ├── quiz_service.py
 │   │   └── payment_service.py     # Razorpay integration + split
-│   ├── middleware/                 # Request middleware
-│   │   ├── auth_middleware.py     # Verify Firebase token on requests
-│   │   └── role_middleware.py     # Check user role (student/teacher)
-│   └── utils/
-│       └── helpers.py
-├── migrations/                    # Flask-Migrate / Alembic
+│   └── dependencies/              # FastAPI dependency injection
+│       ├── auth.py                # get_current_user (JWT decode via python-jose)
+│       └── roles.py               # require_teacher, require_admin
+├── alembic/                       # Alembic migrations
 ├── requirements.txt
 ├── .env.example
-└── run.py                         # App entry point
+└── run.py                         # Uvicorn entry point
 ```
 
 ---
@@ -499,12 +511,13 @@ medicode-backend/
 
 | Concern | Solution |
 |---------|----------|
-| Authentication | Firebase Auth handles passwords, tokens, and OAuth securely |
-| API Authorization | Every Flask route verifies Firebase ID token via middleware |
-| Role-Based Access | Middleware checks user role before allowing teacher/admin actions |
+| Authentication | Custom JWT — bcrypt hashes passwords, python-jose signs/verifies tokens |
+| Token Storage | Access token in memory; refresh token in httpOnly cookie (XSS-safe) |
+| API Authorization | Every FastAPI route verifies Bearer JWT token via dependency injection middleware |
+| Role-Based Access | JWT payload carries user role; middleware enforces teacher/admin restrictions |
 | Teacher-Student Isolation | Queries always filter by `teacher_id` — teachers see only their students |
-| Input Validation | Yup (frontend) + Flask request validation (backend) |
-| CORS | Flask-CORS configured to allow only the Vercel frontend domain |
+| Input Validation | Zod (frontend) + FastAPI Pydantic models (backend) |
+| CORS | FastAPI CORSMiddleware configured to allow only the Vercel frontend domain |
 | Payment Security | Razorpay handles card data (PCI compliant), we never touch card details |
 | Webhook Verification | Verify Razorpay webhook signature before processing payments |
 | SQL Injection | SQLAlchemy ORM parameterizes all queries |
@@ -517,24 +530,24 @@ medicode-backend/
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Vercel      │     │   Render     │     │   Render     │
-│  (Frontend)   │────▶│  (Flask API) │────▶│ (PostgreSQL) │
+│   Vercel      │     │   Render     │     │  Supabase    │
+│  (Frontend)   │────▶│ (FastAPI)    │────▶│ (PostgreSQL) │
 │  Next.js App  │     │  Free Tier   │     │  Free Tier   │
 └──────────────┘     └──────┬───────┘     └──────────────┘
                             │
-              ┌─────────────┼─────────────┐
-              ▼             ▼             ▼
-       ┌───────────┐ ┌───────────┐ ┌───────────┐
-       │ Firebase   │ │Cloudinary │ │ Razorpay  │
-       │   Auth     │ │  (Files)  │ │(Payments) │
-       └───────────┘ └───────────┘ └───────────┘
+              ┌─────────────┴─────────────┐
+              ▼                           ▼
+       ┌───────────┐               ┌───────────┐
+       │Cloudinary │               │ Razorpay  │
+       │  (Files)  │               │(Payments) │
+       └───────────┘               └───────────┘
 ```
 
 ### Deployment Steps (when ready)
 1. **Frontend:** Push to GitHub → Vercel auto-deploys from main branch
-2. **Backend:** Push to GitHub → Render auto-deploys from main branch
-3. **Database:** Render provisions PostgreSQL, connection string in env vars
-4. **Environment Variables:** Set Firebase keys, Cloudinary keys, Razorpay keys in Render dashboard
+2. **Backend:** Push to GitHub → Render auto-deploys from main branch (Uvicorn + FastAPI)
+3. **Database:** Supabase project created, connection string added to Render env vars
+4. **Environment Variables:** Set JWT secret, Cloudinary keys, Razorpay keys in Render dashboard
 
 ### MVP Deployment (frontend only)
 - Just deploy Next.js app to Vercel with dummy data — no backend needed yet

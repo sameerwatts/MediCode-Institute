@@ -44,8 +44,8 @@
 - [ ] Course detail page (`/courses/[slug]`)
 - [ ] Quiz-taking functionality (answer questions, show score, review answers)
 - [ ] Blog detail page (`/blogs/[slug]`)
-- [ ] Firebase Authentication (sign up, login, protected routes)
-- [ ] Connect to Flask backend API (replace dummy data with real API calls)
+- [ ] Custom JWT Authentication — FastAPI login/register endpoints, bcrypt + python-jose
+- [ ] Connect to FastAPI backend (replace dummy data with real API calls)
 - [ ] Razorpay integration for course payments
 - [ ] Video player integration (YouTube embed)
 
@@ -54,10 +54,12 @@
 |----------|--------|
 | Framework | Next.js 15 (App Router) |
 | Styling | Tailwind CSS |
+| Forms | React Hook Form + Zod |
 | State | useState (local), Server Components for static pages |
-| Backend | Flask + Flask-RESTful (later) |
-| Database | PostgreSQL on Render (later) |
-| Auth | Firebase Authentication (later) |
+| Backend | FastAPI (later) |
+| ORM | SQLAlchemy + Alembic |
+| Database | Supabase PostgreSQL (later) |
+| Auth | Custom JWT — bcrypt + python-jose (later) |
 | Videos | YouTube embedded/linked |
 | Live classes | Jitsi integration |
 | File storage | Cloudinary |
@@ -71,4 +73,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-02-20
+2026-02-23
