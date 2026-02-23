@@ -3,7 +3,7 @@
 ## Project Documentation
 - **[brainstorm.md](./brainstorm.md)** — Vision, target audience, features, tech stack, monetization, milestones, and key decisions
 - **[architecture.md](./architecture.md)** — System design, database schema, API endpoints, project structure, security, and deployment
-- **[.env.example](./.env.example)** — Environment variable template (Firebase, Cloudinary, Razorpay, DB, Jitsi)
+- **[.env.example](./.env.example)** — Environment variable template (JWT, Cloudinary, Razorpay, Supabase, Jitsi)
 - **[CHANGELOG.md](./CHANGELOG.md)** — Release changelog for tracking what changed in each version
 - **[project_status.md](./project_status.md)** — Current project status, what's done, what's next (for quick restart)
 - **[deployment-workflow.md](./deployment-workflow.md)** — Step-by-step feature → Vercel Preview → Production deployment process
@@ -14,6 +14,7 @@
 - **Framework:** Next.js 15 (App Router)
 - **Language:** TypeScript 5 (strict mode)
 - **Styling:** Tailwind CSS
+- **Forms:** React Hook Form + Zod
 - **Testing:** Jest + React Testing Library
 
 ## Language

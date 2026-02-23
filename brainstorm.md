@@ -37,23 +37,26 @@
 - **Language:** TypeScript 5 (strict mode)
 - **Framework:** Next.js 15 (App Router) — SSR, SSG, file-system routing
 - **Styling:** Tailwind CSS (zero-runtime, utility-first)
-- **Forms:** Formik + Yup for validation
+- **Forms:** React Hook Form + Zod for validation
 - **State Management:** useState / useReducer + useContext (no Redux); Server Components for static pages
 - **Dependencies:** Free to use any npm packages (e.g., react-slick for sliders)
 - **Hosting:** Vercel (free)
 - **Design approach:** Mobile-first and responsive
 
 ### Backend (later)
-- **Framework:** Flask + Flask-RESTful
-- **ORM:** SQLAlchemy + Flask-Migrate
+- **Framework:** FastAPI
+- **ORM:** SQLAlchemy + Alembic
+- **Password Hashing:** bcrypt
+- **Token Handling:** python-jose (JWT)
 - **Hosting:** Render (free tier — 750 hrs/month)
 
 ### Database (later)
-- **Database:** PostgreSQL (Render free tier — 256MB)
+- **Database:** Supabase PostgreSQL (free tier)
 
 ### Authentication (later)
-- **Provider:** Firebase Authentication (free — 50k MAU)
-- Supports email/password, Google, phone OTP
+- **Strategy:** Custom JWT Authentication with FastAPI
+- Email/password login — passwords hashed with bcrypt, tokens signed with python-jose
+- Access token (short-lived) + Refresh token (long-lived) pattern
 
 ### Storage & Media
 - **Videos:** YouTube (embedded/linked, no local storage)
