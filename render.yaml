@@ -9,6 +9,7 @@ services:
   - type: web
     name: medicode-api
     runtime: python
+    plan: free
     rootDir: backend           # All commands run from the backend/ subfolder
     buildCommand: pip install -r requirements.txt
     # startCommand: runs migrations first (safe to run every deploy — Alembic is idempotent),
