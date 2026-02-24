@@ -39,7 +39,7 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.replace('/dashboard');
+      router.replace('/');
     }
   }, [isLoading, isAuthenticated, router]);
 
@@ -50,7 +50,7 @@ const Login: React.FC = () => {
     setIsSubmitting(true);
     try {
       await login(data.email, data.password);
-      router.push('/dashboard');
+      router.push('/');
     } catch (err) {
       setServerError(
         err instanceof Error ? err.message : 'Login failed. Please try again.',

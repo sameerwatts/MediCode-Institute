@@ -113,7 +113,7 @@ describe('Signup', () => {
       );
     });
 
-    it('redirects to /dashboard on successful signup', async () => {
+    it('redirects to / on successful signup', async () => {
       render(<Signup />);
       await userEvent.type(screen.getByLabelText('Full Name'), 'John Doe');
       await userEvent.type(screen.getByLabelText('Email Address'), 'john@test.com');
@@ -121,7 +121,7 @@ describe('Signup', () => {
       await userEvent.type(screen.getByLabelText('Confirm Password'), 'password123');
       await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
 
-      await waitFor(() => expect(mockPush).toHaveBeenCalledWith('/dashboard'));
+      await waitFor(() => expect(mockPush).toHaveBeenCalledWith('/'));
     });
 
     it('shows server error message on signup failure', async () => {
@@ -142,7 +142,7 @@ describe('Signup', () => {
   });
 
   describe('when already authenticated', () => {
-    it('calls router.replace with /dashboard', () => {
+    it('calls router.replace with /', () => {
       (useAuth as jest.Mock).mockReturnValue({
         ...defaultAuthState,
         isLoading: false,
@@ -150,7 +150,7 @@ describe('Signup', () => {
         user: { id: '1', name: 'Test User', email: 'test@test.com', role: 'student', created_at: '' },
       });
       render(<Signup />);
-      expect(mockReplace).toHaveBeenCalledWith('/dashboard');
+      expect(mockReplace).toHaveBeenCalledWith('/');
     });
   });
 });

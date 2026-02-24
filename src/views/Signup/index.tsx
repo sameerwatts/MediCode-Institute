@@ -51,7 +51,7 @@ const Signup: React.FC = () => {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.replace('/dashboard');
+      router.replace('/');
     }
   }, [isLoading, isAuthenticated, router]);
 
@@ -62,7 +62,7 @@ const Signup: React.FC = () => {
     setIsSubmitting(true);
     try {
       await signup(data.name, data.email, data.password);
-      router.push('/dashboard');
+      router.push('/');
     } catch (err) {
       setServerError(
         err instanceof Error ? err.message : 'Sign up failed. Please try again.',
