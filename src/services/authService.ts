@@ -1,60 +1,86 @@
+/**
+ * authService.ts — Real API calls to the FastAPI backend.
+ *
+ * Key concepts:
+ *
+ * axios.create({ withCredentials: true })
+ *   `withCredentials` tells the browser to include cookies in every request.
+ *   Without this, the browser silently strips the httpOnly cookie and FastAPI
+ *   would always return 401. This one flag is what makes cookie auth work.
+ *
+ * baseURL: '/api'
+ *   All requests go to /api/... which Next.js proxies to FastAPI (see next.config.ts).
+ *   We never hardcode ports — the proxy handles routing in both dev and prod.
+ *
+ * getMe() catches 401 silently
+ *   On app load, we call getMe() to check if the user is logged in.
+ *   If there's no cookie (or it expired), FastAPI returns 401 — that's
+ *   expected, not an error. We return null instead of throwing.
+ */
+
+import axios from 'axios';
 import { IUser } from '@/types';
 
-const STORAGE_KEY = 'medicode_user';
+// Shared axios instance — withCredentials ensures cookies travel with every request
+const api = axios.create({
+  baseURL: '/api',
+  withCredentials: true,
+});
 
-function generateId(): string {
-  return Math.random().toString(36).slice(2, 11);
+export interface IAuthResponse {
+  user: IUser;
+  message: string;
 }
 
-export async function mockLogin(email: string, password: string): Promise<IUser> {
-  await new Promise((resolve) => setTimeout(resolve, 600));
-
-  if (!email || password.length < 6) {
-    throw new Error('Invalid email or password.');
+/**
+ * Extract a user-readable message from a FastAPI / axios error.
+ * FastAPI returns `{ detail: "..." }` for all 4xx errors.
+ * Return type is `never` because this function always throws.
+ */
+function toError(err: unknown, fallback: string): never {
+  if (axios.isAxiosError(err)) {
+    const detail = err.response?.data?.detail;
+    if (typeof detail === 'string') throw new Error(detail);
   }
-
-  const raw = email.split('@')[0].replace(/[._]/g, ' ');
-  const name = raw.replace(/\b\w/g, (c) => c.toUpperCase());
-
-  return {
-    id: generateId(),
-    name,
-    email,
-    role: 'student',
-    created_at: new Date().toISOString(),
-  };
+  throw new Error(err instanceof Error ? err.message : fallback);
 }
 
-export async function mockSignup(
+export async function login(email: string, password: string): Promise<IUser> {
+  try {
+    const res = await api.post<IAuthResponse>('/auth/login', { email, password });
+    // FastAPI set the access_token + refresh_token httpOnly cookies in the response.
+    // The browser stored them automatically. We never see the token value here.
+    return res.data.user;
+  } catch (err) {
+    return toError(err, 'Login failed. Please try again.');
+  }
+}
+
+export async function signup(
   name: string,
   email: string,
-  _password: string,
+  password: string,
 ): Promise<IUser> {
-  await new Promise((resolve) => setTimeout(resolve, 600));
-
-  return {
-    id: generateId(),
-    name: name.trim(),
-    email,
-    role: 'student',
-    created_at: new Date().toISOString(),
-  };
-}
-
-export function persistUser(user: IUser): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-}
-
-export function clearUser(): void {
-  localStorage.removeItem(STORAGE_KEY);
-}
-
-export function loadUser(): IUser | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as IUser;
+    const res = await api.post<IAuthResponse>('/auth/register', { name, email, password });
+    return res.data.user;
+  } catch (err) {
+    return toError(err, 'Sign up failed. Please try again.');
+  }
+}
+
+export async function logout(): Promise<void> {
+  // FastAPI responds with delete_cookie() — the browser discards both tokens.
+  await api.post('/auth/logout');
+}
+
+export async function getMe(): Promise<IUser | null> {
+  try {
+    const res = await api.get<IUser>('/auth/me');
+    // FastAPI read the access_token cookie and returned the user.
+    return res.data;
   } catch {
+    // 401 = no valid cookie — user is not logged in. This is expected, not an error.
     return null;
   }
 }
