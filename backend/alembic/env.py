@@ -36,8 +36,13 @@ from app.models import user  # noqa: F401 — import registers the model
 # Alembic config object (provides access to alembic.ini values)
 config = context.config
 
-# Override the sqlalchemy.url with our environment variable
-config.set_main_option("sqlalchemy.url", os.environ["DATABASE_URL"])
+# Override the sqlalchemy.url with our environment variable.
+# Normalise prefix so psycopg3 (psycopg[binary]) is used — not the absent psycopg2.
+_raw_url = os.environ["DATABASE_URL"]
+_db_url = _raw_url.replace("postgresql://", "postgresql+psycopg://", 1).replace(
+    "postgres://", "postgresql+psycopg://", 1
+)
+config.set_main_option("sqlalchemy.url", _db_url)
 
 # Set up Python logging from the alembic.ini [loggers] section
 if config.config_file_name is not None:

@@ -22,29 +22,24 @@ JWT TOKENS — what's in the payload?
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
+import bcrypt
 from jose import jwt, JWTError
-from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
 from app.config import settings
 from app.models.user import User
 
 
-# CryptContext handles bcrypt hashing. `deprecated="auto"` means if you ever
-# switch to a stronger algorithm, old hashes are automatically migrated on login.
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
 # ─── Password utilities ──────────────────────────────────────────────────────
 
 def hash_password(plain_password: str) -> str:
     """Hash a plain-text password with bcrypt (includes random salt)."""
-    return pwd_context.hash(plain_password)
+    return bcrypt.hashpw(plain_password.encode(), bcrypt.gensalt()).decode()
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Check if a plain-text password matches the stored bcrypt hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
 
 
 # ─── JWT utilities ───────────────────────────────────────────────────────────

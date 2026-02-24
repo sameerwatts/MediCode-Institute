@@ -14,7 +14,15 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from app.config import settings
 
 
-engine = create_engine(settings.database_url)
+# psycopg3 requires the dialect prefix "postgresql+psycopg://"
+# Normalise whatever the user put in .env so both forms work.
+_db_url = settings.database_url.replace(
+    "postgresql://", "postgresql+psycopg://", 1
+).replace(
+    "postgres://", "postgresql+psycopg://", 1
+)
+
+engine = create_engine(_db_url)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
