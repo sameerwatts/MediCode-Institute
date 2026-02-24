@@ -19,6 +19,7 @@ CORS (Cross-Origin Resource Sharing) explained:
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.config import settings
 from app.routers import auth
 
 
@@ -31,10 +32,9 @@ app = FastAPI(
 # CORS must be added BEFORE including routers
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",               # Next.js dev server
-        "https://medicode-institute.vercel.app",  # TODO: update with your real Vercel domain
-    ],
+    # Origins are read from the ALLOWED_ORIGINS env var (comma-separated).
+    # Set this in Render dashboard to include your Vercel domain(s).
+    allow_origins=settings.origins_list,
     allow_credentials=True,   # REQUIRED for httpOnly cookies to work across origins
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],
