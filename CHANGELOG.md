@@ -8,6 +8,26 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+### Added
+- Mock auth layer (`src/services/authService.ts`) — localStorage-backed login/signup, drop-in ready for real FastAPI + Axios
+- `AuthContext` + `AuthProvider` — global user state with `isLoading` guard, login/signup/logout
+- `useAuth` hook — typed `IAuthContext` wrapper around `AuthContext`
+- `FormInput` component — reusable labeled input with error state and password show/hide toggle
+- `/login` page — React Hook Form + Zod validation, server error banner, redirects to home on success
+- `/signup` page — 4-field form (name, email, password ≥8 chars, confirm), auto-login on success, redirects to home
+- `/dashboard` page — protected client page with auth guard (redirects to `/login` if unauthenticated)
+- `WelcomeBanner` component — client component that shows "Welcome back, {first name}!" at the top of the home page when authenticated
+- Auth-aware Navbar — Login + Sign Up buttons when unauthenticated; user name + Sign Out when logged in (desktop + mobile)
+- `IUser` and `IAuthContext` types added to `src/types/index.ts`
+- 48 new tests (138 total across 20 suites)
+
+### Changed
+- After login or signup, users are redirected to `/` (home) instead of `/dashboard`
+- Already-authenticated users visiting `/login` or `/signup` are redirected to `/`
+- `app/layout.tsx` — wrapped body with `AuthProvider`
+- `src/test-utils.tsx` — render wrapper now includes `AuthProvider`
+- `src/setupTests.ts` — `beforeEach(() => localStorage.clear())` to isolate auth state between tests
+
 ## [0.2.1] - 2026-02-20
 
 ### Added

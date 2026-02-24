@@ -4,6 +4,7 @@ import SectionHeading from '@/components/common/SectionHeading';
 import CourseCard from '@/components/course/CourseCard';
 import Button from '@/components/common/Button';
 import { courses } from '@/data/courses';
+import WelcomeBanner from '@/components/common/WelcomeBanner';
 import HeroSection from './HeroSection';
 import FeaturesSection from './FeaturesSection';
 import StatsSection from './StatsSection';
@@ -14,6 +15,7 @@ const popularCourses = courses.slice(0, 3);
 const Home: React.FC = () => {
   return (
     <>
+      <WelcomeBanner />
       <HeroSection />
 
       <FeaturesSection />

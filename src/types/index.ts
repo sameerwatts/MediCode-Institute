@@ -57,3 +57,21 @@ export interface IBlog {
   publishedAt: string;
   readTime: string;
 }
+
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  role: 'student' | 'teacher' | 'admin';
+  avatar_url?: string;
+  created_at: string;
+}
+
+export interface IAuthContext {
+  user: IUser | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  signup: (name: string, email: string, password: string) => Promise<void>;
+  logout: () => void;
+}
