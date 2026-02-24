@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Deployed & Workflow Validated** — Static frontend is live on Vercel. Full feature branch → CI → Preview → Production pipeline confirmed working end-to-end.
+**Auth UI in Progress** — Mock authentication (login, signup, dashboard) built and tested. PR open for review.
 
 ## Current Branch
-`main` — clean, up to date, deployed to production.
+`feature/auth-login-signup` — PR #25 open, awaiting owner approval to merge into `main`.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -39,6 +39,15 @@
 - [x] 90 tests passing with Jest + React Testing Library (16 suites)
 - [x] `npm run build` passes — all 8 pages statically generated
 - [x] SVG images from placehold.co allowed in Next.js Image config
+- [x] Mock auth layer (localStorage-backed, swap-ready for FastAPI)
+- [x] `AuthContext` + `useAuth` hook — global user state
+- [x] `FormInput` component — labeled input with error state + password toggle
+- [x] `/login` page — React Hook Form + Zod validation, redirects to home on success
+- [x] `/signup` page — 4-field form with password confirm, redirects to home on success
+- [x] `/dashboard` page — protected with client-side auth guard
+- [x] `WelcomeBanner` — shows "Welcome back, {first name}!" on home page when logged in
+- [x] Navbar updated — auth-aware (Login/Sign Up when guest, user name + Sign Out when authenticated)
+- [x] 138 tests passing across 20 suites (48 new auth tests)
 
 ## What's Next
 - [ ] Course detail page (`/courses/[slug]`)
@@ -73,4 +82,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-02-23
+2026-02-24
