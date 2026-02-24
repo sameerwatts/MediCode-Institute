@@ -32,11 +32,28 @@ export interface IAuthResponse {
   message: string;
 }
 
+/**
+ * Extract a user-readable message from a FastAPI / axios error.
+ * FastAPI returns `{ detail: "..." }` for all 4xx errors.
+ * Return type is `never` because this function always throws.
+ */
+function toError(err: unknown, fallback: string): never {
+  if (axios.isAxiosError(err)) {
+    const detail = err.response?.data?.detail;
+    if (typeof detail === 'string') throw new Error(detail);
+  }
+  throw new Error(err instanceof Error ? err.message : fallback);
+}
+
 export async function login(email: string, password: string): Promise<IUser> {
-  const res = await api.post<IAuthResponse>('/auth/login', { email, password });
-  // FastAPI set the access_token + refresh_token httpOnly cookies in the response.
-  // The browser stored them automatically. We never see the token value here.
-  return res.data.user;
+  try {
+    const res = await api.post<IAuthResponse>('/auth/login', { email, password });
+    // FastAPI set the access_token + refresh_token httpOnly cookies in the response.
+    // The browser stored them automatically. We never see the token value here.
+    return res.data.user;
+  } catch (err) {
+    return toError(err, 'Login failed. Please try again.');
+  }
 }
 
 export async function signup(
@@ -44,8 +61,12 @@ export async function signup(
   email: string,
   password: string,
 ): Promise<IUser> {
-  const res = await api.post<IAuthResponse>('/auth/register', { name, email, password });
-  return res.data.user;
+  try {
+    const res = await api.post<IAuthResponse>('/auth/register', { name, email, password });
+    return res.data.user;
+  } catch (err) {
+    return toError(err, 'Sign up failed. Please try again.');
+  }
 }
 
 export async function logout(): Promise<void> {
