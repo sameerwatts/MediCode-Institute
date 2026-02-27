@@ -1,15 +1,23 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSidebar } from "@/context/SidebarContext";
 
 const PageShiftWrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { isOpen, closeMenu } = useSidebar();
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    el.style.position = isOpen ? "fixed" : "relative";
+  }, [isOpen]);
 
   return (
     <div
+      ref={wrapperRef}
       className="relative z-20 min-h-screen bg-white transition-all duration-300 ease-in-out"
       style={{
         transform: isOpen ? "translateX(80vw)" : "translateX(0)",
