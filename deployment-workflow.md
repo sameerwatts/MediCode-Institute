@@ -86,7 +86,41 @@ git commit -m "feat: add CourseDetail page with lesson list"
 
 ---
 
-### 3. Pre-Push Checks (mandatory)
+### 3. Update Changelog & Project Status
+Once development is done, update these two files **before the final commit and push**:
+
+#### `CHANGELOG.md`
+Add a versioned entry under the appropriate version heading using the standard format:
+
+```md
+## [Unreleased]
+### Added
+- Brief description of what was added
+
+### Fixed
+- Brief description of what was fixed
+
+### Changed
+- Brief description of what was changed
+```
+
+#### `project_status.md`
+Update the following fields so Claude always has an accurate snapshot without exploring the full file structure:
+- **What's Done** — add the completed feature/fix
+- **What's Next** — update priorities
+- **Current Branch** — current working branch
+- **Last Updated** — today's date
+
+Then commit both files together:
+
+```bash
+git add CHANGELOG.md project_status.md
+git commit -m "docs: update changelog and project status for <feature-name>"
+```
+
+---
+
+### 4. Pre-Push Checks (mandatory)
 Run all three before pushing — catch issues before Vercel sees the code.
 
 ```bash
@@ -99,7 +133,7 @@ Do not push if any of these fail.
 
 ---
 
-### 4. Push Branch & Open PR
+### 5. Push Branch & Open PR
 
 ```bash
 git push -u origin feature/your-feature-name
@@ -114,7 +148,7 @@ PR description must include:
 
 ---
 
-### 5. CI Runs Automatically (GitHub Actions)
+### 6. CI Runs Automatically (GitHub Actions)
 On every push to an open PR, GitHub Actions runs the CI pipeline defined in `.github/workflows/ci.yml`.
 
 **CI runs three checks in order:**
@@ -131,7 +165,7 @@ On every push to an open PR, GitHub Actions runs the CI pipeline defined in `.gi
 
 ---
 
-### 6. Vercel Preview Deployment (automatic)
+### 7. Vercel Preview Deployment (automatic)
 When a PR is opened, Vercel automatically builds and deploys the feature branch to a unique Preview URL.
 
 - Preview URL format: `https://medicode-institute-<hash>.vercel.app`
@@ -142,7 +176,7 @@ No manual deploy step needed — Vercel handles it automatically.
 
 ---
 
-### 6. Validate on Preview
+### 8. Validate on Preview
 Validation is a two-part process — Claude runs automated checks first, then the owner does a final review.
 
 #### Part A — Claude's automated checks (Playwright)
@@ -174,7 +208,7 @@ Once Claude's checks pass, the owner reviews the Preview URL for:
 
 ---
 
-### 7. Merge PR into Main
+### 9. Merge PR into Main
 Once the Preview is validated and you're satisfied:
 
 - Merge the PR into `main` via GitHub
@@ -185,7 +219,7 @@ Merging into `main` automatically triggers a **Production deployment** on Vercel
 
 ---
 
-### 8. Production Sanity Check
+### 10. Production Sanity Check
 After the production deploy completes (usually ~1–2 minutes):
 
 - [ ] Visit the production URL and verify the feature is live
@@ -226,17 +260,18 @@ To add/update env vars: Vercel Dashboard → Project → Settings → Environmen
 1.  git checkout main && git pull
 2.  git checkout -b feature/name
 3.  ... develop ...
-4.  npm run lint && npm run build && npm test   ← local pre-push check
-5.  git push -u origin feature/name
-6.  Open PR → main (GitHub)
-7.  GitHub Actions CI runs: lint → build → test  ← automated enforcement
-8.  CI red → fix on branch → re-push → CI re-runs (repeat until green)
-9.  CI green → Vercel auto-generates Preview URL
-10. Claude runs Playwright checks — pages, console, nav, responsive
-11. Claude fixes any issues → re-push → CI + Preview rebuild → re-check
-12. Claude shares Preview URL + findings with owner
-13. Owner reviews and validates on Preview
-14. Owner gives approval (or feedback → Claude fixes → repeat 13)
-15. Claude merges PR → main → Production deploy
-16. Quick sanity check on Production
+4.  Update CHANGELOG.md + project_status.md → commit both
+5.  npm run lint && npm run build && npm test   ← local pre-push check
+6.  git push -u origin feature/name
+7.  Open PR → main (GitHub)
+8.  GitHub Actions CI runs: lint → build → test  ← automated enforcement
+9.  CI red → fix on branch → re-push → CI re-runs (repeat until green)
+10. CI green → Vercel auto-generates Preview URL
+11. Claude runs Playwright checks — pages, console, nav, responsive
+12. Claude fixes any issues → re-push → CI + Preview rebuild → re-check
+13. Claude shares Preview URL + findings with owner
+14. Owner reviews and validates on Preview
+15. Owner gives approval (or feedback → Claude fixes → repeat 14)
+16. Claude merges PR → main → Production deploy
+17. Quick sanity check on Production
 ```
