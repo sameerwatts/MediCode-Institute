@@ -71,15 +71,30 @@ const Navbar: React.FC = () => {
           ))}
 
           {!isLoading && (
-            <li className="md:hidden border-t border-light-gray pt-2 mt-2">
+            <li className="md:hidden mt-auto pt-4 border-t border-light-gray">
               {isAuthenticated ? (
-                <div className="flex flex-col gap-2 px-4">
+                <div className="flex items-center justify-between px-4">
                   <span className="text-sm-text font-semibold text-dark">{user?.name}</span>
                   <button
                     onClick={handleLogout}
-                    className="text-left text-sm-text text-dark-gray hover:text-primary transition-colors"
+                    aria-label="Sign out"
+                    className="flex items-center justify-center w-10 h-10 rounded-full bg-light text-dark-gray hover:bg-red-50 hover:text-red-500 active:scale-90 transition-all duration-150 ease-out"
                   >
-                    Sign Out
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                      <polyline points="16 17 21 12 16 7" />
+                      <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
                   </button>
                 </div>
               ) : (
@@ -129,11 +144,11 @@ const Navbar: React.FC = () => {
         <button
           onClick={toggleMenu}
           aria-label="Toggle menu"
-          className="flex flex-col gap-1.5 p-2 md:hidden"
+          className="flex flex-col items-center justify-center gap-[5px] w-12 h-12 md:hidden rounded-full bg-light active:scale-90 transition-transform duration-150 ease-out"
         >
-          <span className="block w-6 h-0.5 bg-dark transition-all duration-300" />
-          <span className="block w-6 h-0.5 bg-dark transition-all duration-300" />
-          <span className="block w-3 h-0.5 bg-dark transition-all duration-300" />
+          <span className="block w-5 h-[2px] bg-dark rounded-full" />
+          <span className="block w-5 h-[2px] bg-dark rounded-full" />
+          <span className="block w-[10px] h-[2px] bg-dark rounded-full self-start ml-[14px]" />
         </button>
       </div>
     </nav>
