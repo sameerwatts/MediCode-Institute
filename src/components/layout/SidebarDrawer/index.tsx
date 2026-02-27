@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { navLinks } from "@/data/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useSidebar } from "@/context/SidebarContext";
@@ -11,11 +11,29 @@ import Button from "@/components/common/Button";
 const SidebarDrawer: React.FC = () => {
   const { closeMenu } = useSidebar();
   const pathname = usePathname();
+  const router = useRouter();
   const { isAuthenticated, isLoading, user, logout } = useAuth();
+  const [pendingPath, setPendingPath] = useState<string | null>(null);
 
   const handleLogout = async () => {
     await logout();
     closeMenu();
+  };
+
+  // Show the clicked link as highlighted for 200ms before closing the sidebar
+  // so the user sees the selection feedback before the menu disappears.
+  const handleNavClick = (e: React.MouseEvent, path: string) => {
+    if (pathname === path) {
+      closeMenu();
+      return;
+    }
+    e.preventDefault();
+    setPendingPath(path);
+    setTimeout(() => {
+      closeMenu();
+      router.push(path);
+      setPendingPath(null);
+    }, 200);
   };
 
   return (
@@ -29,18 +47,21 @@ const SidebarDrawer: React.FC = () => {
 
       {/* Nav links */}
       <ul className="flex flex-col gap-1">
-        {navLinks.map((link) => (
-          <li key={link.path}>
-            <Link
-              href={link.path}
-              onClick={closeMenu}
-              className={`block px-4 py-2.5 rounded-lg transition-colors duration-200 hover:text-primary hover:bg-light
-                ${pathname === link.path ? "font-semibold text-primary bg-primary-light" : "font-medium text-dark-gray"}`}
-            >
-              {link.label}
-            </Link>
-          </li>
-        ))}
+        {navLinks.map((link) => {
+          const isActive = pathname === link.path || pendingPath === link.path;
+          return (
+            <li key={link.path}>
+              <Link
+                href={link.path}
+                onClick={(e) => handleNavClick(e, link.path)}
+                className={`block px-4 py-2.5 rounded-lg transition-colors duration-200 hover:text-primary hover:bg-light
+                  ${isActive ? "font-semibold text-primary bg-primary-light" : "font-medium text-dark-gray"}`}
+              >
+                {link.label}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
 
       {/* Auth section pinned to bottom */}
