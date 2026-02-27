@@ -27,11 +27,36 @@ const Navbar: React.FC = () => {
           Medi<span className="text-secondary">Code</span>
         </Link>
 
+        {/* Backdrop overlay — mobile only */}
+        {isOpen && (
+          <div
+            className="fixed inset-0 bg-black/40 z-[1001] md:hidden"
+            onClick={closeMenu}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Sidebar drawer */}
         <ul
-          className={`flex flex-col fixed top-16 left-0 right-0 bg-white p-4 shadow-md gap-2 transition-all duration-300
-            ${isOpen ? 'translate-y-0 visible' : '-translate-y-[150%] invisible'}
-            md:static md:flex-row md:translate-y-0 md:visible md:shadow-none md:p-0 md:gap-8`}
+          className={`flex flex-col fixed top-0 left-0 h-screen w-[75%] bg-white p-6 shadow-xl gap-2
+            z-[1002] transition-transform duration-300 ease-in-out
+            ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+            md:static md:h-auto md:w-auto md:flex-row md:translate-x-0 md:shadow-none md:p-0 md:gap-8 md:z-auto`}
         >
+          {/* Brand + close button — mobile only */}
+          <li className="md:hidden flex items-center justify-between mb-4 pb-4 border-b border-light-gray">
+            <span className="text-h3 font-extrabold text-primary">
+              Medi<span className="text-secondary">Code</span>
+            </span>
+            <button
+              onClick={closeMenu}
+              aria-label="Close menu"
+              className="p-1 text-dark-gray hover:text-primary transition-colors"
+            >
+              ✕
+            </button>
+          </li>
+
           {navLinks.map((link) => (
             <li key={link.path}>
               <Link
@@ -104,11 +129,11 @@ const Navbar: React.FC = () => {
         <button
           onClick={toggleMenu}
           aria-label="Toggle menu"
-          className="flex flex-col gap-1 p-2 md:hidden"
+          className="flex flex-col gap-1.5 p-2 md:hidden"
         >
-          <span className="block w-6 h-0.5 bg-dark transition-transform duration-300" />
-          <span className="block w-6 h-0.5 bg-dark transition-transform duration-300" />
-          <span className="block w-6 h-0.5 bg-dark transition-transform duration-300" />
+          <span className="block w-6 h-0.5 bg-dark transition-all duration-300" />
+          <span className="block w-6 h-0.5 bg-dark transition-all duration-300" />
+          <span className="block w-3 h-0.5 bg-dark transition-all duration-300" />
         </button>
       </div>
     </nav>

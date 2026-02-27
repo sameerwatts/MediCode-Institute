@@ -25,8 +25,8 @@ beforeEach(() => {
 describe('Navbar', () => {
   it('renders the logo text', () => {
     render(<Navbar />);
-    expect(screen.getByText(/Medi/)).toBeInTheDocument();
-    expect(screen.getByText(/Code/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Medi/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Code/).length).toBeGreaterThan(0);
   });
 
   it('renders all navigation links', () => {
