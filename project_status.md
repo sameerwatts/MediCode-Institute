@@ -50,6 +50,7 @@
 - [x] 138 tests passing across 20 suites (48 new auth tests)
 - [x] Custom brand favicon (`app/icon.svg`) — blue→green gradient with white "MC" initials
 - [x] `deployment-workflow.md` updated — Step 3 added (update changelog + project_status before every push)
+- [x] 177 tests passing across 27 suites — added 39 tests for 7 previously untested components (HeroSection, FeaturesSection, StatsSection, CTASection, WelcomeBanner, PageShiftWrapper, SidebarDrawer)
 
 ## What's Next
 - [ ] Course detail page (`/courses/[slug]`)
