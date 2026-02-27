@@ -9,6 +9,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ## [Unreleased]
 
 ### Added
+- `docs/become-a-teacher-architecture.md` — complete 18-PR architecture plan for gated teacher onboarding pipeline (application form → admin review → invite token → teacher signup → onboarding)
+
+### Changed
+- Moved all project docs (CLAUDE.md, architecture.md, brainstorm.md, deployment-workflow.md, project_status.md, CHANGELOG.md, vercel-deployment-plan.md) from project root into `docs/` folder — README.md stays at root
+- Fixed `.env.example` link in CLAUDE.md to point to `../backend/.env.example`
+
+---
+
+## [0.3.0] - 2026-02-27
+
+### Added
 - Custom brand favicon (`app/icon.svg`) — rounded square with blue→green diagonal gradient (`#2563EB`→`#10B981`) and bold white "MC" initials; auto-detected by Next.js App Router
 - `icons` field added to `metadata` in `app/layout.tsx` for explicit favicon declaration
 - 39 new tests covering 7 previously untested components: `HeroSection`, `FeaturesSection`, `StatsSection`, `CTASection`, `WelcomeBanner`, `PageShiftWrapper`, `SidebarDrawer` — total now 177 tests across 27 suites
