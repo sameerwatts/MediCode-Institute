@@ -8,6 +8,14 @@ jest.mock('@/hooks/useAuth', () => ({
   useAuth: jest.fn(),
 }));
 
+jest.mock('@/context/SidebarContext', () => ({
+  useSidebar: jest.fn(() => ({
+    isOpen: false,
+    toggleMenu: jest.fn(),
+    closeMenu: jest.fn(),
+  })),
+}));
+
 const defaultAuthState = {
   user: null,
   isLoading: true,
