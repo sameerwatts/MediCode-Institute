@@ -8,6 +8,14 @@ jest.mock('@/hooks/useAuth', () => ({
   useAuth: jest.fn(),
 }));
 
+jest.mock('@/context/SidebarContext', () => ({
+  useSidebar: jest.fn(() => ({
+    isOpen: false,
+    toggleMenu: jest.fn(),
+    closeMenu: jest.fn(),
+  })),
+}));
+
 const defaultAuthState = {
   user: null,
   isLoading: true,
@@ -25,8 +33,8 @@ beforeEach(() => {
 describe('Navbar', () => {
   it('renders the logo text', () => {
     render(<Navbar />);
-    expect(screen.getAllByText(/Medi/).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Code/).length).toBeGreaterThan(0);
+    expect(screen.getByText(/Medi/)).toBeInTheDocument();
+    expect(screen.getByText(/Code/)).toBeInTheDocument();
   });
 
   it('renders all navigation links', () => {
