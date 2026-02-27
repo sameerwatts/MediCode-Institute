@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Polish & Docs** — Custom brand favicon added. Deployment workflow updated with mandatory changelog/status step.
+**Become a Teacher Feature** — 18-PR architecture plan finalized. Docs reorganized into `docs/` folder. Starting backend PRs next.
 
 ## Current Branch
-`feature/custom-favicon-and-docs` — in progress, awaiting PR and owner approval.
+`docs/move-docs-to-folder-and-add-teacher-plan` — docs reorganization + teacher architecture plan.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -51,15 +51,24 @@
 - [x] Custom brand favicon (`app/icon.svg`) — blue→green gradient with white "MC" initials
 - [x] `deployment-workflow.md` updated — Step 3 added (update changelog + project_status before every push)
 - [x] 177 tests passing across 27 suites — added 39 tests for 7 previously untested components (HeroSection, FeaturesSection, StatsSection, CTASection, WelcomeBanner, PageShiftWrapper, SidebarDrawer)
+- [x] All project docs moved to `docs/` folder (CLAUDE.md, architecture.md, brainstorm.md, deployment-workflow.md, project_status.md, CHANGELOG.md, vercel-deployment-plan.md)
+- [x] `docs/become-a-teacher-architecture.md` — complete 18-PR plan for teacher onboarding pipeline
 
 ## What's Next
+- [ ] **Become a Teacher Feature (18 PRs):**
+  - [ ] PR 1–2: Backend DB models (TeacherApplication + InviteToken)
+  - [ ] PR 3: Admin CLI command
+  - [ ] PR 4–6: Role dependencies, schemas, invite service
+  - [ ] PR 7–8: Application + admin API routes
+  - [ ] PR 9: Modified auth register (invite token support)
+  - [ ] PR 10: Email service (Resend)
+  - [ ] PR 11–13: Frontend shared components (FormTextarea, FormRadioGroup, Modal, StatusBadge)
+  - [ ] PR 14–15: Become a Teacher page + Application Status page
+  - [ ] PR 16–17: Admin shell + teacher requests dashboard
+  - [ ] PR 18: Invite signup flow + teacher onboarding
 - [ ] Course detail page (`/courses/[slug]`)
-- [ ] Quiz-taking functionality (answer questions, show score, review answers)
+- [ ] Quiz-taking functionality
 - [ ] Blog detail page (`/blogs/[slug]`)
-- [ ] Custom JWT Authentication — FastAPI login/register endpoints, bcrypt + python-jose
-- [ ] Connect to FastAPI backend (replace dummy data with real API calls)
-- [ ] Razorpay integration for course payments
-- [ ] Video player integration (YouTube embed)
 
 ## Key Decisions Made
 | Decision | Choice |
