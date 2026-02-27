@@ -8,26 +8,6 @@ const PageShiftWrapper: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { isOpen, closeMenu } = useSidebar();
 
-  // Prevent scroll while sidebar is open.
-  // overflow:hidden alone is ignored by iOS Safari for touch-scroll, so we also
-  // attach a non-passive touchmove listener on document that calls preventDefault().
-  useEffect(() => {
-    if (!isOpen) {
-      document.body.style.overflow = "";
-      return;
-    }
-
-    document.body.style.overflow = "hidden";
-
-    const preventScroll = (e: TouchEvent) => e.preventDefault();
-    document.addEventListener("touchmove", preventScroll, { passive: false });
-
-    return () => {
-      document.body.style.overflow = "";
-      document.removeEventListener("touchmove", preventScroll);
-    };
-  }, [isOpen]);
-
   return (
     <div
       className="relative z-20 min-h-screen bg-white transition-all duration-300 ease-in-out"
