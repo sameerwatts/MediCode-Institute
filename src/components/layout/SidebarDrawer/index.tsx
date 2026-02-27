@@ -37,7 +37,7 @@ const SidebarDrawer: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 h-screen w-[80%] bg-white z-10 flex flex-col p-6 md:hidden">
+    <div className="fixed top-0 left-0 h-screen w-[80%] bg-white z-10 flex flex-col p-6 pb-12 md:hidden">
       {/* Brand */}
       <div className="mb-4 pb-4 border-b border-light-gray">
         <span className="text-h3 font-extrabold text-primary">
