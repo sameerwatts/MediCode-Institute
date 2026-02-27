@@ -9,6 +9,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ## [Unreleased]
 
 ### Added
+- Custom brand favicon (`app/icon.svg`) — rounded square with blue→green diagonal gradient (`#2563EB`→`#10B981`) and bold white "MC" initials; auto-detected by Next.js App Router
+- `icons` field added to `metadata` in `app/layout.tsx` for explicit favicon declaration
+- 39 new tests covering 7 previously untested components: `HeroSection`, `FeaturesSection`, `StatsSection`, `CTASection`, `WelcomeBanner`, `PageShiftWrapper`, `SidebarDrawer` — total now 177 tests across 27 suites
+
+### Changed
+- `deployment-workflow.md` — added Step 3 (Update Changelog & Project Status before every push), fixed duplicate Step 6 numbering, updated Quick Reference to 17 steps
+
+---
+
+### Added
 - Mock auth layer (`src/services/authService.ts`) — localStorage-backed login/signup, drop-in ready for real FastAPI + Axios
 - `AuthContext` + `AuthProvider` — global user state with `isLoading` guard, login/signup/logout
 - `useAuth` hook — typed `IAuthContext` wrapper around `AuthContext`

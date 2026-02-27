@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Auth UI in Progress** — Mock authentication (login, signup, dashboard) built and tested. PR open for review.
+**Polish & Docs** — Custom brand favicon added. Deployment workflow updated with mandatory changelog/status step.
 
 ## Current Branch
-`feature/auth-login-signup` — PR #25 open, awaiting owner approval to merge into `main`.
+`feature/custom-favicon-and-docs` — in progress, awaiting PR and owner approval.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -48,6 +48,9 @@
 - [x] `WelcomeBanner` — shows "Welcome back, {first name}!" on home page when logged in
 - [x] Navbar updated — auth-aware (Login/Sign Up when guest, user name + Sign Out when authenticated)
 - [x] 138 tests passing across 20 suites (48 new auth tests)
+- [x] Custom brand favicon (`app/icon.svg`) — blue→green gradient with white "MC" initials
+- [x] `deployment-workflow.md` updated — Step 3 added (update changelog + project_status before every push)
+- [x] 177 tests passing across 27 suites — added 39 tests for 7 previously untested components (HeroSection, FeaturesSection, StatsSection, CTASection, WelcomeBanner, PageShiftWrapper, SidebarDrawer)
 
 ## What's Next
 - [ ] Course detail page (`/courses/[slug]`)
@@ -82,4 +85,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-02-24
+2026-02-27
