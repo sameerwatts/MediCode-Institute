@@ -85,9 +85,8 @@ These are only available in Server Components, API Routes, and Server Actions â€
 
 | Variable | Environment |
 |----------|-------------|
-| `CLOUDINARY_CLOUD_NAME` | Production, Preview |
-| `CLOUDINARY_API_KEY` | Production, Preview |
-| `CLOUDINARY_API_SECRET` | Production, Preview |
+| `SUPABASE_URL` | Production, Preview |
+| `SUPABASE_SERVICE_ROLE_KEY` | Production, Preview |
 | `RAZORPAY_KEY_SECRET` | Production only |
 | `RAZORPAY_WEBHOOK_SECRET` | Production only |
 | `DATABASE_URL` | Production, Preview |

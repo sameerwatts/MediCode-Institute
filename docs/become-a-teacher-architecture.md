@@ -16,8 +16,10 @@ MediCode Institute needs a way for aspiring teachers to apply, get vetted by an 
 | Email service | **Resend** — 3,000 emails/month free, modern DX |
 | Admin creation | **CLI command** — server-side only, no public signup for admins |
 | Entry point | **Footer link + Home page CTA section** — matches Udemy/Skillshare pattern, keeps navbar clean for learners |
-| CV upload | **Deferred** — `resume_url` column stays nullable, no Cloudinary upload widget in v1 |
+| CV upload | **Deferred** — `resume_url` column stays nullable, no upload widget in v1 |
 | Rate limiting | **Deferred** — duplicate-pending check is sufficient for v1, add IP-based throttling later if needed |
+| Photo storage | **Supabase Storage** — teacher profile photos stored in Supabase Storage bucket (`teacher-photos`) |
+| Admin notifications | **Query DB** — email all users with `role='admin'`, scales to multiple admins automatically |
 
 ---
 
@@ -96,7 +98,7 @@ Admin → approved app with expired token → clicks "Re-send Invite" → old to
 | qualifications | TEXT NOT NULL | |
 | experience_years | INTEGER NOT NULL | |
 | teaching_philosophy | TEXT NOT NULL | |
-| resume_url | VARCHAR(500) nullable | Cloudinary URL (optional — deferred to v2, no upload in v1) |
+| resume_url | VARCHAR(500) nullable | Supabase Storage URL (optional — deferred to v2, no upload in v1) |
 | status | VARCHAR(20) NOT NULL DEFAULT 'pending' | CHECK: pending/approved/rejected/registered |
 | admin_notes | TEXT nullable | Rejection reason or comments |
 | reviewed_by | UUID FK → users(id) nullable | |
@@ -120,6 +122,13 @@ Admin → approved app with expired token → clicks "Re-send Invite" → old to
 ### Existing `users` table — no changes needed
 
 Already has `role ENUM('student', 'teacher', 'admin')`.
+
+### Supabase Storage — Teacher Profile Photos
+
+- **Bucket:** `teacher-photos` (created in Supabase dashboard or via migration)
+- **Used by:** `/teacher/onboarding` page for profile photo upload
+- **Backend:** Supabase Storage client configured via existing Supabase credentials in `.env`
+- **Note:** CV upload (`resume_url`) is deferred to v2 but will also use Supabase Storage.
 
 ---
 
@@ -159,6 +168,159 @@ Already has `role ENUM('student', 'teacher', 'admin')`.
 |--------|----------|--------|
 | POST | `/api/auth/register` | Accept optional `invite_token`; if present, validate + set role=teacher |
 
+### Admin Pagination Specification
+
+- **Page size:** 10 items per page
+- **Default sort:** newest first (`created_at DESC`)
+- **Searchable fields:** `name`, `email`
+- **Filter:** `status` param — `pending`, `approved`, `rejected`, `registered`, or `all` (default: `all`)
+- **Response shape:** includes `total`, `page`, `page_size`, `has_next`
+
+---
+
+## API Request/Response Schemas
+
+### Public Endpoints
+
+**POST `/api/applications`** — Submit teacher application
+
+Request body:
+```json
+{
+  "name": "string (required, max 100)",
+  "email": "string (required, valid email)",
+  "phone": "string (required, max 20)",
+  "subject_area": "'medical' | 'cs' (required)",
+  "qualifications": "string (required)",
+  "experience_years": "integer (required, min 0)",
+  "teaching_philosophy": "string (required)"
+}
+```
+
+Response (`201`):
+```json
+{
+  "id": "uuid",
+  "message": "Application submitted successfully",
+  "status": "pending"
+}
+```
+
+**GET `/api/applications/status?email=&application_id=`** — Check application status
+
+Response (`200`):
+```json
+{
+  "id": "uuid",
+  "status": "pending | approved | rejected | registered",
+  "created_at": "timestamp",
+  "reviewed_at": "timestamp | null"
+}
+```
+
+**GET `/api/auth/validate-invite?token=`** — Validate invite token (read-only)
+
+Response — valid (`200`):
+```json
+{
+  "valid": true,
+  "name": "string",
+  "email": "string"
+}
+```
+
+Response — invalid (`400`):
+```json
+{
+  "valid": false,
+  "reason": "expired | used | invalid"
+}
+```
+
+### Admin Endpoints
+
+**GET `/api/admin/applications?status=&search=&page=`** — Paginated application list
+
+Response (`200`):
+```json
+{
+  "items": [
+    {
+      "id": "uuid",
+      "name": "string",
+      "email": "string",
+      "subject_area": "medical | cs",
+      "status": "pending | approved | rejected | registered",
+      "created_at": "timestamp"
+    }
+  ],
+  "total": 42,
+  "page": 1,
+  "page_size": 10,
+  "has_next": true
+}
+```
+
+**GET `/api/admin/applications/{id}`** — Full application detail
+
+Response (`200`): All columns from `teacher_applications` table + related invite token status (if any).
+
+**POST `/api/admin/applications/{id}/approve`** — Approve application
+
+Request: No body required.
+
+Response (`200`):
+```json
+{
+  "message": "Application approved. Invite email sent.",
+  "invite_token_expires_at": "timestamp"
+}
+```
+
+**POST `/api/admin/applications/{id}/reject`** — Reject application
+
+Request body:
+```json
+{
+  "reason": "string (optional)"
+}
+```
+
+Response (`200`):
+```json
+{
+  "message": "Application rejected. Notification email sent."
+}
+```
+
+**POST `/api/admin/applications/{id}/resend-invite`** — Re-send invite
+
+Request: No body required.
+
+Response (`200`):
+```json
+{
+  "message": "New invite email sent. Previous token invalidated.",
+  "invite_token_expires_at": "timestamp"
+}
+```
+
+### Modified Auth Endpoint
+
+**POST `/api/auth/register`** — Register (with optional invite token)
+
+Request body (updated):
+```json
+{
+  "name": "string (required)",
+  "email": "string (required)",
+  "password": "string (required)",
+  "invite_token": "string (optional — if present, validates and sets role=teacher)"
+}
+```
+
+Response: Same as existing auth response (`IAuthResponse` with user + tokens).
+
 ---
 
 ## Frontend Pages
@@ -171,7 +333,7 @@ Already has `role ENUM('student', 'teacher', 'admin')`.
 | `/admin` (layout) | `AdminLayout` | Full-viewport admin shell (sidebar + header + role guard) |
 | `/admin/teacher-requests` | `TeacherRequests` | Filterable, searchable, paginated list |
 | `/admin/teacher-requests/[id]` | `TeacherRequestDetail` | Full detail + approve/reject/resend actions |
-| `/teacher/onboarding` | `TeacherOnboarding` | Profile enrichment form — bio, profile photo upload, designation, department confirmation. Data needed to display teacher on the About/team page |
+| `/teacher/onboarding` | `TeacherOnboarding` | Profile enrichment form — bio, profile photo upload (Supabase Storage), designation, department confirmation. Data needed to display teacher on the About/team page |
 
 ### Modified Pages
 | Route | Change |
@@ -213,7 +375,7 @@ Already has `role ENUM('student', 'teacher', 'admin')`.
 | Trigger | Subject | Key Content |
 |---------|---------|-------------|
 | Application submitted (to applicant) | "Application Received" | Confirmation, app ID, status check link |
-| Application submitted (to admin) | "New Teacher Application" | Applicant name, subject area, link to `/admin/teacher-requests/{id}` for review |
+| Application submitted (to admin) | "New Teacher Application" | Applicant name, subject area, link to `/admin/teacher-requests/{id}` for review. Sent to all users with `role='admin'` (queried from DB). |
 | Admin approves | "You're Approved!" | CTA button to `/signup?invite=<token>`, 72h expiry notice |
 | Admin rejects | "Application Update" | Polite regret, optional reason, encouragement |
 
@@ -237,7 +399,7 @@ Backend: `backend/app/services/email_service.py` using `resend` Python SDK.
 
 ---
 
-## Implementation Sequence (18 PRs)
+## Implementation Sequence (19 PRs)
 
 Small, focused PRs — each touches only a few files.
 
@@ -267,7 +429,8 @@ Small, focused PRs — each touches only a few files.
 | 15 | `feature/application-status-page` | `/application-status` status check page | `app/application-status/`, `src/views/ApplicationStatus/` |
 | 16 | `feature/admin-shell` | Admin layout (sidebar + header + role guard) + `adminService.ts` | `app/admin/layout.tsx`, `src/views/Admin/AdminLayout/`, `src/components/admin/`, `src/services/adminService.ts` |
 | 17 | `feature/admin-teacher-requests` | Admin teacher requests list + detail + actions | `app/admin/teacher-requests/`, `src/views/Admin/TeacherRequests/`, `src/views/Admin/TeacherRequestDetail/`, `src/components/admin/ApplicationActions/` |
-| 18 | `feature/invite-signup-onboarding` | Modified `/signup` (invite token handling + inline error card for expired/invalid tokens) + `/teacher/onboarding` page (profile enrichment: bio, photo, designation, department) | `src/views/Signup/index.tsx`, `src/services/authService.ts`, `src/context/AuthContext.tsx`, `app/teacher/onboarding/`, `src/views/Teacher/Onboarding/` |
+| 18 | `feature/invite-signup-flow` | Modified `/signup` (invite token handling + inline error card for expired/invalid tokens) | `src/views/Signup/index.tsx`, `src/services/authService.ts`, `src/context/AuthContext.tsx` |
+| 19 | `feature/teacher-onboarding` | `/teacher/onboarding` page — profile enrichment form (bio, designation, department) + Supabase Storage photo upload | `app/teacher/onboarding/`, `src/views/Teacher/Onboarding/`, Supabase Storage config |
 
 ---
 

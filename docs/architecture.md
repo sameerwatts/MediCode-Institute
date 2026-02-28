@@ -9,10 +9,10 @@
 └──────────┬──────────┬──────────┬──────────┬─────────────────────┘
            │          │          │          │
            ▼          ▼          ▼          ▼
-     ┌──────────┐ ┌────────┐ ┌───────┐ ┌──────────┐
-     │  Custom  │ │YouTube │ │ Jitsi │ │Cloudinary│
-     │JWT (API) │ │ Embed  │ │ Meet  │ │  (Files) │
-     └────┬─────┘ └────────┘ └───────┘ └──────────┘
+     ┌──────────┐ ┌────────┐ ┌───────┐ ┌───────────────┐
+     │  Custom  │ │YouTube │ │ Jitsi │ │   Supabase    │
+     │JWT (API) │ │ Embed  │ │ Meet  │ │Storage (Files)│
+     └────┬─────┘ └────────┘ └───────┘ └───────────────┘
           │ (Bearer token)
           ▼
 ┌─────────────────────────────────────────────────────────────────┐
@@ -36,7 +36,7 @@
 **Architecture Pattern:** Three-tier (Presentation → Application → Data)
 - **Presentation:** Next.js App (SSR/SSG) handles all UI, sends Bearer JWT tokens to FastAPI
 - **Application:** FastAPI REST API handles business logic, data validation, authorization, and JWT issuance
-- **Data:** Supabase PostgreSQL stores all structured data; Cloudinary stores files
+- **Data:** Supabase PostgreSQL stores all structured data; Supabase Storage stores files
 
 ---
 
@@ -63,7 +63,7 @@
 | Migrations | Alembic |
 | Auth | Custom JWT — python-jose (token signing/verification), bcrypt (password hashing) |
 | CORS | FastAPI CORSMiddleware |
-| File URLs | Cloudinary SDK |
+| File URLs | Supabase Python client (`supabase-py`) |
 | Payments | Razorpay Python SDK |
 
 ### 2.3 Database (Supabase PostgreSQL)
@@ -77,7 +77,7 @@
 |---------|---------|-------------|
 | YouTube | Video hosting and playback | Embed in frontend |
 | Jitsi | Live class video conferencing | Embed in frontend |
-| Cloudinary | PDF/image storage (notes, solutions) | Upload from frontend, URL stored in DB |
+| Supabase Storage | PDF/image storage (notes, solutions) | Upload from frontend, URL stored in DB |
 | Razorpay | Payments with 80/20 split | Checkout in frontend, webhook to backend |
 
 ---
@@ -149,14 +149,14 @@ Student gets access to paid content (live classes, premium)
 
 ### 3.5 Notes/PDF Upload Flow
 ```
-Teacher selects PDF → Next.js → Cloudinary Upload Widget → Cloudinary
+Teacher selects PDF → Next.js → Supabase Storage Upload Widget → Supabase Storage
         │                                                     │
         │                                          Returns file URL
         ▼                                                     │
 Flask API ← ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┘
         │ (stores URL + metadata in DB)
         ▼
-Student browses notes → Flask API → Returns Cloudinary URL → Download/View
+Student browses notes → Flask API → Returns Supabase Storage URL → Download/View
 ```
 
 ### 3.6 Quiz / Exam Flow
@@ -200,7 +200,7 @@ Teacher reviews/grades → Flask API → Updates score → Student sees result
 | title | VARCHAR | Course name |
 | description | TEXT | Course description |
 | category | ENUM | 'medical', 'computer_science' |
-| thumbnail_url | VARCHAR | Cloudinary image URL |
+| thumbnail_url | VARCHAR | Supabase Storage image URL |
 | price | DECIMAL | Course price (0 = free) |
 | is_published | BOOLEAN | Visibility status |
 | created_at | TIMESTAMP | Creation date |
@@ -220,7 +220,7 @@ Teacher reviews/grades → Flask API → Updates score → Student sees result
 | topic_id | UUID (FK → Topics) | Parent topic |
 | title | VARCHAR | Lesson title |
 | youtube_url | VARCHAR | YouTube video link |
-| notes_url | VARCHAR | Cloudinary PDF link |
+| notes_url | VARCHAR | Supabase Storage PDF link |
 | order | INTEGER | Display order within topic |
 | duration_minutes | INTEGER | Video duration |
 
@@ -302,7 +302,7 @@ Teacher reviews/grades → Flask API → Updates score → Student sees result
 | title | VARCHAR | Blog title |
 | content | TEXT | Blog body (markdown) |
 | category | ENUM | 'news', 'exam_update', 'article' |
-| thumbnail_url | VARCHAR | Cloudinary image URL |
+| thumbnail_url | VARCHAR | Supabase Storage image URL |
 | is_published | BOOLEAN | Visibility |
 | published_at | TIMESTAMP | Publish date |
 
@@ -522,7 +522,7 @@ medicode-backend/
 | Webhook Verification | Verify Razorpay webhook signature before processing payments |
 | SQL Injection | SQLAlchemy ORM parameterizes all queries |
 | XSS | Next.js/React auto-escapes JSX output; sanitize any user-generated HTML (blogs) |
-| File Uploads | Files go to Cloudinary (not our server), validated for type and size |
+| File Uploads | Files go to Supabase Storage (not our server), validated for type and size |
 
 ---
 
@@ -537,17 +537,17 @@ medicode-backend/
                             │
               ┌─────────────┴─────────────┐
               ▼                           ▼
-       ┌───────────┐               ┌───────────┐
-       │Cloudinary │               │ Razorpay  │
-       │  (Files)  │               │(Payments) │
-       └───────────┘               └───────────┘
+       ┌───────────────┐           ┌───────────┐
+       │   Supabase    │           │ Razorpay  │
+       │Storage (Files)│           │(Payments) │
+       └───────────────┘           └───────────┘
 ```
 
 ### Deployment Steps (when ready)
 1. **Frontend:** Push to GitHub → Vercel auto-deploys from main branch
 2. **Backend:** Push to GitHub → Render auto-deploys from main branch (Uvicorn + FastAPI)
 3. **Database:** Supabase project created, connection string added to Render env vars
-4. **Environment Variables:** Set JWT secret, Cloudinary keys, Razorpay keys in Render dashboard
+4. **Environment Variables:** Set JWT secret, Supabase keys, Razorpay keys in Render dashboard
 
 ### MVP Deployment (frontend only)
 - Just deploy Next.js app to Vercel with dummy data — no backend needed yet

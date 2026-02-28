@@ -1,7 +1,7 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — 18-PR architecture plan finalized. Docs reorganized into `docs/` folder. Starting backend PRs next.
+**Become a Teacher Feature** — 19-PR architecture plan finalized with full API schemas, pagination spec, Supabase Storage for photos, and admin notification emails. Docs reorganized into `docs/` folder. Starting backend PRs next.
 
 ## Current Branch
 `docs/move-docs-to-folder-and-add-teacher-plan` — docs reorganization + teacher architecture plan.
@@ -52,20 +52,21 @@
 - [x] `deployment-workflow.md` updated — Step 3 added (update changelog + project_status before every push)
 - [x] 177 tests passing across 27 suites — added 39 tests for 7 previously untested components (HeroSection, FeaturesSection, StatsSection, CTASection, WelcomeBanner, PageShiftWrapper, SidebarDrawer)
 - [x] All project docs moved to `docs/` folder (CLAUDE.md, architecture.md, brainstorm.md, deployment-workflow.md, project_status.md, CHANGELOG.md, vercel-deployment-plan.md)
-- [x] `docs/become-a-teacher-architecture.md` — complete 18-PR plan for teacher onboarding pipeline
+- [x] `docs/become-a-teacher-architecture.md` — complete 19-PR plan for teacher onboarding pipeline (with API schemas, pagination spec, Supabase Storage, admin notifications)
 
 ## What's Next
-- [ ] **Become a Teacher Feature (18 PRs):**
+- [ ] **Become a Teacher Feature (19 PRs):**
   - [ ] PR 1–2: Backend DB models (TeacherApplication + InviteToken)
   - [ ] PR 3: Admin CLI command
   - [ ] PR 4–6: Role dependencies, schemas, invite service
   - [ ] PR 7–8: Application + admin API routes
   - [ ] PR 9: Modified auth register (invite token support)
-  - [ ] PR 10: Email service (Resend)
+  - [ ] PR 10: Email service (Resend + admin notifications)
   - [ ] PR 11–13: Frontend shared components (FormTextarea, FormRadioGroup, Modal, StatusBadge)
-  - [ ] PR 14–15: Become a Teacher page + Application Status page
+  - [ ] PR 14–15: Become a Teacher page (+ footer link + home CTA) + Application Status page
   - [ ] PR 16–17: Admin shell + teacher requests dashboard
-  - [ ] PR 18: Invite signup flow + teacher onboarding
+  - [ ] PR 18: Invite signup flow (with expired token error card)
+  - [ ] PR 19: Teacher onboarding page (profile enrichment + Supabase Storage photo upload)
 - [ ] Course detail page (`/courses/[slug]`)
 - [ ] Quiz-taking functionality
 - [ ] Blog detail page (`/blogs/[slug]`)
@@ -83,7 +84,7 @@
 | Auth | Custom JWT — bcrypt + python-jose (later) |
 | Videos | YouTube embedded/linked |
 | Live classes | Jitsi integration |
-| File storage | Cloudinary |
+| File storage | Supabase Storage |
 | Payments | Razorpay (India) / Stripe (global) |
 | Revenue split | 80% instructor / 20% platform |
 | Hosting | Vercel (frontend) + Render (backend) |
@@ -94,4 +95,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-02-27
+2026-02-28

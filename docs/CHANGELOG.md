@@ -9,11 +9,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ## [Unreleased]
 
 ### Added
-- `docs/become-a-teacher-architecture.md` — complete 18-PR architecture plan for gated teacher onboarding pipeline (application form → admin review → invite token → teacher signup → onboarding)
+- `docs/become-a-teacher-architecture.md` — complete 19-PR architecture plan for gated teacher onboarding pipeline (application form → admin review → invite token → teacher signup → onboarding)
+- Full API request/response schemas for all 11 endpoints (public, admin, modified auth)
+- Admin pagination specification (10/page, newest first, searchable by name/email, status filter)
+- Admin notification email on new teacher applications (sent to all admin-role users from DB)
 
 ### Changed
 - Moved all project docs (CLAUDE.md, architecture.md, brainstorm.md, deployment-workflow.md, project_status.md, CHANGELOG.md, vercel-deployment-plan.md) from project root into `docs/` folder — README.md stays at root
 - Fixed `.env.example` link in CLAUDE.md to point to `../backend/.env.example`
+- **Replaced Cloudinary with Supabase Storage** for all file storage (teacher photos, future CV uploads) across all docs, config, and architecture files
+- Split PR 18 into PR 18 (invite signup flow) + PR 19 (teacher onboarding with Supabase Storage photo upload)
+- Updated `next.config.ts` image hostname from `res.cloudinary.com` to `*.supabase.co`
 
 ---
 
