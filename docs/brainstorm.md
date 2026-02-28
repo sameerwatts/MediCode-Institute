@@ -61,7 +61,7 @@
 ### Storage & Media
 - **Videos:** YouTube (embedded/linked, no local storage)
 - **Live classes:** Jitsi (free, open-source)
-- **Files (PDFs, images):** Cloudinary (free — 25GB)
+- **Files (PDFs, images):** Supabase Storage (1GB free, integrated with Supabase DB)
 
 ### Payments (later)
 - **India:** Razorpay (with route-based split for revenue sharing)
