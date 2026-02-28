@@ -15,6 +15,9 @@ MediCode Institute needs a way for aspiring teachers to apply, get vetted by an 
 | Admin panel | **Full shell** — sidebar + role guard, teacher requests as first module, future-proofed |
 | Email service | **Resend** — 3,000 emails/month free, modern DX |
 | Admin creation | **CLI command** — server-side only, no public signup for admins |
+| Entry point | **Footer link + Home page CTA section** — matches Udemy/Skillshare pattern, keeps navbar clean for learners |
+| CV upload | **Deferred** — `resume_url` column stays nullable, no Cloudinary upload widget in v1 |
+| Rate limiting | **Deferred** — duplicate-pending check is sufficient for v1, add IP-based throttling later if needed |
 
 ---
 
@@ -55,15 +58,16 @@ python -m backend.app.cli.create_admin --name "Sameer" --email "admin@medicode.c
 ```
 1. Visitor → /become-a-teacher → fills detailed form → submits
 2. POST /api/applications → row created (status: "pending")
-3. "Application Received" email sent with application ID
-4. Admin → /admin/teacher-requests → reviews → clicks Approve
-5. POST /api/admin/applications/{id}/approve
+3. "Application Received" email sent to applicant with application ID
+4. "New Teacher Application" notification email sent to admin
+5. Admin → /admin/teacher-requests → reviews → clicks Approve
+6. POST /api/admin/applications/{id}/approve
    → status="approved", invite token generated (64-char hex, 72h expiry)
    → "You're Approved!" email with /signup?invite=<token>
-6. Applicant → /signup?invite=<token> → validates token → pre-fills name+email (locked)
-7. POST /api/auth/register { name, email, password, invite_token }
+7. Applicant → /signup?invite=<token> → validates token → pre-fills name+email (locked)
+8. POST /api/auth/register { name, email, password, invite_token }
    → creates user with role="teacher", consumes token, sets app status="registered"
-8. Redirects to /teacher/onboarding → review/enrich profile
+9. Redirects to /teacher/onboarding → profile enrichment (bio, photo, designation, department)
 ```
 
 ### Rejection Path
@@ -92,7 +96,7 @@ Admin → approved app with expired token → clicks "Re-send Invite" → old to
 | qualifications | TEXT NOT NULL | |
 | experience_years | INTEGER NOT NULL | |
 | teaching_philosophy | TEXT NOT NULL | |
-| resume_url | VARCHAR(500) nullable | Cloudinary URL (optional) |
+| resume_url | VARCHAR(500) nullable | Cloudinary URL (optional — deferred to v2, no upload in v1) |
 | status | VARCHAR(20) NOT NULL DEFAULT 'pending' | CHECK: pending/approved/rejected/registered |
 | admin_notes | TEXT nullable | Rejection reason or comments |
 | reviewed_by | UUID FK → users(id) nullable | |
@@ -167,11 +171,12 @@ Already has `role ENUM('student', 'teacher', 'admin')`.
 | `/admin` (layout) | `AdminLayout` | Full-viewport admin shell (sidebar + header + role guard) |
 | `/admin/teacher-requests` | `TeacherRequests` | Filterable, searchable, paginated list |
 | `/admin/teacher-requests/[id]` | `TeacherRequestDetail` | Full detail + approve/reject/resend actions |
-| `/teacher/onboarding` | `TeacherOnboarding` | Post-signup profile completion |
+| `/teacher/onboarding` | `TeacherOnboarding` | Profile enrichment form — bio, profile photo upload, designation, department confirmation. Data needed to display teacher on the About/team page |
 
 ### Modified Pages
 | Route | Change |
 |-------|--------|
+| `/` (Home) | Add a "Share Your Expertise" CTA section (below courses/teachers) linking to `/become-a-teacher` |
 | `/signup` | Detect `?invite=` token → call `validate-invite` API → **Valid token:** pre-fill name+email (locked), include token in register request, redirect to `/teacher/onboarding` — **Expired/invalid/used token:** hide the signup form, show an inline error card with message (e.g. "This invite link has expired") and a "Check Application Status" link to `/application-status` (no new page needed — conditional render within the same `/signup` page) |
 
 ### New Shared Components
@@ -192,6 +197,8 @@ Already has `role ENUM('student', 'teacher', 'admin')`.
 | `src/services/authService.ts` | Add `inviteToken` param to signup, add `validateInviteToken()` |
 | `src/context/AuthContext.tsx` | Update signup signature to accept `inviteToken?` |
 | `src/types/index.ts` | Add `ITeacherApplication`, `IApplicationStatusCheck`, `IInviteValidation` |
+| `src/components/layout/Footer/index.tsx` | Add "Become a Teacher" link to footer |
+| `src/views/Home/index.tsx` | Add "Share Your Expertise" CTA section linking to `/become-a-teacher` |
 
 ### New Service Files
 | File | Functions |
@@ -205,7 +212,8 @@ Already has `role ENUM('student', 'teacher', 'admin')`.
 
 | Trigger | Subject | Key Content |
 |---------|---------|-------------|
-| Application submitted | "Application Received" | Confirmation, app ID, status check link |
+| Application submitted (to applicant) | "Application Received" | Confirmation, app ID, status check link |
+| Application submitted (to admin) | "New Teacher Application" | Applicant name, subject area, link to `/admin/teacher-requests/{id}` for review |
 | Admin approves | "You're Approved!" | CTA button to `/signup?invite=<token>`, 72h expiry notice |
 | Admin rejects | "Application Update" | Polite regret, optional reason, encouragement |
 
@@ -225,6 +233,7 @@ Backend: `backend/app/services/email_service.py` using `resend` Python SDK.
 | Token used twice | "This invite link has already been used" |
 | Email already registered | 409: "Account already exists" |
 | Email send fails | Log error, don't fail approval. Admin can re-send. |
+| Admin notification email fails | Log error, don't fail application submission. Admin can check dashboard manually. |
 
 ---
 
@@ -245,7 +254,7 @@ Small, focused PRs — each touches only a few files.
 | 7 | `feature/application-routes` | Public application endpoints (submit + check status) | `routers/applications.py`, `main.py` |
 | 8 | `feature/admin-routes` | Admin endpoints (list, detail, approve, reject, resend) | `routers/admin.py`, `main.py` |
 | 9 | `feature/modify-auth-register` | Add `invite_token` to register + `validate-invite` endpoint | `routers/auth.py`, `schemas/auth.py`, `services/auth_service.py` |
-| 10 | `feature/email-service` | Resend email service (received, approved, rejected emails) | `services/email_service.py`, `config.py`, wire into routers |
+| 10 | `feature/email-service` | Resend email service (received, approved, rejected, admin notification emails) | `services/email_service.py`, `config.py`, wire into routers |
 
 ### Frontend PRs
 
@@ -254,11 +263,11 @@ Small, focused PRs — each touches only a few files.
 | 11 | `feature/form-textarea` | `FormTextarea` component + tests | `src/components/common/FormTextarea/` |
 | 12 | `feature/form-radio-group` | `FormRadioGroup` component + tests | `src/components/common/FormRadioGroup/` |
 | 13 | `feature/modal-status-badge` | `Modal` + `StatusBadge` components + tests | `src/components/common/Modal/`, `src/components/common/StatusBadge/` |
-| 14 | `feature/become-a-teacher-page` | `/become-a-teacher` application form page + `applicationService.ts` + types | `app/become-a-teacher/`, `src/views/BecomeATeacher/`, `src/services/applicationService.ts`, `src/types/index.ts` |
+| 14 | `feature/become-a-teacher-page` | `/become-a-teacher` application form page + `applicationService.ts` + types + footer link + home page CTA section | `app/become-a-teacher/`, `src/views/BecomeATeacher/`, `src/services/applicationService.ts`, `src/types/index.ts`, `src/components/layout/Footer/index.tsx`, `src/views/Home/index.tsx` |
 | 15 | `feature/application-status-page` | `/application-status` status check page | `app/application-status/`, `src/views/ApplicationStatus/` |
 | 16 | `feature/admin-shell` | Admin layout (sidebar + header + role guard) + `adminService.ts` | `app/admin/layout.tsx`, `src/views/Admin/AdminLayout/`, `src/components/admin/`, `src/services/adminService.ts` |
 | 17 | `feature/admin-teacher-requests` | Admin teacher requests list + detail + actions | `app/admin/teacher-requests/`, `src/views/Admin/TeacherRequests/`, `src/views/Admin/TeacherRequestDetail/`, `src/components/admin/ApplicationActions/` |
-| 18 | `feature/invite-signup-onboarding` | Modified `/signup` (invite token handling) + `/teacher/onboarding` page | `src/views/Signup/index.tsx`, `src/services/authService.ts`, `src/context/AuthContext.tsx`, `app/teacher/onboarding/`, `src/views/Teacher/Onboarding/` |
+| 18 | `feature/invite-signup-onboarding` | Modified `/signup` (invite token handling + inline error card for expired/invalid tokens) + `/teacher/onboarding` page (profile enrichment: bio, photo, designation, department) | `src/views/Signup/index.tsx`, `src/services/authService.ts`, `src/context/AuthContext.tsx`, `app/teacher/onboarding/`, `src/views/Teacher/Onboarding/` |
 
 ---
 
