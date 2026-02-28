@@ -172,7 +172,7 @@ Already has `role ENUM('student', 'teacher', 'admin')`.
 ### Modified Pages
 | Route | Change |
 |-------|--------|
-| `/signup` | Detect `?invite=` token → validate → pre-fill name+email (locked) → include in register request → redirect to `/teacher/onboarding` |
+| `/signup` | Detect `?invite=` token → call `validate-invite` API → **Valid token:** pre-fill name+email (locked), include token in register request, redirect to `/teacher/onboarding` — **Expired/invalid/used token:** hide the signup form, show an inline error card with message (e.g. "This invite link has expired") and a "Check Application Status" link to `/application-status` (no new page needed — conditional render within the same `/signup` page) |
 
 ### New Shared Components
 | Component | Location | Purpose |
