@@ -132,4 +132,9 @@ describe('BecomeATeacher', () => {
     render(<BecomeATeacher />);
     expect(screen.queryByText(/Application Submitted/i)).not.toBeInTheDocument();
   });
+
+  it('renders an "Already applied?" link to application-status page', () => {
+    render(<BecomeATeacher />);
+    expect(screen.getByRole('link', { name: /Check your status/i })).toBeInTheDocument();
+  });
 });

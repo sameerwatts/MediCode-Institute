@@ -39,6 +39,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Footer updated with "Become a Teacher" link under Quick Links
 - Home page updated with "Share Your Expertise" CTA section linking to `/become-a-teacher`
 - 13 new tests for `BecomeATeacher` — total now 235 tests across 32 suites
+- `/application-status` page (`app/application-status/`, `src/views/ApplicationStatus/`) — status check form (email + application ID); shows `StatusBadge`, status message, submitted/reviewed dates; server error banner on not-found or API errors; link back to `/become-a-teacher`
+- 13 new tests for `ApplicationStatus` — total now 248 tests across 33 suites
 
 ### Changed
 - Application submission (`POST /api/applications`) now sends confirmation email to applicant and notification emails to all admin users
