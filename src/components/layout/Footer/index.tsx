@@ -21,6 +21,7 @@ const Footer: React.FC = () => {
           <Link href="/courses" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">All Courses</Link>
           <Link href="/about" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">About Us</Link>
           <Link href="/blogs" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Blog</Link>
+          <Link href="/become-a-teacher" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Become a Teacher</Link>
         </div>
 
         <div>

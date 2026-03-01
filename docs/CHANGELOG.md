@@ -33,6 +33,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - `Modal` component (`src/components/common/Modal/`) — accessible dialog with backdrop overlay, title, children slot, confirm/cancel actions, configurable confirm variant (primary/danger); closes on backdrop or X button click
 - `StatusBadge` component (`src/components/common/StatusBadge/`) — colored pill badge for application statuses: pending (yellow), approved (green), rejected (red), registered (blue)
 - 21 new tests for `Modal` + `StatusBadge` — total now 222 tests across 31 suites
+- `/become-a-teacher` page (`app/become-a-teacher/`, `src/views/BecomeATeacher/`) — public application form (RHF + Zod) with 7 fields: name, email, phone, subject area (radio), experience years, qualifications, teaching philosophy; shows success card with application ID on submit, server error banner on failure
+- `applicationService.ts` (`src/services/applicationService.ts`) — `submitApplication()` and `checkApplicationStatus()` API calls (axios, follows authService pattern)
+- Types added to `src/types/index.ts` — `TApplicationStatus`, `TSubjectArea`, `ITeacherApplication`, `IApplicationSubmitResponse`, `IApplicationStatusCheck`, `IInviteValidation`
+- Footer updated with "Become a Teacher" link under Quick Links
+- Home page updated with "Share Your Expertise" CTA section linking to `/become-a-teacher`
+- 13 new tests for `BecomeATeacher` — total now 235 tests across 32 suites
 
 ### Changed
 - Application submission (`POST /api/applications`) now sends confirmation email to applicant and notification emails to all admin users
