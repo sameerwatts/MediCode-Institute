@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 6 of 19: invite token service.
+**Become a Teacher Feature** — PR 7 of 19: public application routes.
 
 ## Current Branch
-`feature/invite-service` — Invite token generation, validation, and consumption logic (PR 6/19).
+`feature/application-routes` — Public application endpoints: submit + check status (PR 7/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -59,6 +59,7 @@
 - [x] `require_admin` and `require_teacher` FastAPI dependencies (PR 4/19 of become-a-teacher feature)
 - [x] Pydantic application schemas (PR 5/19 of become-a-teacher feature)
 - [x] Invite token service (PR 6/19 of become-a-teacher feature)
+- [x] Public application routes (PR 7/19 of become-a-teacher feature)
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
@@ -68,6 +69,7 @@
   - [x] PR 4: Role dependencies
   - [x] PR 5: Application schemas
   - [x] PR 6: Invite service
+  - [x] PR 7: Public application routes
   - [ ] PR 7–8: Application + admin API routes
   - [ ] PR 9: Modified auth register (invite token support)
   - [ ] PR 10: Email service (Resend + admin notifications)
