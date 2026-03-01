@@ -26,6 +26,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - `GET /api/auth/validate-invite?token=` endpoint — read-only invite token validation, returns applicant name/email if valid or reason (expired/used/invalid) if not
 - Email service (`backend/app/services/email_service.py`) using Resend Python SDK — 4 email functions: application received (to applicant), new application (to all admins), application approved (invite link with 72h expiry), application rejected (with optional reason); all fire-and-forget (failures logged, never block the operation)
 - `resend_api_key`, `email_from`, and `frontend_url` settings in `config.py` + `.env.example` — empty API key disables emails in development
+- `FormTextarea` component (`src/components/common/FormTextarea/`) — textarea with label, error state, character count, configurable rows and maxLength; follows FormInput pattern with Tailwind styling
+- 14 new tests for `FormTextarea` — total now 191 tests across 28 suites
 
 ### Changed
 - Application submission (`POST /api/applications`) now sends confirmation email to applicant and notification emails to all admin users
