@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 8 of 19: admin application routes.
+**Become a Teacher Feature** — PR 9 of 19: modified auth register with invite token support.
 
 ## Current Branch
-`feature/admin-routes` — Admin endpoints: list, detail, approve, reject, resend invite (PR 8/19).
+`feature/invite-auth-register` — Add invite_token to register + validate-invite endpoint (PR 9/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -61,6 +61,7 @@
 - [x] Invite token service (PR 6/19 of become-a-teacher feature)
 - [x] Public application routes (PR 7/19 of become-a-teacher feature)
 - [x] Admin application routes — 5 endpoints: paginated list (search/filter), detail (with invite token status), approve, reject, resend invite (PR 8/19 of become-a-teacher feature)
+- [x] Modified auth register with invite token support + validate-invite endpoint (PR 9/19 of become-a-teacher feature)
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
@@ -72,7 +73,7 @@
   - [x] PR 6: Invite service
   - [x] PR 7: Public application routes
   - [x] PR 8: Admin application routes
-  - [ ] PR 9: Modified auth register (invite token support)
+  - [x] PR 9: Modified auth register (invite token support)
   - [ ] PR 10: Email service (Resend + admin notifications)
   - [ ] PR 11–13: Frontend shared components (FormTextarea, FormRadioGroup, Modal, StatusBadge)
   - [ ] PR 14–15: Become a Teacher page (+ footer link + home CTA) + Application Status page

@@ -23,6 +23,7 @@ class RegisterRequest(BaseModel):
     name: str
     email: EmailStr
     password: str
+    invite_token: Optional[str] = None  # If present → validate + set role=teacher
 
 
 class LoginRequest(BaseModel):

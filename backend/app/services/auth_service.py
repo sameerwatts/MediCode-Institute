@@ -95,17 +95,20 @@ def get_user_by_id(db: Session, user_id: str) -> Optional[User]:
     return db.query(User).filter(User.id == user_id).first()
 
 
-def create_user(db: Session, name: str, email: str, password: str) -> User:
+def create_user(
+    db: Session, name: str, email: str, password: str, role: str = "student"
+) -> User:
     """
     Create a new user with a hashed password.
     db.refresh(user) re-fetches the row from the DB so that auto-generated
     fields like `id` and `created_at` are populated on the returned object.
+    role defaults to 'student'; pass 'teacher' for invite-based registration.
     """
     user = User(
         name=name.strip(),
         email=email.lower().strip(),
         password_hash=hash_password(password),
-        role="student",
+        role=role,
     )
     db.add(user)
     db.commit()
