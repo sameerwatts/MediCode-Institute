@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 2 of 19: InviteToken model + Alembic migration.
+**Become a Teacher Feature** — PR 3 of 19: create_admin CLI command.
 
 ## Current Branch
-`feature/invite-token-model` — InviteToken SQLAlchemy model + migration (PR 2/19).
+`feature/create-admin-cli` — CLI command for admin account provisioning (PR 3/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -55,12 +55,13 @@
 - [x] `docs/become-a-teacher-architecture.md` — complete 19-PR plan for teacher onboarding pipeline (with API schemas, pagination spec, Supabase Storage, admin notifications)
 - [x] `TeacherApplication` SQLAlchemy model + Alembic migration (PR 1/19 of become-a-teacher feature)
 - [x] `InviteToken` SQLAlchemy model + Alembic migration (PR 2/19 of become-a-teacher feature)
+- [x] `create_admin` CLI command (PR 3/19 of become-a-teacher feature)
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
   - [x] PR 1: TeacherApplication model + migration
   - [x] PR 2: InviteToken model + migration
-  - [ ] PR 3: Admin CLI command
+  - [x] PR 3: Admin CLI command
   - [ ] PR 4–6: Role dependencies, schemas, invite service
   - [ ] PR 7–8: Application + admin API routes
   - [ ] PR 9: Modified auth register (invite token support)
