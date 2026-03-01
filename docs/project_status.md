@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — 19-PR architecture plan finalized with full API schemas, pagination spec, Supabase Storage for photos, and admin notification emails. Docs reorganized into `docs/` folder. Starting backend PRs next.
+**Become a Teacher Feature** — PR 1 of 19: TeacherApplication model + Alembic migration.
 
 ## Current Branch
-`docs/move-docs-to-folder-and-add-teacher-plan` — docs reorganization + teacher architecture plan.
+`feature/teacher-app-model` — TeacherApplication SQLAlchemy model + migration (PR 1/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -53,10 +53,12 @@
 - [x] 177 tests passing across 27 suites — added 39 tests for 7 previously untested components (HeroSection, FeaturesSection, StatsSection, CTASection, WelcomeBanner, PageShiftWrapper, SidebarDrawer)
 - [x] All project docs moved to `docs/` folder (CLAUDE.md, architecture.md, brainstorm.md, deployment-workflow.md, project_status.md, CHANGELOG.md, vercel-deployment-plan.md)
 - [x] `docs/become-a-teacher-architecture.md` — complete 19-PR plan for teacher onboarding pipeline (with API schemas, pagination spec, Supabase Storage, admin notifications)
+- [x] `TeacherApplication` SQLAlchemy model + Alembic migration (PR 1/19 of become-a-teacher feature)
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
-  - [ ] PR 1–2: Backend DB models (TeacherApplication + InviteToken)
+  - [x] PR 1: TeacherApplication model + migration
+  - [ ] PR 2: InviteToken model + migration
   - [ ] PR 3: Admin CLI command
   - [ ] PR 4–6: Role dependencies, schemas, invite service
   - [ ] PR 7–8: Application + admin API routes
