@@ -18,6 +18,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Pydantic request/response schemas for teacher applications (`backend/app/schemas/application.py`) — covers submit, status check, admin list/detail/approve/reject/resend, and invite token validation
 - Invite token service (`backend/app/services/invite_service.py`) — generate (256-bit cryptographic token, 72h expiry, auto-invalidates old tokens), validate (checks expired/used/invalid), and consume (marks as used) logic
 - Public application API routes (`backend/app/routers/applications.py`) — `POST /api/applications` (submit with duplicate-pending/approved checks) and `GET /api/applications/status` (check by email + application_id)
+- Admin application API routes (`backend/app/routers/admin.py`) — 5 endpoints: paginated list (search by name/email, filter by status, 10/page), full detail (with invite token status), approve (generates invite token), reject (optional reason), resend invite (invalidates old token)
 - `docs/become-a-teacher-architecture.md` — complete 19-PR architecture plan for gated teacher onboarding pipeline (application form → admin review → invite token → teacher signup → onboarding)
 - Full API request/response schemas for all 11 endpoints (public, admin, modified auth)
 - Admin pagination specification (10/page, newest first, searchable by name/email, status filter)

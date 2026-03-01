@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 7 of 19: public application routes.
+**Become a Teacher Feature** — PR 8 of 19: admin application routes.
 
 ## Current Branch
-`feature/application-routes` — Public application endpoints: submit + check status (PR 7/19).
+`feature/admin-routes` — Admin endpoints: list, detail, approve, reject, resend invite (PR 8/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -60,6 +60,7 @@
 - [x] Pydantic application schemas (PR 5/19 of become-a-teacher feature)
 - [x] Invite token service (PR 6/19 of become-a-teacher feature)
 - [x] Public application routes (PR 7/19 of become-a-teacher feature)
+- [x] Admin application routes — 5 endpoints: paginated list (search/filter), detail (with invite token status), approve, reject, resend invite (PR 8/19 of become-a-teacher feature)
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
@@ -70,7 +71,7 @@
   - [x] PR 5: Application schemas
   - [x] PR 6: Invite service
   - [x] PR 7: Public application routes
-  - [ ] PR 7–8: Application + admin API routes
+  - [x] PR 8: Admin application routes
   - [ ] PR 9: Modified auth register (invite token support)
   - [ ] PR 10: Email service (Resend + admin notifications)
   - [ ] PR 11–13: Frontend shared components (FormTextarea, FormRadioGroup, Modal, StatusBadge)
@@ -106,4 +107,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-02-28
+2026-03-01
