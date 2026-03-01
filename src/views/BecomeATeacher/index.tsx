@@ -119,9 +119,15 @@ const BecomeATeacher: React.FC = () => {
       <div className="w-full max-w-2xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg p-8">
           <h1 className="text-h2 font-extrabold text-dark mb-2">Become a Teacher</h1>
-          <p className="text-body text-dark-gray mb-8 leading-relaxed">
+          <p className="text-body text-dark-gray mb-2 leading-relaxed">
             Share your expertise with thousands of students. Fill in the form below and
             our team will review your application within 3–5 business days.
+          </p>
+          <p className="text-sm-text text-dark-gray mb-8">
+            Already applied?{' '}
+            <Link href="/application-status" className="text-primary font-semibold hover:underline">
+              Check your status &rarr;
+            </Link>
           </p>
 
           {serverError && (
