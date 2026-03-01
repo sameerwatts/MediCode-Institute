@@ -32,6 +32,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Import Base and all models to register them with Base.metadata
 from app.database import Base
 from app.models import user  # noqa: F401 — import registers the model
+from app.models import teacher_application  # noqa: F401
 
 # Alembic config object (provides access to alembic.ini values)
 config = context.config

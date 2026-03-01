@@ -9,6 +9,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ## [Unreleased]
 
 ### Added
+- `TeacherApplication` SQLAlchemy model (`backend/app/models/teacher_application.py`) — `teacher_applications` table with UUID PK, applicant fields (name, email, phone, subject_area, qualifications, experience_years, teaching_philosophy), status tracking (pending/approved/rejected/registered), admin review fields, and FK references to `users` table
+- Alembic migration for `teacher_applications` table with CHECK constraints on `subject_area` and `status`, email index, and foreign keys to `users`
 - `docs/become-a-teacher-architecture.md` — complete 19-PR architecture plan for gated teacher onboarding pipeline (application form → admin review → invite token → teacher signup → onboarding)
 - Full API request/response schemas for all 11 endpoints (public, admin, modified auth)
 - Admin pagination specification (10/page, newest first, searchable by name/email, status filter)
