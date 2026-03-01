@@ -18,6 +18,13 @@ class Settings(BaseSettings):
     database_url: str
     env: str = "development"  # "development" or "production"
 
+    # Resend email service — get API key from https://resend.com/api-keys
+    resend_api_key: str = ""  # Empty = emails disabled (dev mode)
+    email_from: str = "MediCode Institute <noreply@medicode.institute>"
+
+    # Frontend URL for constructing links in emails
+    frontend_url: str = "http://localhost:3000"
+
     # Comma-separated list of allowed CORS origins.
     # Local dev default covers localhost:3000.
     # On Render, set this env var to your Vercel domain(s).

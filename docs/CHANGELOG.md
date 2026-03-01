@@ -24,8 +24,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Admin pagination specification (10/page, newest first, searchable by name/email, status filter)
 - Admin notification email on new teacher applications (sent to all admin-role users from DB)
 - `GET /api/auth/validate-invite?token=` endpoint — read-only invite token validation, returns applicant name/email if valid or reason (expired/used/invalid) if not
+- Email service (`backend/app/services/email_service.py`) using Resend Python SDK — 4 email functions: application received (to applicant), new application (to all admins), application approved (invite link with 72h expiry), application rejected (with optional reason); all fire-and-forget (failures logged, never block the operation)
+- `resend_api_key`, `email_from`, and `frontend_url` settings in `config.py` + `.env.example` — empty API key disables emails in development
 
 ### Changed
+- Application submission (`POST /api/applications`) now sends confirmation email to applicant and notification emails to all admin users
+- Admin approve/reject/resend-invite endpoints now send corresponding emails to applicants (replaced TODO comments)
 - `POST /api/auth/register` now accepts optional `invite_token` field — if present, validates the token, enforces email match, sets role to `teacher`, consumes the token, and links user to the application (status→registered)
 - `create_user()` in `auth_service.py` now accepts optional `role` parameter (defaults to `student`)
 - `RegisterRequest` schema updated with optional `invite_token: str` field
