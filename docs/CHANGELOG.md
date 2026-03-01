@@ -41,6 +41,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - 13 new tests for `BecomeATeacher` — total now 235 tests across 32 suites
 - `/application-status` page (`app/application-status/`, `src/views/ApplicationStatus/`) — status check form (email + application ID); shows `StatusBadge`, status message, submitted/reviewed dates; server error banner on not-found or API errors; link back to `/become-a-teacher`
 - 13 new tests for `ApplicationStatus` — total now 248 tests across 33 suites
+- Admin shell (`app/admin/layout.tsx`, `src/views/Admin/AdminLayout/`) — full-viewport fixed layout (covers main Navbar/Footer), role guard redirects non-admins to `/login`, renders `AdminSidebar` + `AdminHeader` + page content
+- `AdminSidebar` component — dark sidebar with MediCode brand, Teacher Requests nav link (active-state highlight), Sign Out button
+- `AdminHeader` component — top bar with user initial avatar + name
+- `app/admin/page.tsx` — redirects `/admin` → `/admin/teacher-requests`
+- `adminService.ts` — 5 API functions: `getApplications()`, `getApplicationDetail()`, `approveApplication()`, `rejectApplication()`, `resendInvite()`
+- Admin types added to `src/types/index.ts`: `IAdminApplicationListItem`, `IAdminApplicationDetail`, `IPaginatedApplications`, `IApproveResponse`, `IRejectResponse`, `IResendInviteResponse`
+- 16 new tests for admin shell components — total now 265 tests across 36 suites
 
 ### Changed
 - Application submission (`POST /api/applications`) now sends confirmation email to applicant and notification emails to all admin users
