@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 10 of 19: email service (Resend).
+**Become a Teacher Feature** — PR 11 of 19: FormTextarea component.
 
 ## Current Branch
-`feature/email-service` — Resend email service + wire into application and admin routers (PR 10/19).
+`feature/shared-components` — FormTextarea component + tests (PR 11/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -63,6 +63,8 @@
 - [x] Admin application routes — 5 endpoints: paginated list (search/filter), detail (with invite token status), approve, reject, resend invite (PR 8/19 of become-a-teacher feature)
 - [x] Modified auth register with invite token support + validate-invite endpoint (PR 9/19 of become-a-teacher feature)
 - [x] Email service via Resend — 4 email types (received, admin notification, approved, rejected), wired into application + admin routers (PR 10/19 of become-a-teacher feature)
+- [x] `FormTextarea` component + 14 tests — textarea with label, error state, character count (PR 11/19 of become-a-teacher feature)
+- [x] 191 tests passing across 28 suites
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
@@ -76,7 +78,9 @@
   - [x] PR 8: Admin application routes
   - [x] PR 9: Modified auth register (invite token support)
   - [x] PR 10: Email service (Resend + admin notifications)
-  - [ ] PR 11–13: Frontend shared components (FormTextarea, FormRadioGroup, Modal, StatusBadge)
+  - [x] PR 11: FormTextarea component + tests
+  - [ ] PR 12: FormRadioGroup component + tests
+  - [ ] PR 13: Modal + StatusBadge components + tests
   - [ ] PR 14–15: Become a Teacher page (+ footer link + home CTA) + Application Status page
   - [ ] PR 16–17: Admin shell + teacher requests dashboard
   - [ ] PR 18: Invite signup flow (with expired token error card)
