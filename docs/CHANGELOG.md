@@ -15,6 +15,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Alembic migration for `invite_tokens` table with unique token index and FK to `teacher_applications`
 - `create_admin` CLI command (`backend/app/cli/create_admin.py`) — server-side only script to provision admin accounts via `python -m app.cli.create_admin --name --email --password`; uses bcrypt hashing, duplicate email check, min 8-char password validation
 - `require_admin` and `require_teacher` FastAPI dependencies (`backend/app/dependencies/roles.py`) — role-based access control that builds on `get_current_user`; returns 403 Forbidden if authenticated user lacks the required role
+- Pydantic request/response schemas for teacher applications (`backend/app/schemas/application.py`) — covers submit, status check, admin list/detail/approve/reject/resend, and invite token validation
 - `docs/become-a-teacher-architecture.md` — complete 19-PR architecture plan for gated teacher onboarding pipeline (application form → admin review → invite token → teacher signup → onboarding)
 - Full API request/response schemas for all 11 endpoints (public, admin, modified auth)
 - Admin pagination specification (10/page, newest first, searchable by name/email, status filter)
