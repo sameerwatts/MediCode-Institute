@@ -3,3 +3,4 @@
 # when running --autogenerate to create migration scripts.
 from app.models.user import User  # noqa: F401
 from app.models.teacher_application import TeacherApplication  # noqa: F401
+from app.models.invite_token import InviteToken  # noqa: F401

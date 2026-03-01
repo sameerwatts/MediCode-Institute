@@ -33,6 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.database import Base
 from app.models import user  # noqa: F401 — import registers the model
 from app.models import teacher_application  # noqa: F401
+from app.models import invite_token  # noqa: F401
 
 # Alembic config object (provides access to alembic.ini values)
 config = context.config
