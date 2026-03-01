@@ -23,8 +23,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Full API request/response schemas for all 11 endpoints (public, admin, modified auth)
 - Admin pagination specification (10/page, newest first, searchable by name/email, status filter)
 - Admin notification email on new teacher applications (sent to all admin-role users from DB)
+- `GET /api/auth/validate-invite?token=` endpoint — read-only invite token validation, returns applicant name/email if valid or reason (expired/used/invalid) if not
 
 ### Changed
+- `POST /api/auth/register` now accepts optional `invite_token` field — if present, validates the token, enforces email match, sets role to `teacher`, consumes the token, and links user to the application (status→registered)
+- `create_user()` in `auth_service.py` now accepts optional `role` parameter (defaults to `student`)
+- `RegisterRequest` schema updated with optional `invite_token: str` field
 - Moved all project docs (CLAUDE.md, architecture.md, brainstorm.md, deployment-workflow.md, project_status.md, CHANGELOG.md, vercel-deployment-plan.md) from project root into `docs/` folder — README.md stays at root
 - Fixed `.env.example` link in CLAUDE.md to point to `../backend/.env.example`
 - **Replaced Cloudinary with Supabase Storage** for all file storage (teacher photos, future CV uploads) across all docs, config, and architecture files
