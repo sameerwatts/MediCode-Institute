@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 4 of 19: role-based dependencies.
+**Become a Teacher Feature** — PR 5 of 19: application Pydantic schemas.
 
 ## Current Branch
-`feature/role-dependencies` — require_admin and require_teacher FastAPI dependencies (PR 4/19).
+`feature/application-schemas` — Pydantic request/response schemas for applications (PR 5/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -57,6 +57,7 @@
 - [x] `InviteToken` SQLAlchemy model + Alembic migration (PR 2/19 of become-a-teacher feature)
 - [x] `create_admin` CLI command (PR 3/19 of become-a-teacher feature)
 - [x] `require_admin` and `require_teacher` FastAPI dependencies (PR 4/19 of become-a-teacher feature)
+- [x] Pydantic application schemas (PR 5/19 of become-a-teacher feature)
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
@@ -64,7 +65,8 @@
   - [x] PR 2: InviteToken model + migration
   - [x] PR 3: Admin CLI command
   - [x] PR 4: Role dependencies
-  - [ ] PR 5–6: Schemas, invite service
+  - [x] PR 5: Application schemas
+  - [ ] PR 6: Invite service
   - [ ] PR 7–8: Application + admin API routes
   - [ ] PR 9: Modified auth register (invite token support)
   - [ ] PR 10: Email service (Resend + admin notifications)
