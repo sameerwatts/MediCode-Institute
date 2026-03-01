@@ -108,3 +108,52 @@ export interface IInviteValidation {
   email?: string;
   reason?: string;
 }
+
+export interface IAdminApplicationListItem {
+  id: string;
+  name: string;
+  email: string;
+  subject_area: TSubjectArea;
+  status: TApplicationStatus;
+  created_at: string;
+}
+
+export interface IAdminApplicationDetail {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  subject_area: TSubjectArea;
+  qualifications: string;
+  experience_years: number;
+  teaching_philosophy: string;
+  status: TApplicationStatus;
+  admin_notes: string | null;
+  reviewed_at: string | null;
+  user_id: string | null;
+  created_at: string;
+  updated_at: string;
+  invite_token_expires_at: string | null;
+}
+
+export interface IPaginatedApplications {
+  items: IAdminApplicationListItem[];
+  total: number;
+  page: number;
+  page_size: number;
+  has_next: boolean;
+}
+
+export interface IApproveResponse {
+  message: string;
+  invite_token_expires_at: string;
+}
+
+export interface IRejectResponse {
+  message: string;
+}
+
+export interface IResendInviteResponse {
+  message: string;
+  invite_token_expires_at: string;
+}

@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 15 of 19: Application Status page.
+**Become a Teacher Feature** — PR 16 of 19: Admin shell.
 
 ## Current Branch
-`feature/application-status-page` — /application-status status check page (PR 15/19).
+`feature/admin-shell` — Admin layout + sidebar + header + role guard + adminService (PR 16/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -68,7 +68,8 @@
 - [x] `Modal` component + `StatusBadge` component + 21 tests — accessible dialog with backdrop/confirm actions, colored status pill badge (PR 13/19 of become-a-teacher feature)
 - [x] `/become-a-teacher` page + `applicationService.ts` + types + footer link + home CTA section + 13 tests (PR 14/19 of become-a-teacher feature)
 - [x] `/application-status` page + 13 tests — status check by email + app ID, shows StatusBadge + dates (PR 15/19 of become-a-teacher feature)
-- [x] 248 tests passing across 33 suites
+- [x] Admin shell + `AdminSidebar` + `AdminHeader` + role guard + `adminService.ts` + admin types + 16 tests (PR 16/19 of become-a-teacher feature)
+- [x] 265 tests passing across 36 suites
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
@@ -87,7 +88,8 @@
   - [x] PR 13: Modal + StatusBadge components + tests
   - [x] PR 14: Become a Teacher page (+ footer link + home CTA) + applicationService + types
   - [x] PR 15: Application Status page
-  - [ ] PR 16–17: Admin shell + teacher requests dashboard
+  - [x] PR 16: Admin shell + sidebar + header + role guard + adminService
+  - [ ] PR 17: Admin teacher requests dashboard
   - [ ] PR 18: Invite signup flow (with expired token error card)
   - [ ] PR 19: Teacher onboarding page (profile enrichment + Supabase Storage photo upload)
 - [ ] Course detail page (`/courses/[slug]`)
