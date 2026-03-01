@@ -75,3 +75,36 @@ export interface IAuthContext {
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
+
+export type TApplicationStatus = 'pending' | 'approved' | 'rejected' | 'registered';
+export type TSubjectArea = 'medical' | 'cs';
+
+export interface ITeacherApplication {
+  name: string;
+  email: string;
+  phone: string;
+  subject_area: TSubjectArea;
+  qualifications: string;
+  experience_years: number;
+  teaching_philosophy: string;
+}
+
+export interface IApplicationSubmitResponse {
+  id: string;
+  message: string;
+  status: TApplicationStatus;
+}
+
+export interface IApplicationStatusCheck {
+  id: string;
+  status: TApplicationStatus;
+  created_at: string;
+  reviewed_at: string | null;
+}
+
+export interface IInviteValidation {
+  valid: boolean;
+  name?: string;
+  email?: string;
+  reason?: string;
+}
