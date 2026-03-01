@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 3 of 19: create_admin CLI command.
+**Become a Teacher Feature** — PR 4 of 19: role-based dependencies.
 
 ## Current Branch
-`feature/create-admin-cli` — CLI command for admin account provisioning (PR 3/19).
+`feature/role-dependencies` — require_admin and require_teacher FastAPI dependencies (PR 4/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -56,13 +56,15 @@
 - [x] `TeacherApplication` SQLAlchemy model + Alembic migration (PR 1/19 of become-a-teacher feature)
 - [x] `InviteToken` SQLAlchemy model + Alembic migration (PR 2/19 of become-a-teacher feature)
 - [x] `create_admin` CLI command (PR 3/19 of become-a-teacher feature)
+- [x] `require_admin` and `require_teacher` FastAPI dependencies (PR 4/19 of become-a-teacher feature)
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
   - [x] PR 1: TeacherApplication model + migration
   - [x] PR 2: InviteToken model + migration
   - [x] PR 3: Admin CLI command
-  - [ ] PR 4–6: Role dependencies, schemas, invite service
+  - [x] PR 4: Role dependencies
+  - [ ] PR 5–6: Schemas, invite service
   - [ ] PR 7–8: Application + admin API routes
   - [ ] PR 9: Modified auth register (invite token support)
   - [ ] PR 10: Email service (Resend + admin notifications)
