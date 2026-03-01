@@ -30,6 +30,10 @@ from app.schemas.application import (
     ApplicationRejectResponse,
     ApplicationResendInviteResponse,
 )
+from app.services.email_service import (
+    send_application_approved,
+    send_application_rejected,
+)
 from app.services.invite_service import generate_invite_token
 
 
@@ -178,7 +182,12 @@ def approve_application(
 
     db.commit()
 
-    # TODO: Send approval email with invite link (PR 10 — email service)
+    # Send approval email with invite link (fire-and-forget)
+    send_application_approved(
+        applicant_email=application.email,
+        applicant_name=application.name,
+        invite_token=invite.token,
+    )
 
     return ApplicationApproveResponse(
         message="Application approved. Invite email sent.",
@@ -217,7 +226,12 @@ def reject_application(
 
     db.commit()
 
-    # TODO: Send rejection email (PR 10 — email service)
+    # Send rejection email (fire-and-forget)
+    send_application_rejected(
+        applicant_email=application.email,
+        applicant_name=application.name,
+        reason=request.reason,
+    )
 
     return ApplicationRejectResponse(
         message="Application rejected. Notification email sent.",
@@ -255,7 +269,12 @@ def resend_invite(
 
     db.commit()
 
-    # TODO: Send new invite email (PR 10 — email service)
+    # Send new invite email (fire-and-forget)
+    send_application_approved(
+        applicant_email=application.email,
+        applicant_name=application.name,
+        invite_token=invite.token,
+    )
 
     return ApplicationResendInviteResponse(
         message="New invite email sent. Previous token invalidated.",

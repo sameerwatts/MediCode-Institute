@@ -10,11 +10,13 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.teacher_application import TeacherApplication
+from app.models.user import User
 from app.schemas.application import (
     ApplicationCreateRequest,
     ApplicationCreateResponse,
     ApplicationStatusResponse,
 )
+from app.services.email_service import send_admin_new_application, send_application_received
 
 
 router = APIRouter(prefix="/api/applications", tags=["applications"])
@@ -65,6 +67,24 @@ def submit_application(
     db.add(application)
     db.commit()
     db.refresh(application)
+
+    # Send confirmation email to applicant (fire-and-forget)
+    send_application_received(
+        applicant_email=application.email,
+        applicant_name=application.name,
+        application_id=str(application.id),
+    )
+
+    # Notify all admin users (fire-and-forget)
+    admins = db.query(User).filter(User.role == "admin").all()
+    for admin in admins:
+        send_admin_new_application(
+            admin_email=admin.email,
+            applicant_name=application.name,
+            applicant_email=application.email,
+            subject_area=application.subject_area,
+            application_id=str(application.id),
+        )
 
     return ApplicationCreateResponse(
         id=str(application.id),
