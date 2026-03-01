@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 11 of 19: FormTextarea component.
+**Become a Teacher Feature** — PR 12 of 19: FormRadioGroup component.
 
 ## Current Branch
-`feature/shared-components` — FormTextarea component + tests (PR 11/19).
+`feature/form-radio-group` — FormRadioGroup component + tests (PR 12/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -64,7 +64,8 @@
 - [x] Modified auth register with invite token support + validate-invite endpoint (PR 9/19 of become-a-teacher feature)
 - [x] Email service via Resend — 4 email types (received, admin notification, approved, rejected), wired into application + admin routers (PR 10/19 of become-a-teacher feature)
 - [x] `FormTextarea` component + 14 tests — textarea with label, error state, character count (PR 11/19 of become-a-teacher feature)
-- [x] 191 tests passing across 28 suites
+- [x] `FormRadioGroup` component + 10 tests — radio button group with fieldset/legend, error state, configurable options (PR 12/19 of become-a-teacher feature)
+- [x] 201 tests passing across 29 suites
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
@@ -79,7 +80,7 @@
   - [x] PR 9: Modified auth register (invite token support)
   - [x] PR 10: Email service (Resend + admin notifications)
   - [x] PR 11: FormTextarea component + tests
-  - [ ] PR 12: FormRadioGroup component + tests
+  - [x] PR 12: FormRadioGroup component + tests
   - [ ] PR 13: Modal + StatusBadge components + tests
   - [ ] PR 14–15: Become a Teacher page (+ footer link + home CTA) + Application Status page
   - [ ] PR 16–17: Admin shell + teacher requests dashboard
@@ -113,4 +114,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-01
+2026-03-02

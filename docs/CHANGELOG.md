@@ -28,6 +28,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - `resend_api_key`, `email_from`, and `frontend_url` settings in `config.py` + `.env.example` — empty API key disables emails in development
 - `FormTextarea` component (`src/components/common/FormTextarea/`) — textarea with label, error state, character count, configurable rows and maxLength; follows FormInput pattern with Tailwind styling
 - 14 new tests for `FormTextarea` — total now 191 tests across 28 suites
+- `FormRadioGroup` component (`src/components/common/FormRadioGroup/`) — radio button group with fieldset/legend, error state, configurable options array; follows FormInput pattern with Tailwind styling
+- 10 new tests for `FormRadioGroup` — total now 201 tests across 29 suites
 
 ### Changed
 - Application submission (`POST /api/applications`) now sends confirmation email to applicant and notification emails to all admin users
