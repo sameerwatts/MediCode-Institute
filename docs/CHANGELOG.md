@@ -30,6 +30,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - 14 new tests for `FormTextarea` — total now 191 tests across 28 suites
 - `FormRadioGroup` component (`src/components/common/FormRadioGroup/`) — radio button group with fieldset/legend, error state, configurable options array; follows FormInput pattern with Tailwind styling
 - 10 new tests for `FormRadioGroup` — total now 201 tests across 29 suites
+- `Modal` component (`src/components/common/Modal/`) — accessible dialog with backdrop overlay, title, children slot, confirm/cancel actions, configurable confirm variant (primary/danger); closes on backdrop or X button click
+- `StatusBadge` component (`src/components/common/StatusBadge/`) — colored pill badge for application statuses: pending (yellow), approved (green), rejected (red), registered (blue)
+- 21 new tests for `Modal` + `StatusBadge` — total now 222 tests across 31 suites
 
 ### Changed
 - Application submission (`POST /api/applications`) now sends confirmation email to applicant and notification emails to all admin users
