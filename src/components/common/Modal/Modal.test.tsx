@@ -138,4 +138,46 @@ describe('Modal', () => {
     );
     expect(screen.getByRole('dialog')).toHaveAttribute('aria-modal', 'true');
   });
+
+  describe('when isLoading is true', () => {
+    const loadingModal = (onClose = jest.fn(), onConfirm = jest.fn()) => (
+      <Modal
+        isOpen={true}
+        onClose={onClose}
+        title="Test"
+        onConfirm={onConfirm}
+        confirmText="Confirm"
+        isLoading={true}
+      >
+        <p>Content</p>
+      </Modal>
+    );
+
+    it('disables the confirm button', () => {
+      render(loadingModal());
+      expect(screen.getByRole('button', { name: /Processing/i })).toBeDisabled();
+    });
+
+    it('shows Processing... on the confirm button', () => {
+      render(loadingModal());
+      expect(screen.getByRole('button', { name: /Processing/i })).toBeInTheDocument();
+    });
+
+    it('disables the cancel button', () => {
+      render(loadingModal());
+      expect(screen.getByRole('button', { name: 'Cancel' })).toBeDisabled();
+    });
+
+    it('disables the close (X) button', () => {
+      render(loadingModal());
+      expect(screen.getByLabelText('Close modal')).toBeDisabled();
+    });
+
+    it('does not call onClose when backdrop is clicked while loading', () => {
+      const onClose = jest.fn();
+      render(loadingModal(onClose));
+      fireEvent.click(screen.getByRole('dialog'));
+      expect(onClose).not.toHaveBeenCalled();
+    });
+  });
 });
