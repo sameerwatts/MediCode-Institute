@@ -64,6 +64,14 @@ describe('FormInput', () => {
     expect(input).toHaveAttribute('type', 'password');
   });
 
+  it('applies readOnly styles when registration includes readOnly', () => {
+    render(<FormInput id="name" label="Full Name" registration={{ readOnly: true }} />);
+    const input = screen.getByLabelText('Full Name');
+    expect(input).toHaveAttribute('readonly');
+    expect(input).toHaveClass('read-only:bg-gray-100');
+    expect(input).toHaveClass('read-only:cursor-not-allowed');
+  });
+
   it('updates aria-label after toggling password visibility', async () => {
     render(
       <FormInput id="pw" label="Password" type="password" showToggle registration={noop} />,

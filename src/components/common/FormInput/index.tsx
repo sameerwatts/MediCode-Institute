@@ -69,7 +69,7 @@ const FormInput: React.FC<IFormInputProps> = ({
           id={id}
           type={inputType}
           placeholder={placeholder}
-          className={`w-full px-4 py-3 border rounded-md focus:outline-none focus:border-primary transition-colors duration-200 ${
+          className={`w-full px-4 py-3 border rounded-md focus:outline-none focus:border-primary transition-colors duration-200 read-only:bg-gray-100 read-only:text-dark-gray read-only:cursor-not-allowed ${
             error ? 'border-error' : 'border-light-gray'
           }`}
           {...(registration as React.InputHTMLAttributes<HTMLInputElement>)}
