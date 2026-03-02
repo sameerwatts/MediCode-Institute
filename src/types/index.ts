@@ -72,7 +72,7 @@ export interface IAuthContext {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  signup: (name: string, email: string, password: string) => Promise<void>;
+  signup: (name: string, email: string, password: string, inviteToken?: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
