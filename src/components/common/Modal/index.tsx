@@ -11,6 +11,7 @@ interface IModalProps {
   cancelText?: string;
   onConfirm?: () => void;
   confirmVariant?: 'danger' | 'primary';
+  isLoading?: boolean;
 }
 
 const Modal: React.FC<IModalProps> = ({
@@ -22,6 +23,7 @@ const Modal: React.FC<IModalProps> = ({
   cancelText = 'Cancel',
   onConfirm,
   confirmVariant = 'primary',
+  isLoading = false,
 }) => {
   if (!isOpen) return null;
 
@@ -36,7 +38,7 @@ const Modal: React.FC<IModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
-      onClick={onClose}
+      onClick={isLoading ? undefined : onClose}
     >
       <div
         className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6"
@@ -48,8 +50,9 @@ const Modal: React.FC<IModalProps> = ({
           </h2>
           <button
             onClick={onClose}
+            disabled={isLoading}
             aria-label="Close modal"
-            className="text-gray hover:text-dark-gray transition-colors"
+            className="text-gray hover:text-dark-gray transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             ✕
           </button>
@@ -61,15 +64,17 @@ const Modal: React.FC<IModalProps> = ({
           <div className="flex justify-end gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm-text font-medium text-dark-gray border border-light-gray rounded-md hover:bg-light transition-colors"
+              disabled={isLoading}
+              className="px-4 py-2 text-sm-text font-medium text-dark-gray border border-light-gray rounded-md hover:bg-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {cancelText}
             </button>
             <button
               onClick={onConfirm}
-              className={`px-4 py-2 text-sm-text font-medium rounded-md transition-colors ${confirmButtonClass}`}
+              disabled={isLoading}
+              className={`px-4 py-2 text-sm-text font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${confirmButtonClass}`}
             >
-              {confirmText}
+              {isLoading ? 'Processing...' : confirmText}
             </button>
           </div>
         )}

@@ -21,7 +21,7 @@ const sizeClasses = {
 const Button: React.FC<IButtonProps> = ({ variant = 'primary', size = 'md', children, className = '', ...props }) => {
   return (
     <button
-      className={`inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-all duration-200 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       {...props}
     >
       {children}

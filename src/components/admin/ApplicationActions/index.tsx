@@ -154,6 +154,7 @@ const ApplicationActions: React.FC<IApplicationActionsProps> = ({
         confirmText="Approve"
         onConfirm={handleApprove}
         confirmVariant="primary"
+        isLoading={isLoading}
       >
         Are you sure you want to approve this application? An invite email will
         be sent to the applicant.
@@ -166,6 +167,7 @@ const ApplicationActions: React.FC<IApplicationActionsProps> = ({
         confirmText="Reject"
         onConfirm={handleReject}
         confirmVariant="danger"
+        isLoading={isLoading}
       >
         <p className="mb-3">Are you sure you want to reject this application?</p>
         <label
@@ -191,6 +193,7 @@ const ApplicationActions: React.FC<IApplicationActionsProps> = ({
         confirmText="Resend"
         onConfirm={handleResend}
         confirmVariant="primary"
+        isLoading={isLoading}
       >
         A new invite link will be sent to the applicant. The previous invite
         will be invalidated.
