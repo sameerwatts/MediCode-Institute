@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 18 of 19: Invite signup flow.
+**Become a Teacher Feature** — PR 19 of 19: Teacher onboarding page. COMPLETE.
 
 ## Current Branch
-`feature/invite-signup-flow` — Modified /signup with invite token detection + error card (PR 18/19).
+`feature/teacher-onboarding` — /teacher/onboarding profile enrichment form + photo upload UI (PR 19/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -74,7 +74,9 @@
 - [x] `ApplicationActions` component — Approve / Reject (with reason) / Resend Invite via Modal confirmations (PR 17/19)
 - [x] `/signup` invite token flow — `?invite=` detection, token validation, pre-filled locked fields, teacher redirect, inline error card for expired/used/invalid tokens (PR 18/19)
 - [x] `validateInviteToken()` in `authService.ts`; `signup()` accepts optional `inviteToken`; `IAuthContext` type updated; `app/signup/page.tsx` wrapped in `<Suspense>`
-- [x] 306 tests passing across 39 suites
+- [x] `/teacher/onboarding` page — profile enrichment form (designation, department radio, bio textarea), circular photo upload with preview, auth guard, success card with "Go to Dashboard" link (PR 19/19)
+- [x] `teacherService.ts` — `submitOnboarding()` API call (swap-ready for real backend + Supabase Storage)
+- [x] 321 tests passing across 40 suites (15 new onboarding tests)
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
@@ -96,7 +98,7 @@
   - [x] PR 16: Admin shell + sidebar + header + role guard + adminService
   - [x] PR 17: Admin teacher requests dashboard
   - [x] PR 18: Invite signup flow (with expired token error card)
-  - [ ] PR 19: Teacher onboarding page (profile enrichment + Supabase Storage photo upload)
+  - [x] PR 19: Teacher onboarding page (profile enrichment + Supabase Storage photo upload)
 - [ ] Course detail page (`/courses/[slug]`)
 - [ ] Quiz-taking functionality
 - [ ] Blog detail page (`/blogs/[slug]`)
@@ -125,4 +127,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-02 (PR 18)
+2026-03-02 (PR 19 — Become a Teacher feature COMPLETE)

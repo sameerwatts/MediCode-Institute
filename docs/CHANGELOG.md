@@ -61,6 +61,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - `app/signup/page.tsx` wrapped in `<Suspense>` to support `useSearchParams()` in the client component
 - `/signup` invite token flow — detects `?invite=<token>` in URL, validates the token via API, then: **valid token** → shows "Complete Your Registration" form with name+email pre-filled (locked, readOnly) and includes token in register request, redirects to `/teacher/onboarding` on success; **invalid/expired/used token** → hides form entirely, shows inline error card (title + detail message) with a "Check Application Status" link to `/application-status`
 - 13 new tests for invite signup flow across 4 describe blocks (valid token, expired, used, invalid) — total now 306 tests across 39 suites
+- `src/services/teacherService.ts` — `submitOnboarding(data: IOnboardingData)` API function calling `POST /api/teacher/onboarding`; swap-ready for real FastAPI backend + Supabase Storage photo upload
+- `app/teacher/onboarding/page.tsx` — `/teacher/onboarding` App Router page (static)
+- `src/views/Teacher/Onboarding/index.tsx` — Profile enrichment form: circular photo upload button with local preview (`URL.createObjectURL`), Designation text field, Department radio group (Medical Sciences / Computer Science), Bio textarea (20–500 chars); client-side auth guard (redirects to `/login` if unauthenticated); success card with "Go to Dashboard" link on submission
+- 15 new tests for TeacherOnboarding — total now **321 tests across 40 suites**
 
 ### Changed
 - Application submission (`POST /api/applications`) now sends confirmation email to applicant and notification emails to all admin users

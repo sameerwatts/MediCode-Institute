@@ -53,6 +53,14 @@ const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center gap-3">
             {isAuthenticated ? (
               <>
+                {user?.role === 'admin' && (
+                  <Link
+                    href="/admin/teacher-requests"
+                    className="text-sm-text font-semibold text-primary hover:text-primary-dark transition-colors"
+                  >
+                    Admin Dashboard
+                  </Link>
+                )}
                 <span className="text-sm-text font-semibold text-dark-gray">{user?.name}</span>
                 <Button variant="outline" size="sm" onClick={logout}>
                   Sign Out
