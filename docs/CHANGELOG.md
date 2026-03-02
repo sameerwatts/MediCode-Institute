@@ -54,6 +54,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - `app/admin/teacher-requests/page.tsx` — `/admin/teacher-requests` list route (static)
 - `app/admin/teacher-requests/[id]/page.tsx` — `/admin/teacher-requests/:id` dynamic detail route
 - 28 new tests for admin dashboard components — total now 293 tests across 39 suites
+- `validateInviteToken(token)` function in `src/services/authService.ts` — GET `/api/auth/validate-invite?token=`, returns `IInviteValidation`; gracefully returns `{ valid: false, reason: 'invalid' }` on API errors
+- `signup()` in `authService.ts` updated to accept optional `inviteToken?: string`; if present, sends `invite_token` field in the register request body
+- `AuthContext.signup` updated to accept and forward optional `inviteToken?` to `apiSignup()`
+- `IAuthContext.signup` type updated with optional `inviteToken?` parameter
+- `app/signup/page.tsx` wrapped in `<Suspense>` to support `useSearchParams()` in the client component
+- `/signup` invite token flow — detects `?invite=<token>` in URL, validates the token via API, then: **valid token** → shows "Complete Your Registration" form with name+email pre-filled (locked, readOnly) and includes token in register request, redirects to `/teacher/onboarding` on success; **invalid/expired/used token** → hides form entirely, shows inline error card (title + detail message) with a "Check Application Status" link to `/application-status`
+- 13 new tests for invite signup flow across 4 describe blocks (valid token, expired, used, invalid) — total now 306 tests across 39 suites
 
 ### Changed
 - Application submission (`POST /api/applications`) now sends confirmation email to applicant and notification emails to all admin users

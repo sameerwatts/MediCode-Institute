@@ -3,10 +3,22 @@ import { render, screen, waitFor } from '@/test-utils';
 import userEvent from '@testing-library/user-event';
 import Signup from './index';
 import { useAuth } from '@/hooks/useAuth';
+import { useSearchParams } from 'next/navigation';
+import * as authService from '@/services/authService';
 
 jest.mock('@/hooks/useAuth', () => ({
   useAuth: jest.fn(),
 }));
+
+jest.mock('@/services/authService', () => ({
+  validateInviteToken: jest.fn(),
+  getMe: jest.fn().mockResolvedValue(null),
+  login: jest.fn(),
+  signup: jest.fn(),
+  logout: jest.fn(),
+}));
+
+const mockValidateInviteToken = jest.mocked(authService.validateInviteToken);
 
 const mockPush = jest.fn();
 const mockReplace = jest.fn();
@@ -29,6 +41,7 @@ const defaultAuthState = {
 beforeEach(() => {
   jest.clearAllMocks();
   (useAuth as jest.Mock).mockReturnValue({ ...defaultAuthState });
+  (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams());
 });
 
 describe('Signup', () => {
@@ -151,6 +164,163 @@ describe('Signup', () => {
       });
       render(<Signup />);
       expect(mockReplace).toHaveBeenCalledWith('/');
+    });
+  });
+
+  describe('with a valid invite token', () => {
+    beforeEach(() => {
+      (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('invite=test-token'));
+      mockValidateInviteToken.mockResolvedValue({
+        valid: true,
+        name: 'Dr. Jane Smith',
+        email: 'jane@example.com',
+      });
+    });
+
+    it('shows loader while token is being validated', () => {
+      mockValidateInviteToken.mockReturnValue(new Promise(() => {}));
+      render(<Signup />);
+      expect(screen.queryByRole('heading', { name: 'Create Account' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: 'Complete Your Registration' })).not.toBeInTheDocument();
+    });
+
+    it('renders "Complete Your Registration" heading after validation', async () => {
+      render(<Signup />);
+      await waitFor(() => {
+        expect(
+          screen.getByRole('heading', { name: 'Complete Your Registration' }),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('pre-fills name and email from invite data', async () => {
+      render(<Signup />);
+      await waitFor(() => {
+        expect(screen.getByLabelText('Full Name')).toHaveValue('Dr. Jane Smith');
+        expect(screen.getByLabelText('Email Address')).toHaveValue('jane@example.com');
+      });
+    });
+
+    it('calls signup with the invite token and redirects to /teacher/onboarding', async () => {
+      const signupMock = jest.fn().mockResolvedValue(undefined);
+      (useAuth as jest.Mock).mockReturnValue({ ...defaultAuthState, signup: signupMock });
+
+      render(<Signup />);
+
+      // Wait for reset() to have run — name field shows pre-filled value
+      await waitFor(() => {
+        expect(screen.getByLabelText('Full Name')).toHaveValue('Dr. Jane Smith');
+      });
+
+      await userEvent.type(screen.getByLabelText('Password'), 'password123');
+      await userEvent.type(screen.getByLabelText('Confirm Password'), 'password123');
+      await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
+
+      await waitFor(() => {
+        expect(signupMock).toHaveBeenCalledWith(
+          'Dr. Jane Smith',
+          'jane@example.com',
+          'password123',
+          'test-token',
+        );
+        expect(mockPush).toHaveBeenCalledWith('/teacher/onboarding');
+      });
+    });
+
+    it('does not render the "Sign In" link', async () => {
+      render(<Signup />);
+      await waitFor(() =>
+        screen.getByRole('heading', { name: 'Complete Your Registration' }),
+      );
+      expect(screen.queryByRole('link', { name: 'Sign In' })).not.toBeInTheDocument();
+    });
+  });
+
+  describe('with an expired invite token', () => {
+    beforeEach(() => {
+      (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('invite=expired-token'));
+      mockValidateInviteToken.mockResolvedValue({ valid: false, reason: 'expired' });
+    });
+
+    it('shows the "Invite Link Expired" error card', async () => {
+      render(<Signup />);
+      await waitFor(() => {
+        expect(
+          screen.getByRole('heading', { name: 'Invite Link Expired' }),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('shows the expired detail message', async () => {
+      render(<Signup />);
+      await waitFor(() => {
+        expect(screen.getByText(/This invite link has expired/i)).toBeInTheDocument();
+      });
+    });
+
+    it('shows a "Check Application Status" link to /application-status', async () => {
+      render(<Signup />);
+      await waitFor(() => {
+        expect(
+          screen.getByRole('link', { name: /Check Application Status/i }),
+        ).toHaveAttribute('href', '/application-status');
+      });
+    });
+
+    it('does not render the signup form', async () => {
+      render(<Signup />);
+      await waitFor(() =>
+        screen.getByRole('heading', { name: 'Invite Link Expired' }),
+      );
+      expect(screen.queryByLabelText('Password')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('with a used invite token', () => {
+    beforeEach(() => {
+      (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('invite=used-token'));
+      mockValidateInviteToken.mockResolvedValue({ valid: false, reason: 'used' });
+    });
+
+    it('shows the "Invite Link Already Used" error card', async () => {
+      render(<Signup />);
+      await waitFor(() => {
+        expect(
+          screen.getByRole('heading', { name: 'Invite Link Already Used' }),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('shows the used detail message', async () => {
+      render(<Signup />);
+      await waitFor(() => {
+        expect(screen.getByText(/already been used/i)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('with an invalid invite token', () => {
+    beforeEach(() => {
+      (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('invite=bad-token'));
+      mockValidateInviteToken.mockResolvedValue({ valid: false, reason: 'invalid' });
+    });
+
+    it('shows the "Invalid Invite Link" error card', async () => {
+      render(<Signup />);
+      await waitFor(() => {
+        expect(
+          screen.getByRole('heading', { name: 'Invalid Invite Link' }),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('shows a "Check Application Status" link', async () => {
+      render(<Signup />);
+      await waitFor(() => {
+        expect(
+          screen.getByRole('link', { name: /Check Application Status/i }),
+        ).toBeInTheDocument();
+      });
     });
   });
 });

@@ -19,7 +19,7 @@
  */
 
 import axios from 'axios';
-import { IUser } from '@/types';
+import { IUser, IInviteValidation } from '@/types';
 
 // Shared axios instance — withCredentials ensures cookies travel with every request
 const api = axios.create({
@@ -60,12 +60,29 @@ export async function signup(
   name: string,
   email: string,
   password: string,
+  inviteToken?: string,
 ): Promise<IUser> {
   try {
-    const res = await api.post<IAuthResponse>('/auth/register', { name, email, password });
+    const body: Record<string, string> = { name, email, password };
+    if (inviteToken) body.invite_token = inviteToken;
+    const res = await api.post<IAuthResponse>('/auth/register', body);
     return res.data.user;
   } catch (err) {
     return toError(err, 'Sign up failed. Please try again.');
+  }
+}
+
+export async function validateInviteToken(token: string): Promise<IInviteValidation> {
+  try {
+    const res = await api.get<IInviteValidation>('/auth/validate-invite', {
+      params: { token },
+    });
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.data) {
+      return err.response.data as IInviteValidation;
+    }
+    return { valid: false, reason: 'invalid' };
   }
 }
 

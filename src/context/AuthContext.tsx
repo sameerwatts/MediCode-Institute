@@ -70,8 +70,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const signup = useCallback(
-    async (name: string, email: string, password: string): Promise<void> => {
-      const newUser = await apiSignup(name, email, password);
+    async (name: string, email: string, password: string, inviteToken?: string): Promise<void> => {
+      const newUser = await apiSignup(name, email, password, inviteToken);
       setUser(newUser);
     },
     [],

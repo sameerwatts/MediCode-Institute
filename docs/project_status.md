@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 17 of 19: Admin teacher requests dashboard.
+**Become a Teacher Feature** — PR 18 of 19: Invite signup flow.
 
 ## Current Branch
-`feature/admin-teacher-requests` — Admin teacher requests list + detail + ApplicationActions (PR 17/19).
+`feature/invite-signup-flow` — Modified /signup with invite token detection + error card (PR 18/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -72,7 +72,9 @@
 - [x] `TeacherRequests` list view — search by name/email, filter by status, paginated table with View links (PR 17/19)
 - [x] `TeacherRequestDetail` view — full applicant profile with `StatusBadge`, qualifications, invite info (PR 17/19)
 - [x] `ApplicationActions` component — Approve / Reject (with reason) / Resend Invite via Modal confirmations (PR 17/19)
-- [x] 293 tests passing across 39 suites (28 new tests)
+- [x] `/signup` invite token flow — `?invite=` detection, token validation, pre-filled locked fields, teacher redirect, inline error card for expired/used/invalid tokens (PR 18/19)
+- [x] `validateInviteToken()` in `authService.ts`; `signup()` accepts optional `inviteToken`; `IAuthContext` type updated; `app/signup/page.tsx` wrapped in `<Suspense>`
+- [x] 306 tests passing across 39 suites
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
@@ -93,7 +95,7 @@
   - [x] PR 15: Application Status page
   - [x] PR 16: Admin shell + sidebar + header + role guard + adminService
   - [x] PR 17: Admin teacher requests dashboard
-  - [ ] PR 18: Invite signup flow (with expired token error card)
+  - [x] PR 18: Invite signup flow (with expired token error card)
   - [ ] PR 19: Teacher onboarding page (profile enrichment + Supabase Storage photo upload)
 - [ ] Course detail page (`/courses/[slug]`)
 - [ ] Quiz-taking functionality
@@ -123,4 +125,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-02 (PR 17)
+2026-03-02 (PR 18)
