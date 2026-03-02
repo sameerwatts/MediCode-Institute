@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 16 of 19: Admin shell.
+**Become a Teacher Feature** — PR 17 of 19: Admin teacher requests dashboard.
 
 ## Current Branch
-`feature/admin-shell` — Admin layout + sidebar + header + role guard + adminService (PR 16/19).
+`feature/admin-teacher-requests` — Admin teacher requests list + detail + ApplicationActions (PR 17/19).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -69,7 +69,10 @@
 - [x] `/become-a-teacher` page + `applicationService.ts` + types + footer link + home CTA section + 13 tests (PR 14/19 of become-a-teacher feature)
 - [x] `/application-status` page + 13 tests — status check by email + app ID, shows StatusBadge + dates (PR 15/19 of become-a-teacher feature)
 - [x] Admin shell + `AdminSidebar` + `AdminHeader` + role guard + `adminService.ts` + admin types + 16 tests (PR 16/19 of become-a-teacher feature)
-- [x] 265 tests passing across 36 suites
+- [x] `TeacherRequests` list view — search by name/email, filter by status, paginated table with View links (PR 17/19)
+- [x] `TeacherRequestDetail` view — full applicant profile with `StatusBadge`, qualifications, invite info (PR 17/19)
+- [x] `ApplicationActions` component — Approve / Reject (with reason) / Resend Invite via Modal confirmations (PR 17/19)
+- [x] 293 tests passing across 39 suites (28 new tests)
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
@@ -89,7 +92,7 @@
   - [x] PR 14: Become a Teacher page (+ footer link + home CTA) + applicationService + types
   - [x] PR 15: Application Status page
   - [x] PR 16: Admin shell + sidebar + header + role guard + adminService
-  - [ ] PR 17: Admin teacher requests dashboard
+  - [x] PR 17: Admin teacher requests dashboard
   - [ ] PR 18: Invite signup flow (with expired token error card)
   - [ ] PR 19: Teacher onboarding page (profile enrichment + Supabase Storage photo upload)
 - [ ] Course detail page (`/courses/[slug]`)
@@ -120,4 +123,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-02
+2026-03-02 (PR 17)
