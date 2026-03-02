@@ -48,6 +48,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - `adminService.ts` — 5 API functions: `getApplications()`, `getApplicationDetail()`, `approveApplication()`, `rejectApplication()`, `resendInvite()`
 - Admin types added to `src/types/index.ts`: `IAdminApplicationListItem`, `IAdminApplicationDetail`, `IPaginatedApplications`, `IApproveResponse`, `IRejectResponse`, `IResendInviteResponse`
 - 16 new tests for admin shell components — total now 265 tests across 36 suites
+- `TeacherRequests` view (`src/views/Admin/TeacherRequests/`) — paginated table of teacher applications with search by name/email, status filter tabs (All / Pending / Approved / Rejected / Registered), Previous/Next pagination, and per-row View link
+- `TeacherRequestDetail` view (`src/views/Admin/TeacherRequestDetail/`) — full applicant profile card (name, email, phone, subject, experience, qualifications, teaching philosophy, admin notes, invite expiry); shows `StatusBadge`; refresh on action; Back to requests link
+- `ApplicationActions` component (`src/components/admin/ApplicationActions/`) — approve (pending → sends invite), reject with optional reason textarea, resend invite (approved → new token); each action guarded by a `Modal` confirmation; inline success/error messages
+- `app/admin/teacher-requests/page.tsx` — `/admin/teacher-requests` list route (static)
+- `app/admin/teacher-requests/[id]/page.tsx` — `/admin/teacher-requests/:id` dynamic detail route
+- 28 new tests for admin dashboard components — total now 293 tests across 39 suites
 
 ### Changed
 - Application submission (`POST /api/applications`) now sends confirmation email to applicant and notification emails to all admin users
