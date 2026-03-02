@@ -129,13 +129,56 @@ describe('Navbar', () => {
       expect(screen.queryByRole('button', { name: 'Sign Up' })).not.toBeInTheDocument();
     });
 
-    it('calls logout when desktop Sign Out button is clicked', async () => {
+    it('does not show Admin Dashboard link for non-admin users', () => {
+      render(<Navbar />);
+      expect(screen.queryByRole('link', { name: 'Admin Dashboard' })).not.toBeInTheDocument();
+    });
+  });
+
+  describe('when authenticated as admin', () => {
+    const adminUser = {
+      id: 'a1',
+      name: 'Admin User',
+      email: 'admin@test.com',
+      role: 'admin' as const,
+      created_at: '',
+    };
+
+    beforeEach(() => {
+      (useAuth as jest.Mock).mockReturnValue({
+        ...defaultAuthState,
+        isLoading: false,
+        isAuthenticated: true,
+        user: adminUser,
+      });
+    });
+
+    it('shows Admin Dashboard link for admin users', () => {
+      render(<Navbar />);
+      expect(screen.getByRole('link', { name: 'Admin Dashboard' })).toHaveAttribute(
+        'href',
+        '/admin/teacher-requests',
+      );
+    });
+
+    it('does not show Admin Dashboard link for non-admin', () => {
+      (useAuth as jest.Mock).mockReturnValue({
+        ...defaultAuthState,
+        isLoading: false,
+        isAuthenticated: true,
+        user: { ...adminUser, role: 'student' as const },
+      });
+      render(<Navbar />);
+      expect(screen.queryByRole('link', { name: 'Admin Dashboard' })).not.toBeInTheDocument();
+    });
+
+    it('calls logout when Sign Out is clicked', async () => {
       const logoutMock = jest.fn();
       (useAuth as jest.Mock).mockReturnValue({
         ...defaultAuthState,
         isLoading: false,
         isAuthenticated: true,
-        user: mockUser,
+        user: adminUser,
         logout: logoutMock,
       });
       render(<Navbar />);
