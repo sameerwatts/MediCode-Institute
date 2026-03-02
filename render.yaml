@@ -10,7 +10,7 @@ services:
     name: medicode-api
     runtime: python
     plan: free
-    rootDir: backend           # All commands run from the backend/ subfolder
+    rootDir: backend # All commands run from the backend/ subfolder
     buildCommand: pip install -r requirements.txt
     # startCommand: runs migrations first (safe to run every deploy — Alembic is idempotent),
     # then starts the server. Render injects $PORT automatically.
@@ -28,8 +28,14 @@ services:
         value: production
       # The following must be set manually in the Render dashboard — never commit real values:
       - key: SECRET_KEY
-        sync: false           # Render will prompt you to fill this in
+        sync: false # Render will prompt you to fill this in
       - key: DATABASE_URL
-        sync: false           # Your Supabase connection string
+        sync: false # Your Supabase connection string
       - key: ALLOWED_ORIGINS
-        sync: false           # e.g. https://medicode-institute.vercel.app
+        sync: false # e.g. https://medicode-institute.vercel.app
+      - key: RESEND_API_KEY
+        sync: false # Your Resend API key from https://resend.com/api-keys
+      - key: EMAIL_FROM
+        sync: false # e.g. MediCode Institute <onboarding@resend.dev>
+      - key: FRONTEND_URL
+        sync: false # Your Vercel frontend URL e.g. https://medicode-institute.vercel.app
