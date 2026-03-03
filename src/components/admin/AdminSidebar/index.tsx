@@ -4,15 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-interface IAdminSidebarProps {
-  onLogout: () => void;
-}
-
 const navItems = [
   { label: 'Teacher Requests', href: '/admin/teacher-requests' },
 ];
 
-const AdminSidebar: React.FC<IAdminSidebarProps> = ({ onLogout }) => {
+const AdminSidebar: React.FC = () => {
   const pathname = usePathname();
 
   return (
@@ -44,12 +40,12 @@ const AdminSidebar: React.FC<IAdminSidebarProps> = ({ onLogout }) => {
       </nav>
 
       <div className="px-3 py-4 border-t border-dark-gray">
-        <button
-          onClick={onLogout}
+        <Link
+          href="/"
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm-text font-medium text-gray hover:bg-dark-gray/40 hover:text-white transition-colors duration-150"
         >
-          Sign Out
-        </button>
+          ← Back to Home
+        </Link>
       </div>
     </aside>
   );
