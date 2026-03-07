@@ -108,13 +108,13 @@ const StudentsList: React.FC = () => {
                     <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
                       Name
                     </th>
-                    <th className="hidden md:table-cell text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
+                    <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
                       Email
                     </th>
                     <th className="hidden md:table-cell text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
                       Phone
                     </th>
-                    <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
+                    <th className="hidden md:table-cell text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
                       Registered
                     </th>
                     <th className="px-4 py-3" />
@@ -126,13 +126,13 @@ const StudentsList: React.FC = () => {
                       <td className="px-4 py-3 text-sm-text text-dark font-medium">
                         {item.name}
                       </td>
-                      <td className="hidden md:table-cell px-4 py-3 text-sm-text text-dark-gray">
+                      <td className="px-4 py-3 text-sm-text text-dark-gray">
                         {item.email}
                       </td>
                       <td className="hidden md:table-cell px-4 py-3 text-sm-text text-dark-gray">
                         {item.phone ?? '—'}
                       </td>
-                      <td className="px-4 py-3 text-sm-text text-dark-gray">
+                      <td className="hidden md:table-cell px-4 py-3 text-sm-text text-dark-gray">
                         {formatDate(item.created_at)}
                       </td>
                       <td className="px-4 py-3 text-right">
