@@ -10,6 +10,7 @@ import {
   IApproveResponse,
   IRejectResponse,
   IResendInviteResponse,
+  IPaginatedStudents,
 } from '@/types';
 
 const api = axios.create({
@@ -87,5 +88,17 @@ export async function resendInvite(id: string): Promise<IResendInviteResponse> {
     return res.data;
   } catch (err) {
     return toError(err, 'Failed to resend invite.');
+  }
+}
+
+export async function getStudents(params?: {
+  search?: string;
+  page?: number;
+}): Promise<IPaginatedStudents> {
+  try {
+    const res = await api.get<IPaginatedStudents>('/admin/students', { params });
+    return res.data;
+  } catch (err) {
+    return toError(err, 'Failed to load students.');
   }
 }

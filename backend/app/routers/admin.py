@@ -1,5 +1,5 @@
 """
-routers/admin.py — Admin endpoints for managing teacher applications.
+routers/admin.py — Admin endpoints for managing teacher applications and students.
 
 All endpoints require admin role (via require_admin dependency).
 
@@ -8,6 +8,7 @@ GET  /api/admin/applications/{id}         — Full application detail
 POST /api/admin/applications/{id}/approve — Approve + generate invite token
 POST /api/admin/applications/{id}/reject  — Reject with optional reason
 POST /api/admin/applications/{id}/resend-invite — Re-send invite (invalidates old token)
+GET  /api/admin/students                  — Paginated, searchable list of registered students
 """
 
 from datetime import datetime, timezone
@@ -21,6 +22,7 @@ from app.dependencies.roles import require_admin
 from app.models.invite_token import InviteToken
 from app.models.teacher_application import TeacherApplication
 from app.models.user import User
+from app.schemas.student import StudentListItem, StudentListResponse
 from app.schemas.application import (
     ApplicationApproveResponse,
     ApplicationDetailResponse,
@@ -279,4 +281,50 @@ def resend_invite(
     return ApplicationResendInviteResponse(
         message="New invite email sent. Previous token invalidated.",
         invite_token_expires_at=invite.expires_at,
+    )
+
+
+@router.get("/students", response_model=StudentListResponse)
+def list_students(
+    search: str = Query("", description="Search by name or email"),
+    page: int = Query(1, ge=1, description="Page number"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin),
+):
+    """Paginated, searchable list of registered students."""
+    query = db.query(User).filter(User.role == "student")
+
+    if search.strip():
+        search_term = f"%{search.strip()}%"
+        query = query.filter(
+            or_(
+                User.name.ilike(search_term),
+                User.email.ilike(search_term),
+            )
+        )
+
+    total = query.count()
+    items = (
+        query.order_by(User.created_at.desc())
+        .offset((page - 1) * PAGE_SIZE)
+        .limit(PAGE_SIZE)
+        .all()
+    )
+
+    return StudentListResponse(
+        items=[
+            StudentListItem(
+                id=str(user.id),
+                name=user.name,
+                email=user.email,
+                phone=user.phone,
+                avatar_url=user.avatar_url,
+                created_at=user.created_at,
+            )
+            for user in items
+        ],
+        total=total,
+        page=page,
+        page_size=PAGE_SIZE,
+        has_next=(page * PAGE_SIZE) < total,
     )

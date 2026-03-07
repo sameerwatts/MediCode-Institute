@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 
 const navItems = [
   { label: 'Teacher Requests', href: '/admin/teacher-requests' },
+  { label: 'Students', href: '/admin/students' },
 ];
 
 const AdminSidebar: React.FC = () => {
