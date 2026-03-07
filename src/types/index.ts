@@ -157,3 +157,20 @@ export interface IResendInviteResponse {
   message: string;
   invite_token_expires_at: string;
 }
+
+export interface IStudentListItem {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  avatar_url: string | null;
+  created_at: string;
+}
+
+export interface IPaginatedStudents {
+  items: IStudentListItem[];
+  total: number;
+  page: number;
+  page_size: number;
+  has_next: boolean;
+}

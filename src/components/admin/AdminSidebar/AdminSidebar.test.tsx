@@ -38,4 +38,17 @@ describe('AdminSidebar', () => {
     render(<AdminSidebar />);
     expect(screen.getByRole('navigation', { name: 'Admin navigation' })).toBeInTheDocument();
   });
+
+  it('renders the Students nav link', () => {
+    render(<AdminSidebar />);
+    expect(
+      screen.getByRole('link', { name: 'Students' }),
+    ).toBeInTheDocument();
+  });
+
+  it('Students link points to correct href', () => {
+    render(<AdminSidebar />);
+    const link = screen.getByRole('link', { name: 'Students' });
+    expect(link).toHaveAttribute('href', '/admin/students');
+  });
 });
