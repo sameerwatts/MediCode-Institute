@@ -56,7 +56,7 @@ const StudentsList: React.FC = () => {
       </div>
 
       {/* Search */}
-      <div className="flex flex-wrap gap-4 mb-6">
+      <div className="mb-6">
         <form onSubmit={handleSearch} className="flex gap-2">
           <input
             type="text"
@@ -64,7 +64,7 @@ const StudentsList: React.FC = () => {
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search by name or email..."
             aria-label="Search students"
-            className="border border-light-gray rounded-md px-3 py-2 text-sm-text text-dark focus:outline-none focus:ring-1 focus:ring-primary w-64"
+            className="flex-1 border border-light-gray rounded-md px-3 py-2 text-sm-text text-dark focus:outline-none focus:ring-1 focus:ring-primary md:w-64 md:flex-none"
           />
           <button
             type="submit"
@@ -100,8 +100,8 @@ const StudentsList: React.FC = () => {
               No students found.
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-              <table className="w-full">
+            <div className="bg-white rounded-lg shadow-sm overflow-x-auto">
+              <table className="w-full min-w-[480px]">
                 <thead className="bg-light border-b border-light-gray">
                   <tr>
                     <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">

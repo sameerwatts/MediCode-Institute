@@ -68,7 +68,21 @@ const SidebarDrawer: React.FC = () => {
       {!isLoading && (
         <div className="mt-auto pt-4 border-t border-light-gray">
           {isAuthenticated ? (
-            <div className="flex items-center justify-between px-2">
+            <div className="flex flex-col gap-2">
+              {user?.role === 'admin' && (
+                <Link
+                  href="/admin/teacher-requests"
+                  onClick={closeMenu}
+                  className={`block px-4 py-2.5 rounded-lg text-sm-text transition-colors duration-200 hover:text-primary hover:bg-light ${
+                    pathname.startsWith('/admin')
+                      ? 'font-semibold text-primary bg-primary-light'
+                      : 'font-medium text-dark-gray'
+                  }`}
+                >
+                  Admin Dashboard
+                </Link>
+              )}
+              <div className="flex items-center justify-between px-2">
               <span className="text-sm-text font-semibold text-dark">
                 {user?.name}
               </span>
@@ -93,6 +107,7 @@ const SidebarDrawer: React.FC = () => {
                   <line x1="21" y1="12" x2="9" y2="12" />
                 </svg>
               </button>
+              </div>
             </div>
           ) : (
             <div className="flex flex-col gap-2">
