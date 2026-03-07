@@ -8,6 +8,21 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [fix/admin-mobile-responsive] — 2026-03-08
+
+### Fixed
+- Admin panel mobile layout: collapsible sidebar with PageShiftWrapper-style animation (translateX(80vw), shadow, border-radius) matching regular mobile nav
+- Admin Dashboard link missing from mobile nav drawer (SidebarDrawer) — now visible for admin users with correct active state via `pathname.startsWith('/admin')`
+- TeacherRequests and StudentsList tables now horizontally scrollable on mobile (`overflow-x-auto`, `min-w` on table)
+- Search inputs now full-width on mobile (`flex-1`), fixed width on desktop (`md:w-64 md:flex-none`)
+- Admin sidebar was independently scrollable — removed `overflow-y-auto` from nav to match regular sidebar behavior
+- Main page content locked (non-scrollable) when admin sidebar is open
+- Hamburger button in AdminHeader now `w-12 h-12` matching regular Navbar hamburger size
+
+### Added
+- AdminHeader: hamburger button (mobile-only) with `onToggleSidebar` prop
+- Mobile-First Responsive Design section added to `docs/CLAUDE.md` with 8 specific rules for tables, search inputs, filter buttons, and admin layout
+
 ### Added
 - `TeacherApplication` SQLAlchemy model (`backend/app/models/teacher_application.py`) — `teacher_applications` table with UUID PK, applicant fields (name, email, phone, subject_area, qualifications, experience_years, teaching_philosophy), status tracking (pending/approved/rejected/registered), admin review fields, and FK references to `users` table
 - Alembic migration for `teacher_applications` table with CHECK constraints on `subject_area` and `status`, email index, and foreign keys to `users`

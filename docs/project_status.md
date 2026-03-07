@@ -4,7 +4,7 @@
 **Become a Teacher Feature** — PR 19 of 19: Teacher onboarding page. COMPLETE.
 
 ## Current Branch
-`feature/teacher-onboarding` — /teacher/onboarding profile enrichment form + photo upload UI (PR 19/19).
+`fix/admin-mobile-responsive` — admin panel mobile responsiveness fixes.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -77,6 +77,8 @@
 - [x] `/teacher/onboarding` page — profile enrichment form (designation, department radio, bio textarea), circular photo upload with preview, auth guard, success card with "Go to Dashboard" link (PR 19/19)
 - [x] `teacherService.ts` — `submitOnboarding()` API call (swap-ready for real backend + Supabase Storage)
 - [x] 321 tests passing across 40 suites (15 new onboarding tests)
+- [x] Admin panel fully mobile responsive — collapsible sidebar (PageShiftWrapper pattern), hamburger button, Admin Dashboard link in mobile nav, responsive tables + search inputs, scroll locking
+- [x] 340 tests passing across 41 suites
 
 ## What's Next
 - [ ] **Become a Teacher Feature (19 PRs):**
@@ -127,4 +129,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-02 (PR 19 — Become a Teacher feature COMPLETE)
+2026-03-08 (Admin mobile responsiveness fix)

@@ -68,6 +68,16 @@
 - Each component gets its own folder with `index.tsx` and `*.test.tsx`
 - Keep components small — if it exceeds ~150 lines, break it into smaller components
 
+## Mobile-First Responsive Design
+- **Always design mobile-first** — write base styles for mobile, then use `md:` / `lg:` prefixes to enhance for larger screens
+- Every new page and component must work at 375px (mobile), 768px (tablet), and 1200px (desktop)
+- Admin pages are NOT exempt — admin panels must be fully usable on mobile
+- **Tables:** always wrap in `overflow-x-auto` with `min-w-[Npx]` so content never breaks layout
+- **Search inputs:** use `flex-1` (full width) on mobile, `md:w-64 md:flex-none` on desktop
+- **Filter button rows:** use `overflow-x-auto` + `flex-shrink-0` so buttons scroll horizontally rather than wrap awkwardly
+- **Admin layout sidebar:** must be a collapsible overlay on mobile, always visible on `md+`
+- **Mobile nav drawer:** always include role-specific links (e.g. Admin Dashboard for admin users)
+
 ## Styling
 - Use **Tailwind CSS** utility classes for all styling
 - Theme tokens defined in `tailwind.config.ts` (colors, typography, spacing, shadows)
