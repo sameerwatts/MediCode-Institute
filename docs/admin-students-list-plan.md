@@ -1,14 +1,11 @@
-# Plan: Admin Portal — Students List + Feature Roadmap
+# Plan: Admin Students List
 
 ## Context
-
-The admin panel currently has only one section: **Teacher Requests** (list + detail + approve/reject/resend-invite). The admin needs visibility into registered students. This plan adds a **Students List** page to the admin panel, following the exact patterns already established by the TeacherRequests feature. Students are already stored as `User` records with `role='student'` — no new database tables needed.
+The admin panel currently has only one section: Teacher Requests. This feature adds a Students List page so admins can see all registered students. Students are already stored as `User` records with `role='student'` — no new DB tables needed. The implementation follows the exact TeacherRequests pattern established in the codebase.
 
 ---
 
-## Part 1: Students List Implementation
-
-### Files to Modify (4)
+## Files to Modify (5)
 
 | File | Change |
 |------|--------|
@@ -16,8 +13,9 @@ The admin panel currently has only one section: **Teacher Requests** (list + det
 | `src/types/index.ts` | Add `IStudentListItem` + `IPaginatedStudents` interfaces |
 | `src/services/adminService.ts` | Add `getStudents()` function |
 | `src/components/admin/AdminSidebar/index.tsx` | Add "Students" nav item |
+| `src/components/admin/AdminSidebar/AdminSidebar.test.tsx` | Add test for Students nav item |
 
-### Files to Create (4)
+## Files to Create (4)
 
 | File | Purpose |
 |------|---------|
@@ -28,17 +26,24 @@ The admin panel currently has only one section: **Teacher Requests** (list + det
 
 ---
 
-### Step 1 — Backend Pydantic Schema
+## Step-by-Step Implementation
 
+### Step 1 — Backend Pydantic Schema
 **Create** `backend/app/schemas/student.py`
 
 ```python
+from datetime import datetime
+from typing import Optional
+from pydantic import BaseModel, ConfigDict
+
 class StudentListItem(BaseModel):
+    model_config = ConfigDict(from_attributes=True)  # required for SQLAlchemy ORM
+
     id: str
     name: str
     email: str
-    phone: str | None = None
-    avatar_url: str | None = None
+    phone: Optional[str] = None
+    avatar_url: Optional[str] = None
     created_at: datetime
 
 class StudentListResponse(BaseModel):
@@ -50,20 +55,57 @@ class StudentListResponse(BaseModel):
 ```
 
 ### Step 2 — Backend API Endpoint
+**Modify** `backend/app/routers/admin.py`
 
-**Modify** `backend/app/routers/admin.py` — add endpoint following `list_applications` pattern:
+Add imports for the new schemas. Add endpoint after existing routes:
 
-- **Route:** `GET /api/admin/students?search=&page=1`
-- **Auth:** `require_admin` dependency
-- **Query:** `db.query(User).filter(User.role == "student")`
-- **Search:** `ilike` on `User.name` and `User.email`
-- **Sort:** `User.created_at.desc()` (newest first)
-- **Pagination:** Same `PAGE_SIZE = 10`, same `offset/limit` pattern
-- No status filter needed (all returned users are active students)
+```python
+from app.schemas.student import StudentListItem, StudentListResponse
+
+@router.get("/students", response_model=StudentListResponse)
+def list_students(
+    search: str = Query("", description="Search by name or email"),
+    page: int = Query(1, ge=1, description="Page number"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin),
+):
+    query = db.query(User).filter(User.role == "student")
+
+    if search.strip():
+        search_term = f"%{search.strip()}%"
+        query = query.filter(
+            or_(User.name.ilike(search_term), User.email.ilike(search_term))
+        )
+
+    total = query.count()
+    items = (
+        query.order_by(User.created_at.desc())
+        .offset((page - 1) * PAGE_SIZE)
+        .limit(PAGE_SIZE)
+        .all()
+    )
+
+    return StudentListResponse(
+        items=[
+            StudentListItem(
+                id=str(user.id),  # UUID → str required
+                name=user.name,
+                email=user.email,
+                phone=user.phone,
+                avatar_url=user.avatar_url,
+                created_at=user.created_at,
+            )
+            for user in items
+        ],
+        total=total,
+        page=page,
+        page_size=PAGE_SIZE,
+        has_next=(page * PAGE_SIZE) < total,
+    )
+```
 
 ### Step 3 — Frontend Types
-
-**Modify** `src/types/index.ts` — add:
+**Modify** `src/types/index.ts` — append after existing interfaces:
 
 ```typescript
 export interface IStudentListItem {
@@ -85,53 +127,102 @@ export interface IPaginatedStudents {
 ```
 
 ### Step 4 — Frontend Service
+**Modify** `src/services/adminService.ts` — add `getStudents()` mirroring `getApplications()`:
 
-**Modify** `src/services/adminService.ts` — add `getStudents()`:
-
-- Mirrors `getApplications()` pattern exactly
-- Params: `{ search?: string; page?: number }` (no status param needed)
-- Endpoint: `GET /admin/students`
-- Uses same `api` axios instance and `toError` helper
+```typescript
+export async function getStudents(params?: {
+  search?: string;
+  page?: number;
+}): Promise<IPaginatedStudents> {
+  try {
+    const res = await api.get<IPaginatedStudents>('/admin/students', { params });
+    return res.data;
+  } catch (err) {
+    toError(err, 'Failed to fetch students.');
+  }
+}
+```
 
 ### Step 5 — StudentsList View Component
-
 **Create** `src/views/Admin/StudentsList/index.tsx`
 
-Follows `TeacherRequests/index.tsx` pattern with these differences:
-- **No status filter buttons** (students have no status lifecycle)
-- **Table columns:** Name, Email, Phone, Registered (date)
-- **No "View" link** (no student detail page in this scope)
-- Phone shows `'—'` for null values
-- Same search form, pagination, loading/error/empty states
+Follows `TeacherRequests/index.tsx` pattern exactly with these differences:
+- **No status filter buttons** — students have no status lifecycle
+- **Table columns:** Name, Email, Phone (full number; `'—'` for null), Registered (MMM DD, YYYY)
+- **No "View" link** — no student detail page in scope
+- **Dual search state pattern:** `searchInput` (UI state) + `search` (API trigger, reset to page 1 on submit)
+- **aria-label on search input:** `"Search students"` (for accessibility + tests)
+- Same loading ("Loading..."), error (`role="alert"`), empty ("No students found"), and pagination states as TeacherRequests
 
 ### Step 6 — Route Page
-
 **Create** `app/admin/students/page.tsx`
 
 ```typescript
+import type { Metadata } from 'next';
 import StudentsList from '@/views/Admin/StudentsList';
-export const metadata = { title: 'Students | MediCode Admin' };
-export default function StudentsPage() { return <StudentsList />; }
+
+export const metadata: Metadata = { title: 'Students | MediCode Admin' };
+
+export default function StudentsPage() {
+  return <StudentsList />;
+}
 ```
 
 ### Step 7 — Sidebar Nav
+**Modify** `src/components/admin/AdminSidebar/index.tsx`
 
-**Modify** `src/components/admin/AdminSidebar/index.tsx`:
+Add to `navItems` array:
+```typescript
+const navItems = [
+  { label: 'Teacher Requests', href: '/admin/teacher-requests' },
+  { label: 'Students', href: '/admin/students' },
+];
+```
+Active-state highlighting already works via `pathname.startsWith(item.href)`.
 
-Add `{ label: 'Students', href: '/admin/students' }` to `navItems` array. Active-state highlighting already works via `pathname.startsWith()`.
+### Step 8 — Update AdminSidebar Tests
+**Modify** `src/components/admin/AdminSidebar/AdminSidebar.test.tsx`
 
-### Step 8 — Tests
+Add test (following existing mock of `usePathname`):
+```typescript
+it('renders Students nav link', () => {
+  render(<AdminSidebar />);
+  expect(screen.getByRole('link', { name: /Students/i })).toBeInTheDocument();
+});
+```
 
+### Step 9 — StudentsList Tests
 **Create** `src/views/Admin/StudentsList/StudentsList.test.tsx`
 
-Mock `adminService.getStudents`, test:
-- Renders heading and search input
-- Shows loading state
-- Renders students in table after fetch
-- Shows "No students found" for empty results
-- Shows error alert on fetch failure
-- Displays dash for missing phone
-- Pagination controls render
+Mock `adminService.getStudents`. Test cases:
+1. Renders heading "Students"
+2. Renders search input (`getByLabelText(/Search students/i)`)
+3. Shows "Loading..." state (mock never-resolving promise)
+4. Renders students in table rows after successful fetch
+5. Shows "No students found" for empty result
+6. Shows `role="alert"` error on fetch failure
+7. Displays `'—'` for null phone number
+8. Renders Previous/Next pagination buttons
+
+---
+
+## Key Patterns (from codebase exploration)
+
+- **UUID serialization**: `str(user.id)` required — User model uses `UUID(as_uuid=True)`
+- **Schema ORM compat**: `model_config = ConfigDict(from_attributes=True)` required
+- **Auth guard**: `AdminLayout` already redirects non-admin users to `/login` — no extra work needed
+- **Test imports**: Use `@/test-utils` not `@testing-library/react`; mock with `jest.mocked(adminService.getStudents)`
+- **Mock data pattern**: Use `as const` for literal types in test mock objects
+
+---
+
+## Verification
+
+1. **Backend**: `GET /api/admin/students` returns paginated student list with correct fields; search filters by name/email
+2. **Frontend**: `npm test` — all StudentsList tests and updated AdminSidebar test pass
+3. **Lint/Build**: `npm run lint && npm run build` must pass
+4. **E2E**: Login as admin → sidebar shows "Students" link → click → see paginated list → search works → pagination works
+5. **Access control**: Non-admin hitting `/admin/students` → redirected to `/login` (handled by AdminLayout)
 
 ---
 
@@ -168,13 +259,3 @@ Mock `adminService.getStudents`, test:
 | **Later** | Earnings Dashboard | Revenue from courses, payout history |
 | **Later** | Course Analytics | Views, completion rates, drop-off points |
 | **Later** | Blog/Content | Publish educational blog posts |
-
----
-
-## Verification
-
-1. **Backend:** Run `pytest` (or manually test `GET /api/admin/students` with admin session cookie)
-2. **Frontend:** Run `npm test` — StudentsList tests should pass
-3. **Lint/Build:** `npm run lint && npm run build` must pass
-4. **E2E:** Login as admin → sidebar shows "Students" link → click it → see paginated student list → search works → pagination works
-5. **Access control:** Non-admin users hitting `/admin/students` should be redirected to `/login`
