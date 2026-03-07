@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import AppSidebar from "@/components/layout/AppSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
 import Loader from "@/components/common/Loader";
 
@@ -26,9 +26,9 @@ const AdminLayout: React.FC<IAdminLayoutProps> = ({ children }) => {
   if (!user || user.role !== "admin") return null;
 
   return (
-    <div className="fixed inset-0 z-[1001] overflow-hidden md:flex" role="main">
+    <div className="fixed inset-0 z-[1001] overflow-hidden md:flex">
       {/* Sidebar — always at left, behind page content on mobile (z-10) */}
-      <AdminSidebar onClose={() => setIsSidebarOpen(false)} />
+      <AppSidebar variant="admin" onClose={() => setIsSidebarOpen(false)} />
 
       {/* Page content — slides right on mobile to reveal sidebar, same as PageShiftWrapper */}
       <div
