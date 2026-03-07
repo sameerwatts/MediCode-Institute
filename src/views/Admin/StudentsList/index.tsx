@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { getStudents } from '@/services/adminService';
 import { IPaginatedStudents } from '@/types';
 
@@ -101,7 +102,7 @@ const StudentsList: React.FC = () => {
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow-sm overflow-x-auto">
-              <table className="w-full min-w-[480px]">
+              <table className="w-full">
                 <thead className="bg-light border-b border-light-gray">
                   <tr>
                     <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
@@ -110,12 +111,13 @@ const StudentsList: React.FC = () => {
                     <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
                       Email
                     </th>
-                    <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
+                    <th className="hidden md:table-cell text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
                       Phone
                     </th>
-                    <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
+                    <th className="hidden md:table-cell text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
                       Registered
                     </th>
+                    <th className="px-4 py-3" />
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-light-gray">
@@ -127,11 +129,19 @@ const StudentsList: React.FC = () => {
                       <td className="px-4 py-3 text-sm-text text-dark-gray">
                         {item.email}
                       </td>
-                      <td className="px-4 py-3 text-sm-text text-dark-gray">
+                      <td className="hidden md:table-cell px-4 py-3 text-sm-text text-dark-gray">
                         {item.phone ?? '—'}
                       </td>
-                      <td className="px-4 py-3 text-sm-text text-dark-gray">
+                      <td className="hidden md:table-cell px-4 py-3 text-sm-text text-dark-gray">
                         {formatDate(item.created_at)}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <Link
+                          href={`/admin/students/${item.id}`}
+                          className="text-primary text-sm-text font-medium hover:underline"
+                        >
+                          View
+                        </Link>
                       </td>
                     </tr>
                   ))}

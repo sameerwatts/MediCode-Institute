@@ -25,3 +25,14 @@ class StudentListResponse(BaseModel):
     page: int
     page_size: int
     has_next: bool
+
+
+class StudentDetail(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    name: str
+    email: str
+    phone: Optional[str] = None
+    avatar_url: Optional[str] = None
+    created_at: datetime

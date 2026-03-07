@@ -134,22 +134,22 @@ const TeacherRequests: React.FC = () => {
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow-sm overflow-x-auto">
-              <table className="w-full min-w-[640px]">
+              <table className="w-full">
                 <thead className="bg-light border-b border-light-gray">
                   <tr>
                     <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
                       Name
                     </th>
-                    <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
+                    <th className="hidden md:table-cell text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
                       Email
                     </th>
-                    <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
+                    <th className="hidden md:table-cell text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
                       Subject
                     </th>
                     <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
                       Status
                     </th>
-                    <th className="text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
+                    <th className="hidden md:table-cell text-left px-4 py-3 text-sm-text font-semibold text-dark-gray">
                       Submitted
                     </th>
                     <th className="px-4 py-3" />
@@ -161,16 +161,16 @@ const TeacherRequests: React.FC = () => {
                       <td className="px-4 py-3 text-sm-text text-dark font-medium">
                         {item.name}
                       </td>
-                      <td className="px-4 py-3 text-sm-text text-dark-gray">
+                      <td className="hidden md:table-cell px-4 py-3 text-sm-text text-dark-gray">
                         {item.email}
                       </td>
-                      <td className="px-4 py-3 text-sm-text text-dark-gray">
+                      <td className="hidden md:table-cell px-4 py-3 text-sm-text text-dark-gray">
                         {item.subject_area === 'cs' ? 'Computer Science' : 'Medical Sciences'}
                       </td>
                       <td className="px-4 py-3">
                         <StatusBadge status={item.status} />
                       </td>
-                      <td className="px-4 py-3 text-sm-text text-dark-gray">
+                      <td className="hidden md:table-cell px-4 py-3 text-sm-text text-dark-gray">
                         {formatDate(item.created_at)}
                       </td>
                       <td className="px-4 py-3 text-right">
