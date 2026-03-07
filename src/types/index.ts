@@ -174,3 +174,5 @@ export interface IPaginatedStudents {
   page_size: number;
   has_next: boolean;
 }
+
+export type IStudentDetail = IStudentListItem;

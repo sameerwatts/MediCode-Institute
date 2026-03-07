@@ -22,7 +22,7 @@ from app.dependencies.roles import require_admin
 from app.models.invite_token import InviteToken
 from app.models.teacher_application import TeacherApplication
 from app.models.user import User
-from app.schemas.student import StudentListItem, StudentListResponse
+from app.schemas.student import StudentDetail, StudentListItem, StudentListResponse
 from app.schemas.application import (
     ApplicationApproveResponse,
     ApplicationDetailResponse,
@@ -327,4 +327,32 @@ def list_students(
         page=page,
         page_size=PAGE_SIZE,
         has_next=(page * PAGE_SIZE) < total,
+    )
+
+
+@router.get("/students/{student_id}", response_model=StudentDetail)
+def get_student_detail(
+    student_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin),
+):
+    """Full detail of a single registered student."""
+    student = db.query(User).filter(
+        User.id == student_id,
+        User.role == "student",
+    ).first()
+
+    if not student:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Student not found.",
+        )
+
+    return StudentDetail(
+        id=str(student.id),
+        name=student.name,
+        email=student.email,
+        phone=student.phone,
+        avatar_url=student.avatar_url,
+        created_at=student.created_at,
     )

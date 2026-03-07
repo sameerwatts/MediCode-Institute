@@ -11,6 +11,7 @@ import {
   IRejectResponse,
   IResendInviteResponse,
   IPaginatedStudents,
+  IStudentDetail,
 } from '@/types';
 
 const api = axios.create({
@@ -100,5 +101,14 @@ export async function getStudents(params?: {
     return res.data;
   } catch (err) {
     return toError(err, 'Failed to load students.');
+  }
+}
+
+export async function getStudent(id: string): Promise<IStudentDetail> {
+  try {
+    const res = await api.get<IStudentDetail>(`/admin/students/${id}`);
+    return res.data;
+  } catch (err) {
+    return toError(err, 'Failed to load student detail.');
   }
 }
