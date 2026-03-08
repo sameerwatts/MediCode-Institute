@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     # Frontend URL for constructing links in emails
     frontend_url: str = "http://localhost:3000"
 
+    # Google OAuth
+    google_client_id: str = ""
+    google_client_secret: str = ""
+
     # Comma-separated list of allowed CORS origins.
     # Local dev default covers localhost:3000.
     # On Render, set this env var to your Vercel domain(s).
