@@ -38,6 +38,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'ui-avatars.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
     ],
   },
 };
