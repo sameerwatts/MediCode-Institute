@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
-  const state = searchParams.get('state');
 
-  const cookieStore = await cookies();
-  const storedState = cookieStore.get('oauth_state')?.value;
-
-  // CSRF state check
-  if (!code || !state || state !== storedState) {
-    return NextResponse.redirect(new URL('/login?error=oauth_state_error', request.url));
+  if (!code) {
+    return NextResponse.redirect(new URL('/login?error=oauth_failed', request.url));
   }
 
   const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000/api';
@@ -25,15 +19,12 @@ export async function GET(request: NextRequest) {
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    const errorParam = err?.detail === 'oauth_role_not_permitted' ? 'oauth_role_error' : 'oauth_exchange_failed';
+    const errorParam = err?.detail === 'oauth_role_not_permitted' ? 'oauth_role_error' : 'oauth_failed';
     return NextResponse.redirect(new URL(`/login?error=${errorParam}`, request.url));
   }
 
   const { access_token, refresh_token } = await res.json();
   const isSecure = process.env.NODE_ENV === 'production';
-
-  cookieStore.delete('oauth_state');
-
   const response = NextResponse.redirect(new URL('/', request.url));
 
   response.cookies.set('access_token', access_token, {
