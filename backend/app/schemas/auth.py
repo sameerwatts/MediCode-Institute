@@ -62,3 +62,14 @@ class UserResponse(BaseModel):
 class AuthResponse(BaseModel):
     user: UserResponse
     message: str
+
+
+class GoogleExchangeRequest(BaseModel):
+    code: str
+    redirect_uri: str  # must match the URI registered in Google Cloud Console
+
+
+class GoogleExchangeResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    user: UserResponse
