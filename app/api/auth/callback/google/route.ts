@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 export const runtime = 'nodejs';
 
@@ -6,9 +7,11 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
   const state = searchParams.get('state');
-  const storedState = request.cookies.get('oauth_state')?.value;
 
-  // CSRF state check — distinct error so we can diagnose cookie issues
+  const cookieStore = await cookies();
+  const storedState = cookieStore.get('oauth_state')?.value;
+
+  // CSRF state check
   if (!code || !state || state !== storedState) {
     return NextResponse.redirect(new URL('/login?error=oauth_state_error', request.url));
   }
@@ -28,6 +31,9 @@ export async function GET(request: NextRequest) {
 
   const { access_token, refresh_token } = await res.json();
   const isSecure = process.env.NODE_ENV === 'production';
+
+  cookieStore.delete('oauth_state');
+
   const response = NextResponse.redirect(new URL('/', request.url));
 
   response.cookies.set('access_token', access_token, {
@@ -44,7 +50,6 @@ export async function GET(request: NextRequest) {
     maxAge: 7 * 24 * 60 * 60,
     path: '/api/auth/refresh',
   });
-  response.cookies.delete('oauth_state');
 
   return response;
 }
