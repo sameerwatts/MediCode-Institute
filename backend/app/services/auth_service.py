@@ -131,6 +131,13 @@ def exchange_google_code(code: str, redirect_uri: str) -> Optional[dict]:
     3. Verify the email is verified.
     Returns { google_id, email, name, picture } or None on any failure.
     """
+    import logging
+    logger = logging.getLogger(__name__)
+
+    if not settings.google_client_id or not settings.google_client_secret:
+        logger.error("Google OAuth: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET is not configured")
+        return None
+
     try:
         token_res = httpx.post(
             "https://oauth2.googleapis.com/token",
@@ -143,9 +150,18 @@ def exchange_google_code(code: str, redirect_uri: str) -> Optional[dict]:
             },
             timeout=10,
         )
-        token_res.raise_for_status()
+        if not token_res.is_success:
+            logger.error(
+                "Google OAuth token exchange failed: status=%s body=%s redirect_uri=%s",
+                token_res.status_code,
+                token_res.text,
+                redirect_uri,
+            )
+            return None
+
         google_access_token = token_res.json().get("access_token")
         if not google_access_token:
+            logger.error("Google OAuth: no access_token in token response: %s", token_res.text)
             return None
 
         userinfo_res = httpx.get(
@@ -157,6 +173,7 @@ def exchange_google_code(code: str, redirect_uri: str) -> Optional[dict]:
         userinfo = userinfo_res.json()
 
         if not userinfo.get("verified_email"):
+            logger.error("Google OAuth: email not verified for %s", userinfo.get("email"))
             return None
 
         return {
@@ -165,7 +182,8 @@ def exchange_google_code(code: str, redirect_uri: str) -> Optional[dict]:
             "name": userinfo.get("name", ""),
             "picture": userinfo.get("picture"),
         }
-    except Exception:
+    except Exception as exc:
+        logger.error("Google OAuth exchange_google_code exception: %s", exc, exc_info=True)
         return None
 
 
