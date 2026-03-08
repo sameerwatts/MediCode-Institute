@@ -1,4 +1,6 @@
+import { Suspense } from 'react';
 import Login from '@/views/Login';
+import Loader from '@/components/common/Loader';
 
 export const metadata = {
   title: 'Sign In | MediCode Institute',
@@ -6,5 +8,9 @@ export const metadata = {
 };
 
 export default function LoginPage() {
-  return <Login />;
+  return (
+    <Suspense fallback={<Loader />}>
+      <Login />
+    </Suspense>
+  );
 }
