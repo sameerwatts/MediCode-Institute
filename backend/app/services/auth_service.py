@@ -23,6 +23,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import bcrypt
+import httpx
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
@@ -95,6 +96,10 @@ def get_user_by_id(db: Session, user_id: str) -> Optional[User]:
     return db.query(User).filter(User.id == user_id).first()
 
 
+def get_user_by_google_id(db: Session, google_id: str) -> Optional[User]:
+    return db.query(User).filter(User.google_id == google_id).first()
+
+
 def create_user(
     db: Session, name: str, email: str, password: str, role: str = "student"
 ) -> User:
@@ -109,6 +114,99 @@ def create_user(
         email=email.lower().strip(),
         password_hash=hash_password(password),
         role=role,
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+# ─── Google OAuth ─────────────────────────────────────────────────────────────
+
+def exchange_google_code(code: str, redirect_uri: str) -> Optional[dict]:
+    """
+    Exchange an authorization code for Google user info.
+    1. POST to Google token endpoint to get access token.
+    2. GET Google userinfo using that access token.
+    3. Verify the email is verified.
+    Returns { google_id, email, name, picture } or None on any failure.
+    """
+    try:
+        token_res = httpx.post(
+            "https://oauth2.googleapis.com/token",
+            data={
+                "code": code,
+                "client_id": settings.google_client_id,
+                "client_secret": settings.google_client_secret,
+                "redirect_uri": redirect_uri,
+                "grant_type": "authorization_code",
+            },
+            timeout=10,
+        )
+        token_res.raise_for_status()
+        google_access_token = token_res.json().get("access_token")
+        if not google_access_token:
+            return None
+
+        userinfo_res = httpx.get(
+            "https://www.googleapis.com/oauth2/v2/userinfo",
+            headers={"Authorization": f"Bearer {google_access_token}"},
+            timeout=10,
+        )
+        userinfo_res.raise_for_status()
+        userinfo = userinfo_res.json()
+
+        if not userinfo.get("verified_email"):
+            return None
+
+        return {
+            "google_id": userinfo["id"],
+            "email": userinfo["email"],
+            "name": userinfo.get("name", ""),
+            "picture": userinfo.get("picture"),
+        }
+    except Exception:
+        return None
+
+
+def find_or_create_google_user(db: Session, google_user: dict) -> User:
+    """
+    Find or create a user from Google OAuth data.
+    1. Look up by google_id → if found: update avatar and return.
+    2. Look up by email → if found:
+       - Teacher/admin: raise ValueError (blocked).
+       - Student: link google_id, set auth_provider="both", return.
+    3. Neither → create new student with auth_provider="google".
+    """
+    # 1. Lookup by google_id
+    user = get_user_by_google_id(db, google_user["google_id"])
+    if user:
+        user.avatar_url = google_user.get("picture") or user.avatar_url
+        db.commit()
+        db.refresh(user)
+        return user
+
+    # 2. Lookup by email
+    user = get_user_by_email(db, google_user["email"])
+    if user:
+        if user.role in ("teacher", "admin"):
+            raise ValueError("oauth_role_not_permitted")
+        user.google_id = google_user["google_id"]
+        user.auth_provider = "both"
+        user.avatar_url = google_user.get("picture") or user.avatar_url
+        db.commit()
+        db.refresh(user)
+        return user
+
+    # 3. Create new student
+    user = User(
+        name=google_user["name"].strip() or google_user["email"].split("@")[0],
+        email=google_user["email"].lower().strip(),
+        password_hash=None,
+        role="student",
+        google_id=google_user["google_id"],
+        auth_provider="google",
+        avatar_url=google_user.get("picture"),
     )
     db.add(user)
     db.commit()

@@ -29,7 +29,7 @@ from app.database import get_db
 from app.dependencies.auth import get_current_user
 from app.models.user import User
 from app.schemas.application import InviteTokenInvalidResponse, InviteTokenValidResponse
-from app.schemas.auth import AuthResponse, LoginRequest, RegisterRequest, UserResponse
+from app.schemas.auth import AuthResponse, GoogleExchangeRequest, GoogleExchangeResponse, LoginRequest, RegisterRequest, UserResponse
 from app.services import auth_service
 from app.services.invite_service import consume_invite_token, validate_invite_token
 
@@ -198,6 +198,35 @@ def refresh(
     return AuthResponse(
         user=UserResponse.model_validate(user),
         message="Token refreshed",
+    )
+
+
+@router.post("/google/exchange", response_model=GoogleExchangeResponse)
+def google_exchange(
+    request: GoogleExchangeRequest,
+    db: Session = Depends(get_db),
+):
+    """
+    Exchange a Google authorization code for JWT tokens.
+    Called server-to-server by the Next.js Route Handler — cookies are set
+    by the Route Handler, not here. Returns JSON with access + refresh tokens.
+    """
+    google_user = auth_service.exchange_google_code(request.code, request.redirect_uri)
+    if not google_user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="oauth_failed")
+
+    try:
+        user = auth_service.find_or_create_google_user(db, google_user)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+
+    access_token = auth_service.create_access_token(str(user.id), user.role)
+    refresh_token = auth_service.create_refresh_token(str(user.id))
+
+    return GoogleExchangeResponse(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        user=UserResponse.model_validate(user),
     )
 
 
