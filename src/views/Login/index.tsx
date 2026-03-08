@@ -25,8 +25,6 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 const OAUTH_ERRORS: Record<string, string> = {
   oauth_failed: 'Google sign-in failed. Please try again.',
-  oauth_state_error: 'Google sign-in session expired or was tampered with. Please try again.',
-  oauth_exchange_failed: 'Google sign-in failed. Please try again.',
   oauth_role_error: 'Google sign-in is only available for student accounts.',
 };
 

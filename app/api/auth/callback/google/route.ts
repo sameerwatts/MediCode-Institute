@@ -5,12 +5,9 @@ export const runtime = 'nodejs';
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
-  const state = searchParams.get('state');
-  const storedState = request.cookies.get('oauth_state')?.value;
 
-  // CSRF state check — distinct error so we can diagnose cookie issues
-  if (!code || !state || state !== storedState) {
-    return NextResponse.redirect(new URL('/login?error=oauth_state_error', request.url));
+  if (!code) {
+    return NextResponse.redirect(new URL('/login?error=oauth_failed', request.url));
   }
 
   const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000/api';
@@ -22,7 +19,7 @@ export async function GET(request: NextRequest) {
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    const errorParam = err?.detail === 'oauth_role_not_permitted' ? 'oauth_role_error' : 'oauth_exchange_failed';
+    const errorParam = err?.detail === 'oauth_role_not_permitted' ? 'oauth_role_error' : 'oauth_failed';
     return NextResponse.redirect(new URL(`/login?error=${errorParam}`, request.url));
   }
 
@@ -44,7 +41,6 @@ export async function GET(request: NextRequest) {
     maxAge: 7 * 24 * 60 * 60,
     path: '/api/auth/refresh',
   });
-  response.cookies.delete('oauth_state');
 
   return response;
 }
