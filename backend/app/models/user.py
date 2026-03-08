@@ -25,8 +25,10 @@ class User(Base):
         default=uuid.uuid4,
     )
     email = Column(String, unique=True, nullable=False, index=True)
-    password_hash = Column(String, nullable=False)
+    password_hash = Column(String, nullable=True)  # nullable for OAuth users
     name = Column(String, nullable=False)
+    google_id = Column(String(255), nullable=True, unique=True, index=True)
+    auth_provider = Column(String(20), nullable=False, default="local")  # 'local' | 'google' | 'both'
     role = Column(
         Enum("student", "teacher", "admin", name="user_role"),
         nullable=False,

@@ -139,7 +139,7 @@ def login(
     """
     user = auth_service.get_user_by_email(db, request.email)
 
-    if not user or not auth_service.verify_password(request.password, user.password_hash):
+    if not user or not user.password_hash or not auth_service.verify_password(request.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password.",
