@@ -8,6 +8,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [fix/redirect-teacher-admin-from-apply] — 2026-03-18
+
+### Fixed
+- Teachers and admins navigating to `/become-a-teacher` are now redirected to home page
+
 ## [fix/admin-mobile-responsive] — 2026-03-08
 
 ### Fixed
