@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     google_client_id: str = ""
     google_client_secret: str = ""
 
+    # How long (seconds) after a rejection before the same email can re-apply
+    rejection_cooldown_seconds: int = 60
+
     # Comma-separated list of allowed CORS origins.
     # Local dev default covers localhost:3000.
     # On Render, set this env var to your Vercel domain(s).
