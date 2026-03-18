@@ -2,9 +2,22 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@/test-utils';
 import BecomeATeacher from './index';
 import * as applicationService from '@/services/applicationService';
+import { useAuth } from '@/hooks/useAuth';
+
+jest.mock('@/hooks/useAuth', () => ({
+  useAuth: jest.fn(),
+}));
+const mockUseAuth = jest.mocked(useAuth);
 
 jest.mock('@/services/applicationService');
 const mockSubmit = jest.mocked(applicationService.submitApplication);
+
+const mockReplace = jest.fn();
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({ replace: mockReplace, push: jest.fn(), back: jest.fn() })),
+  usePathname: jest.fn(() => '/become-a-teacher'),
+  useSearchParams: jest.fn(() => new URLSearchParams()),
+}));
 
 const VALID_QUALIFICATIONS = 'MBBS, MD with 5 years of clinical experience';
 const VALID_PHILOSOPHY =
@@ -35,6 +48,15 @@ function fillValidForm() {
 describe('BecomeATeacher', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Default: logged-out user (student and logged-out see the form)
+    mockUseAuth.mockReturnValue({
+      user: null,
+      isLoading: false,
+      isAuthenticated: false,
+      login: jest.fn(),
+      signup: jest.fn(),
+      logout: jest.fn(),
+    });
   });
 
   it('renders the page heading', () => {
@@ -136,5 +158,46 @@ describe('BecomeATeacher', () => {
   it('renders an "Already applied?" link to application-status page', () => {
     render(<BecomeATeacher />);
     expect(screen.getByRole('link', { name: /Check your status/i })).toBeInTheDocument();
+  });
+
+  it('redirects teachers to home page', () => {
+    mockUseAuth.mockReturnValue({
+      user: { id: '1', name: 'Teacher', email: 't@test.com', role: 'teacher', created_at: '' },
+      isLoading: false,
+      isAuthenticated: true,
+      login: jest.fn(),
+      signup: jest.fn(),
+      logout: jest.fn(),
+    });
+    const { container } = render(<BecomeATeacher />);
+    expect(mockReplace).toHaveBeenCalledWith('/');
+    expect(container.innerHTML).toBe('');
+  });
+
+  it('redirects admins to home page', () => {
+    mockUseAuth.mockReturnValue({
+      user: { id: '2', name: 'Admin', email: 'a@test.com', role: 'admin', created_at: '' },
+      isLoading: false,
+      isAuthenticated: true,
+      login: jest.fn(),
+      signup: jest.fn(),
+      logout: jest.fn(),
+    });
+    const { container } = render(<BecomeATeacher />);
+    expect(mockReplace).toHaveBeenCalledWith('/');
+    expect(container.innerHTML).toBe('');
+  });
+
+  it('renders the form for students', () => {
+    mockUseAuth.mockReturnValue({
+      user: { id: '3', name: 'Student', email: 's@test.com', role: 'student', created_at: '' },
+      isLoading: false,
+      isAuthenticated: true,
+      login: jest.fn(),
+      signup: jest.fn(),
+      logout: jest.fn(),
+    });
+    render(<BecomeATeacher />);
+    expect(screen.getByRole('heading', { name: /Become a Teacher/i })).toBeInTheDocument();
   });
 });

@@ -102,9 +102,9 @@
   - [x] PR 18: Invite signup flow (with expired token error card)
   - [x] PR 19: Teacher onboarding page (profile enrichment + Supabase Storage photo upload)
 - [ ] **Restrict "Become a Teacher" by Role & Email (4 PRs):**
-  - [ ] PR 1: Block teacher/admin email applications (backend)
-  - [ ] PR 2: Rejection cooldown (backend)
-  - [ ] PR 3: Redirect teachers/admins from /become-a-teacher page (frontend)
+  - [x] PR 1: Block teacher/admin email applications (backend)
+  - [x] PR 2: Rejection cooldown (backend)
+  - [x] PR 3: Redirect teachers/admins from /become-a-teacher page (frontend)
   - [x] PR 4: Hide "Become a Teacher" links for teachers/admins (frontend)
 - [ ] Course detail page (`/courses/[slug]`)
 - [ ] Quiz-taking functionality
