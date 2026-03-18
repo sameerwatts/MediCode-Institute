@@ -8,6 +8,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [fix/application-rejection-cooldown] — 2026-03-18
+
+### Fixed
+- `POST /api/applications` now enforces a 60-second cooldown after rejection before the same email can re-apply (returns 429)
+
 ## [fix/block-teacher-admin-applications] — 2026-03-18
 
 ### Added

@@ -5,8 +5,12 @@ POST /api/applications        — Submit a new teacher application
 GET  /api/applications/status — Check application status by email + application_id
 """
 
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
+
+from app.config import settings
 
 from app.database import get_db
 from app.models.teacher_application import TeacherApplication
@@ -63,6 +67,20 @@ def submit_application(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="This email is already registered as a teacher or admin.",
         )
+
+    # Block re-application too soon after rejection
+    last_rejected = db.query(TeacherApplication).filter(
+        TeacherApplication.email == request.email.lower().strip(),
+        TeacherApplication.status == "rejected",
+    ).order_by(TeacherApplication.updated_at.desc()).first()
+
+    if last_rejected and last_rejected.updated_at:
+        seconds_since = (datetime.now(timezone.utc) - last_rejected.updated_at).total_seconds()
+        if seconds_since < settings.rejection_cooldown_seconds:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail="Please wait before re-applying.",
+            )
 
     application = TeacherApplication(
         name=request.name.strip(),
