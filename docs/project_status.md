@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Restrict "Become a Teacher" by Role & Email** — PR 1 of 4: Block teacher/admin email applications.
+**Restrict "Become a Teacher" by Role & Email** — PR 2 of 4: Rejection cooldown.
 
 ## Current Branch
-`fix/block-teacher-admin-applications` — backend rejects applications from existing teacher/admin emails.
+`fix/application-rejection-cooldown` — 60s cooldown after rejection before re-applying.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -103,7 +103,7 @@
   - [x] PR 19: Teacher onboarding page (profile enrichment + Supabase Storage photo upload)
 - [ ] **Restrict "Become a Teacher" by Role & Email (4 PRs):**
   - [x] PR 1: Block teacher/admin email applications (backend)
-  - [ ] PR 2: Rejection cooldown (backend)
+  - [x] PR 2: Rejection cooldown (backend)
   - [ ] PR 3: Redirect teachers/admins from /become-a-teacher page (frontend)
   - [ ] PR 4: Hide "Become a Teacher" links for teachers/admins (frontend)
 - [ ] Course detail page (`/courses/[slug]`)
@@ -134,4 +134,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-18 (Restrict "Become a Teacher" — PR 1: block teacher/admin emails)
+2026-03-18 (Restrict "Become a Teacher" — PR 2: rejection cooldown)
