@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Restrict "Become a Teacher" by Role & Email** — PR 2 of 4: Rejection cooldown.
+**Restrict "Become a Teacher" by Role & Email** — PR 3 of 4: Redirect teachers/admins from apply page.
 
 ## Current Branch
-`fix/application-rejection-cooldown` — 60s cooldown after rejection before re-applying.
+`fix/redirect-teacher-admin-from-apply` — teachers/admins redirected away from /become-a-teacher.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -104,7 +104,7 @@
 - [ ] **Restrict "Become a Teacher" by Role & Email (4 PRs):**
   - [x] PR 1: Block teacher/admin email applications (backend)
   - [x] PR 2: Rejection cooldown (backend)
-  - [ ] PR 3: Redirect teachers/admins from /become-a-teacher page (frontend)
+  - [x] PR 3: Redirect teachers/admins from /become-a-teacher page (frontend)
   - [ ] PR 4: Hide "Become a Teacher" links for teachers/admins (frontend)
 - [ ] Course detail page (`/courses/[slug]`)
 - [ ] Quiz-taking functionality
@@ -134,4 +134,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-18 (Restrict "Become a Teacher" — PR 2: rejection cooldown)
+2026-03-18 (Restrict "Become a Teacher" — PR 3: redirect teachers/admins from apply page)

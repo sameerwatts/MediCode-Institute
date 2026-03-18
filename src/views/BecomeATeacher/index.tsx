@@ -5,11 +5,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import FormInput from '@/components/common/FormInput';
 import FormTextarea from '@/components/common/FormTextarea';
 import FormRadioGroup from '@/components/common/FormRadioGroup';
 import Button from '@/components/common/Button';
 import { submitApplication } from '@/services/applicationService';
+import { useAuth } from '@/hooks/useAuth';
 
 const applicationSchema = z.object({
   name: z
@@ -54,6 +56,8 @@ const subjectOptions = [
 ];
 
 const BecomeATeacher: React.FC = () => {
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
   const [serverError, setServerError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [applicationId, setApplicationId] = useState('');
@@ -83,6 +87,13 @@ const BecomeATeacher: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
+  // Redirect teachers/admins — they shouldn't access this page
+  if (!isLoading && user && user.role !== 'student') {
+    router.replace('/');
+    return null;
+  }
+  if (isLoading) return null;
 
   if (applicationId) {
     return (
