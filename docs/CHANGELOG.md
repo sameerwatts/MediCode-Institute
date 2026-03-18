@@ -8,6 +8,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [fix/block-teacher-admin-applications] — 2026-03-18
+
+### Added
+- `rejection_cooldown_seconds` config setting (default 60s) in `backend/app/config.py`
+
+### Fixed
+- `POST /api/applications` now rejects submissions from emails already registered as teacher or admin (returns 403)
+
 ## [fix/admin-mobile-responsive] — 2026-03-08
 
 ### Fixed
