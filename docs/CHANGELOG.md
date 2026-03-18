@@ -8,6 +8,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [fix/invite-upgrade-student-to-teacher] — 2026-03-18
+
+### Fixed
+- Existing students can now accept teacher invite without "email already exists" error — role is upgraded from student to teacher instead of blocking registration
+
 ## [fix/hide-teacher-links-by-role] — 2026-03-18
 
 ### Fixed
