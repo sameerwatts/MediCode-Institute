@@ -16,6 +16,7 @@ from app.schemas.application import (
     ApplicationCreateResponse,
     ApplicationStatusResponse,
 )
+from app.services.auth_service import get_user_by_email
 from app.services.email_service import send_admin_new_application, send_application_received
 
 
@@ -54,6 +55,14 @@ def submit_application(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Already approved. Check your email for the invite link.",
             )
+
+    # Block if email already belongs to a teacher or admin
+    existing_user = get_user_by_email(db, request.email.lower().strip())
+    if existing_user and existing_user.role in ("teacher", "admin"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="This email is already registered as a teacher or admin.",
+        )
 
     application = TeacherApplication(
         name=request.name.strip(),
