@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Restrict "Become a Teacher" by Role & Email** — PR 4 of 4: Hide teacher links by role.
+**Bug fix** — Invite signup fails for existing students (email conflict).
 
 ## Current Branch
-`fix/hide-teacher-links-by-role` — hide Footer link and Home CTA for teachers/admins.
+`fix/invite-upgrade-student-to-teacher` — upgrade existing student role to teacher on invite signup.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -134,4 +134,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-18 (Restrict "Become a Teacher" — PR 4: hide teacher links by role)
+2026-03-18 (fix: invite signup upgrades existing student to teacher)

@@ -69,23 +69,18 @@ def register(
 ):
     """
     Register a new user account.
-    - Checks if email is already taken
-    - Hashes the password with bcrypt
-    - If invite_token is provided: validates it, sets role=teacher, links to application
-    - Otherwise: creates a standard student account
+    - If invite_token is provided: validates it first
+    - If email already exists as a student + valid invite: upgrades role to teacher
+    - If email already exists otherwise: returns 409
+    - If email is new + invite: creates teacher account
+    - If email is new, no invite: creates student account
     - Sets httpOnly cookies and returns the user object
     """
     existing = auth_service.get_user_by_email(db, request.email)
-    if existing:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="An account with this email already exists.",
-        )
-
-    role = "student"
     invite = None
     application = None
 
+    # Validate invite token first (if provided) so we know the context
     if request.invite_token:
         invite, application, error_reason = validate_invite_token(db, request.invite_token)
 
@@ -102,8 +97,31 @@ def register(
                 detail="Registration email must match the approved application email.",
             )
 
-        role = "teacher"
+    if existing:
+        # Existing student + valid invite → upgrade to teacher
+        if invite and application and existing.role == "student":
+            existing.role = "teacher"
+            consume_invite_token(db, invite)
+            application.user_id = existing.id
+            application.status = "registered"
+            db.commit()
+            db.refresh(existing)
 
+            access_token = auth_service.create_access_token(str(existing.id), existing.role)
+            refresh_token = auth_service.create_refresh_token(str(existing.id))
+            _set_auth_cookies(response, access_token, refresh_token)
+
+            return AuthResponse(
+                user=UserResponse.model_validate(existing),
+                message="Account upgraded to teacher successfully",
+            )
+
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="An account with this email already exists.",
+        )
+
+    role = "teacher" if invite else "student"
     user = auth_service.create_user(db, request.name, request.email, request.password, role=role)
 
     # If invite-based registration, consume the token and link user to application
