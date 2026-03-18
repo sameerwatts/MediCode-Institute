@@ -9,6 +9,7 @@ import HeroSection from './HeroSection';
 import FeaturesSection from './FeaturesSection';
 import StatsSection from './StatsSection';
 import CTASection from './CTASection';
+import TeacherCTASection from './TeacherCTASection';
 
 const popularCourses = courses.slice(0, 3);
 
@@ -64,21 +65,7 @@ const Home: React.FC = () => {
 
       <StatsSection />
 
-      <section className="py-section px-6">
-        <div className="max-w-[1200px] mx-auto rounded-xl bg-gradient-to-br from-secondary to-secondary-dark p-12 text-center text-white">
-          <h2 className="text-h2 font-extrabold mb-4">Share Your Expertise</h2>
-          <p className="text-body opacity-90 mb-8 max-w-[600px] mx-auto leading-relaxed">
-            Are you a medical professional or tech expert? Join our platform and
-            inspire the next generation of learners.
-          </p>
-          <Link
-            href="/become-a-teacher"
-            className="inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-all duration-200 px-8 py-4 text-h4 border-2 border-white text-white hover:bg-white/20"
-          >
-            Apply to Teach
-          </Link>
-        </div>
-      </section>
+      <TeacherCTASection />
 
       <CTASection />
     </>

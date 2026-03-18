@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Restrict "Become a Teacher" by Role & Email** — PR 3 of 4: Redirect teachers/admins from apply page.
+**Restrict "Become a Teacher" by Role & Email** — PR 4 of 4: Hide teacher links by role.
 
 ## Current Branch
-`fix/redirect-teacher-admin-from-apply` — teachers/admins redirected away from /become-a-teacher.
+`fix/hide-teacher-links-by-role` — hide Footer link and Home CTA for teachers/admins.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -105,7 +105,7 @@
   - [x] PR 1: Block teacher/admin email applications (backend)
   - [x] PR 2: Rejection cooldown (backend)
   - [x] PR 3: Redirect teachers/admins from /become-a-teacher page (frontend)
-  - [ ] PR 4: Hide "Become a Teacher" links for teachers/admins (frontend)
+  - [x] PR 4: Hide "Become a Teacher" links for teachers/admins (frontend)
 - [ ] Course detail page (`/courses/[slug]`)
 - [ ] Quiz-taking functionality
 - [ ] Blog detail page (`/blogs/[slug]`)
@@ -134,4 +134,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-18 (Restrict "Become a Teacher" — PR 3: redirect teachers/admins from apply page)
+2026-03-18 (Restrict "Become a Teacher" — PR 4: hide teacher links by role)

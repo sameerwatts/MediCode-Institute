@@ -8,6 +8,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [fix/hide-teacher-links-by-role] — 2026-03-18
+
+### Fixed
+- Footer "Become a Teacher" link hidden for teachers and admins
+- Home "Share Your Expertise" CTA section hidden for teachers and admins
+
+### Changed
+- Extracted `TeacherCTASection` client component from `Home/index.tsx` (keeps Home as server component)
+- Footer converted to client component to support `useAuth` hook
+
 ## [fix/redirect-teacher-admin-from-apply] — 2026-03-18
 
 ### Fixed
