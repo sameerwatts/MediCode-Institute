@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Become a Teacher Feature** — PR 19 of 19: Teacher onboarding page. COMPLETE.
+**Restrict "Become a Teacher" by Role & Email** — PR 4 of 4: Hide teacher links by role.
 
 ## Current Branch
-`fix/admin-mobile-responsive` — admin panel mobile responsiveness fixes.
+`fix/hide-teacher-links-by-role` — hide Footer link and Home CTA for teachers/admins.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -101,6 +101,11 @@
   - [x] PR 17: Admin teacher requests dashboard
   - [x] PR 18: Invite signup flow (with expired token error card)
   - [x] PR 19: Teacher onboarding page (profile enrichment + Supabase Storage photo upload)
+- [ ] **Restrict "Become a Teacher" by Role & Email (4 PRs):**
+  - [ ] PR 1: Block teacher/admin email applications (backend)
+  - [ ] PR 2: Rejection cooldown (backend)
+  - [ ] PR 3: Redirect teachers/admins from /become-a-teacher page (frontend)
+  - [x] PR 4: Hide "Become a Teacher" links for teachers/admins (frontend)
 - [ ] Course detail page (`/courses/[slug]`)
 - [ ] Quiz-taking functionality
 - [ ] Blog detail page (`/blogs/[slug]`)
@@ -129,4 +134,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-08 (Admin mobile responsiveness fix)
+2026-03-18 (Restrict "Become a Teacher" — PR 4: hide teacher links by role)

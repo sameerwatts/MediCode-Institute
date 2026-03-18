@@ -1,7 +1,13 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/useAuth';
 
 const Footer: React.FC = () => {
+  const { user } = useAuth();
+  const showTeacherLink = !user || user.role === 'student';
+
   return (
     <footer className="bg-dark text-gray pt-section px-4 pb-8">
       <div className="max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr] gap-8">
@@ -21,7 +27,9 @@ const Footer: React.FC = () => {
           <Link href="/courses" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">All Courses</Link>
           <Link href="/about" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">About Us</Link>
           <Link href="/blogs" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Blog</Link>
-          <Link href="/become-a-teacher" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Become a Teacher</Link>
+          {showTeacherLink && (
+            <Link href="/become-a-teacher" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Become a Teacher</Link>
+          )}
         </div>
 
         <div>
