@@ -10,6 +10,8 @@ Covers:
 - Publish / unpublish course
 - Topic CRUD: create, get, update, delete, list by course
 - Subtopic CRUD: create, get, update, delete, list by topic
+- Public: list published courses, get by slug, get subtopic content
+- Enrollment: enroll student, check enrollment status
 """
 
 import re
@@ -21,6 +23,8 @@ from sqlalchemy.orm import Session
 from app.models.course import Course
 from app.models.topic import Topic
 from app.models.subtopic import Subtopic
+from app.models.enrollment import Enrollment
+from app.models.user import User
 
 
 def _generate_slug(title: str) -> str:
@@ -275,4 +279,137 @@ def list_subtopics_by_topic(
         .filter(Subtopic.topic_id == topic_id)
         .order_by(Subtopic.order.asc())
         .all()
+    )
+
+
+# ─── Public queries ────────────────────────────────────────────────────────────
+
+def list_published_courses(
+    db: Session,
+    page: int = 1,
+    page_size: int = 10,
+    category: Optional[str] = None,
+    search: Optional[str] = None,
+) -> tuple[list[Course], int]:
+    """
+    List published courses for public browsing, paginated.
+    Optional category filter and title search.
+    Returns (courses, total_count).
+    """
+    query = db.query(Course).filter(Course.status == "published")
+
+    if category:
+        query = query.filter(Course.category == category)
+    if search:
+        query = query.filter(Course.title.ilike(f"%{search}%"))
+
+    total = query.count()
+    courses = (
+        query
+        .order_by(Course.created_at.desc())
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+        .all()
+    )
+    return courses, total
+
+
+def get_course_by_slug(
+    db: Session,
+    slug: str,
+) -> Optional[Course]:
+    """Get a published course by slug. Returns None if not found."""
+    return (
+        db.query(Course)
+        .filter(Course.slug == slug, Course.status == "published")
+        .first()
+    )
+
+
+def get_course_detail_by_slug(
+    db: Session,
+    slug: str,
+) -> Optional[dict]:
+    """
+    Get full course detail by slug with teacher name and nested TOC.
+    Returns None if course not found or not published.
+    """
+    course = get_course_by_slug(db, slug)
+    if not course:
+        return None
+
+    teacher = db.query(User).filter(User.id == course.teacher_id).first()
+    teacher_name = teacher.name if teacher else "Unknown"
+
+    topics = list_topics_by_course(db, course.id)
+    topics_with_subtopics = []
+    for topic in topics:
+        subtopics = list_subtopics_by_topic(db, topic.id)
+        topics_with_subtopics.append({
+            "id": str(topic.id),
+            "title": topic.title,
+            "order": topic.order,
+            "subtopics": [
+                {
+                    "id": str(s.id),
+                    "title": s.title,
+                    "order": s.order,
+                }
+                for s in subtopics
+            ],
+        })
+
+    return {
+        "id": str(course.id),
+        "title": course.title,
+        "slug": course.slug,
+        "description": course.description,
+        "category": course.category,
+        "thumbnail_url": course.thumbnail_url,
+        "status": course.status,
+        "teacher_name": teacher_name,
+        "topics": topics_with_subtopics,
+        "created_at": course.created_at,
+        "updated_at": course.updated_at,
+    }
+
+
+def get_subtopic_content(
+    db: Session,
+    subtopic_id: uuid.UUID,
+) -> Optional[Subtopic]:
+    """Get a subtopic with its content. Returns None if not found."""
+    return db.query(Subtopic).filter(Subtopic.id == subtopic_id).first()
+
+
+# ─── Enrollment ────────────────────────────────────────────────────────────────
+
+def enroll_student(
+    db: Session,
+    student_id: uuid.UUID,
+    course_id: uuid.UUID,
+) -> Enrollment:
+    """Enroll a student in a course. Caller commits."""
+    enrollment = Enrollment(
+        student_id=student_id,
+        course_id=course_id,
+    )
+    db.add(enrollment)
+    db.flush()
+    return enrollment
+
+
+def check_enrollment(
+    db: Session,
+    student_id: uuid.UUID,
+    course_id: uuid.UUID,
+) -> Optional[Enrollment]:
+    """Check if a student is enrolled in a course. Returns enrollment or None."""
+    return (
+        db.query(Enrollment)
+        .filter(
+            Enrollment.student_id == student_id,
+            Enrollment.course_id == course_id,
+        )
+        .first()
     )
