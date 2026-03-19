@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/public-course-endpoints` — Public course list + detail endpoints (PR 12/27).
+`feature/enrollment-subtopic-content-endpoints` — Enrollment + subtopic content endpoints (PR 13/27).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -92,6 +92,7 @@
 - [x] Teacher course CRUD endpoints (PR 10/27 of course management feature)
 - [x] Teacher topic + subtopic endpoints (PR 11/27 of course management feature)
 - [x] Public course list + detail endpoints (PR 12/27 of course management feature)
+- [x] Enrollment + subtopic content endpoints (PR 13/27 of course management feature)
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -107,7 +108,7 @@
   - [x] PR 10: Teacher course CRUD endpoints
   - [x] PR 11: Teacher topic + subtopic endpoints
   - [x] PR 12: Public course list + detail endpoints
-  - [ ] PR 13: Enrollment + subtopic content endpoints
+  - [x] PR 13: Enrollment + subtopic content endpoints
   - [ ] PR 14: Supabase Storage config + service
   - [ ] PR 15: Image upload endpoint
   - [ ] PR 16: Course types (frontend)

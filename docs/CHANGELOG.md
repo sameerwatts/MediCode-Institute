@@ -8,6 +8,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/enrollment-subtopic-content-endpoints] — 2026-03-19
+
+### Added
+- Enrollment + subtopic content endpoints in `backend/app/routers/courses.py` — enroll, check enrollment status, get subtopic content (with enrollment + course membership verification)
+- PR 13/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/public-course-endpoints] — 2026-03-19
 
 ### Added
