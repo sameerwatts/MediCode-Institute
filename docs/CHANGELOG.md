@@ -8,6 +8,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/course-model] — 2026-03-19
+
+### Added
+- `Course` SQLAlchemy model (`backend/app/models/course.py`) — `courses` table with UUID PK, teacher_id FK→users, title, slug (unique indexed), description, category (medical/cs), thumbnail_url, status (draft/published), timestamps
+- Alembic migration `create_courses_table` — creates courses table with CHECK constraints on category and status, unique slug index, FK to users
+- Registered Course model in `backend/app/models/__init__.py` and `backend/alembic/env.py`
+- PR 1/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [fix/invite-upgrade-student-to-teacher] — 2026-03-18
 
 ### Fixed

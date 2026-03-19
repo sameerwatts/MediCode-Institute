@@ -1,10 +1,10 @@
 # MediCode Institute — Project Status
 
 ## Current Phase
-**Bug fix** — Invite signup fails for existing students (email conflict).
+**Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`fix/invite-upgrade-student-to-teacher` — upgrade existing student role to teacher on invite signup.
+`feature/course-model` — Course model + migration (PR 1/27).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -79,34 +79,38 @@
 - [x] 321 tests passing across 40 suites (15 new onboarding tests)
 - [x] Admin panel fully mobile responsive — collapsible sidebar (PageShiftWrapper pattern), hamburger button, Admin Dashboard link in mobile nav, responsive tables + search inputs, scroll locking
 - [x] 340 tests passing across 41 suites
+- [x] `docs/course-management-architecture.md` — complete 27-PR plan for course management system
+- [x] `Course` SQLAlchemy model + Alembic migration (PR 1/27 of course management feature)
 
 ## What's Next
-- [ ] **Become a Teacher Feature (19 PRs):**
-  - [x] PR 1: TeacherApplication model + migration
-  - [x] PR 2: InviteToken model + migration
-  - [x] PR 3: Admin CLI command
-  - [x] PR 4: Role dependencies
-  - [x] PR 5: Application schemas
-  - [x] PR 6: Invite service
-  - [x] PR 7: Public application routes
-  - [x] PR 8: Admin application routes
-  - [x] PR 9: Modified auth register (invite token support)
-  - [x] PR 10: Email service (Resend + admin notifications)
-  - [x] PR 11: FormTextarea component + tests
-  - [x] PR 12: FormRadioGroup component + tests
-  - [x] PR 13: Modal + StatusBadge components + tests
-  - [x] PR 14: Become a Teacher page (+ footer link + home CTA) + applicationService + types
-  - [x] PR 15: Application Status page
-  - [x] PR 16: Admin shell + sidebar + header + role guard + adminService
-  - [x] PR 17: Admin teacher requests dashboard
-  - [x] PR 18: Invite signup flow (with expired token error card)
-  - [x] PR 19: Teacher onboarding page (profile enrichment + Supabase Storage photo upload)
-- [ ] **Restrict "Become a Teacher" by Role & Email (4 PRs):**
-  - [x] PR 1: Block teacher/admin email applications (backend)
-  - [x] PR 2: Rejection cooldown (backend)
-  - [x] PR 3: Redirect teachers/admins from /become-a-teacher page (frontend)
-  - [x] PR 4: Hide "Become a Teacher" links for teachers/admins (frontend)
-- [ ] Course detail page (`/courses/[slug]`)
+- [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
+  - [x] PR 1: Course model + migration
+  - [ ] PR 2: Topic model + migration
+  - [ ] PR 3: Subtopic model + migration
+  - [ ] PR 4: Enrollment model + migration
+  - [ ] PR 5: Course, Topic, Subtopic schemas
+  - [ ] PR 6: Enrollment schemas
+  - [ ] PR 7: Course CRUD service
+  - [ ] PR 8: Topic + Subtopic CRUD service
+  - [ ] PR 9: Public queries + Enrollment service
+  - [ ] PR 10: Teacher course CRUD endpoints
+  - [ ] PR 11: Teacher topic + subtopic endpoints
+  - [ ] PR 12: Public course list + detail endpoints
+  - [ ] PR 13: Enrollment + subtopic content endpoints
+  - [ ] PR 14: Supabase Storage config + service
+  - [ ] PR 15: Image upload endpoint
+  - [ ] PR 16: Course types (frontend)
+  - [ ] PR 17: Frontend API services
+  - [ ] PR 18: Teacher layout + sidebar variant
+  - [ ] PR 19: Teacher dashboard home
+  - [ ] PR 20: Teacher courses list page
+  - [ ] PR 21: Create course form
+  - [ ] PR 22: Edit course + publish/unpublish
+  - [ ] PR 23: TipTap editor component
+  - [ ] PR 24: Course content management page
+  - [ ] PR 25: Auto-save everywhere + image upload in editor
+  - [ ] PR 26: Course detail page + enrollment
+  - [ ] PR 27: Subtopic reader page
 - [ ] Quiz-taking functionality
 - [ ] Blog detail page (`/blogs/[slug]`)
 
@@ -134,4 +138,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-18 (fix: invite signup upgrades existing student to teacher)
+2026-03-19 (feature: Course model + migration — PR 1/27 of course management)
