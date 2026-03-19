@@ -8,6 +8,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/topic-model] — 2026-03-19
+
+### Added
+- `Topic` SQLAlchemy model (`backend/app/models/topic.py`) — `topics` table with UUID PK, course_id FK→courses (CASCADE delete), title, order (default 0), timestamps
+- Alembic migration `create_topics_table` — creates topics table with composite index on (course_id, order) for efficient ordered listing
+- Registered Topic model in `backend/app/models/__init__.py`
+- PR 2/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/course-model] — 2026-03-19
 
 ### Added
