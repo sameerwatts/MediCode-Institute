@@ -8,6 +8,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/frontend-api-services] — 2026-03-19
+
+### Added
+- Public/student course API service (`src/services/courseService.ts`) — list, detail, enroll, enrollment status, subtopic content
+- Teacher course API service (`src/services/teacherCourseService.ts`) — course CRUD, publish/unpublish, topic CRUD, subtopic CRUD, image upload
+- PR 17/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/course-types] — 2026-03-19
 
 ### Added
