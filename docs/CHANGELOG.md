@@ -8,6 +8,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/tiptap-editor] — 2026-03-19
+
+### Added
+- `TipTapEditor` component (`src/components/course/TipTapEditor/`) — rich text editor with JSON output for course content authoring
+- `TipTapToolbar` — formatting toolbar with bold, italic, strike, code, headings (H1–H3), lists, blockquote, code block (with syntax highlighting via lowlight), table, image insert, horizontal rule, undo/redo
+- TipTap dependencies: `@tiptap/react`, `@tiptap/starter-kit`, `@tiptap/extension-image`, `@tiptap/extension-code-block-lowlight`, `@tiptap/extension-table` (+ row/cell/header), `lowlight`
+- `@tailwindcss/typography` plugin for `prose` styling in editor content area
+- PR 23/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/edit-course-publish] — 2026-03-19
 
 ### Changed
