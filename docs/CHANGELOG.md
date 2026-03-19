@@ -8,6 +8,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/public-queries-enrollment-service] — 2026-03-19
+
+### Added
+- Public query functions in `course_service.py` — list published courses (paginated, filterable, searchable), get course by slug, get full detail with teacher name + nested TOC, get subtopic content
+- Enrollment functions in `course_service.py` — enroll student, check enrollment status
+- PR 9/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/topic-subtopic-crud-service] — 2026-03-19
 
 ### Added
