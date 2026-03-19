@@ -8,6 +8,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/teacher-dashboard-home] — 2026-03-19
+
+### Added
+- Teacher dashboard page (`src/views/Teacher/Dashboard/`) — stat cards for total/published/draft courses, quick action links
+- `app/teacher/page.tsx` route
+- PR 19/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/teacher-layout-sidebar] — 2026-03-19
 
 ### Added
