@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { Editor } from "@tiptap/react";
 
 interface ITipTapToolbarProps {
   editor: Editor | null;
+  onImageUpload?: (file: File) => Promise<string>;
 }
 
 interface IToolbarButton {
@@ -13,7 +14,9 @@ interface IToolbarButton {
   isActive: boolean;
 }
 
-const TipTapToolbar: React.FC<ITipTapToolbarProps> = ({ editor }) => {
+const TipTapToolbar: React.FC<ITipTapToolbarProps> = ({ editor, onImageUpload }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   if (!editor) return null;
 
   const buttons: IToolbarButton[] = [
@@ -91,10 +94,27 @@ const TipTapToolbar: React.FC<ITipTapToolbarProps> = ({ editor }) => {
   ];
 
   const insertImage = () => {
-    const url = window.prompt("Enter image URL:");
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
+    if (onImageUpload) {
+      fileInputRef.current?.click();
+    } else {
+      const url = window.prompt("Enter image URL:");
+      if (url) {
+        editor.chain().focus().setImage({ src: url }).run();
+      }
     }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !onImageUpload) return;
+    try {
+      const url = await onImageUpload(file);
+      editor.chain().focus().setImage({ src: url }).run();
+    } catch {
+      // Error handled by parent
+    }
+    // Reset so same file can be re-selected
+    e.target.value = "";
   };
 
   const btnClass = (active: boolean) =>
@@ -158,6 +178,15 @@ const TipTapToolbar: React.FC<ITipTapToolbarProps> = ({ editor }) => {
       >
         Image
       </button>
+      {onImageUpload && (
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+      )}
 
       <span className="w-px h-6 bg-light-gray self-center mx-1" />
 

@@ -18,12 +18,14 @@ const lowlight = createLowlight(common);
 export interface ITipTapEditorProps {
   content: JSONContent | null;
   onUpdate?: (content: JSONContent) => void;
+  onImageUpload?: (file: File) => Promise<string>;
   editable?: boolean;
 }
 
 const TipTapEditor: React.FC<ITipTapEditorProps> = ({
   content,
   onUpdate,
+  onImageUpload,
   editable = true,
 }) => {
   const editor = useEditor({
@@ -58,12 +60,55 @@ const TipTapEditor: React.FC<ITipTapEditorProps> = ({
       attributes: {
         class: "prose prose-sm max-w-none focus:outline-none min-h-[300px] p-4",
       },
+      handleDrop: (view, event, _slice, moved) => {
+        if (moved || !onImageUpload) return false;
+        const files = event.dataTransfer?.files;
+        if (!files || files.length === 0) return false;
+        const file = files[0];
+        if (!file.type.startsWith("image/")) return false;
+
+        event.preventDefault();
+        onImageUpload(file).then((url) => {
+          const { tr } = view.state;
+          const pos = view.posAtCoords({
+            left: event.clientX,
+            top: event.clientY,
+          });
+          if (pos) {
+            const node = view.state.schema.nodes.image.create({ src: url });
+            view.dispatch(tr.insert(pos.pos, node));
+          }
+        });
+        return true;
+      },
+      handlePaste: (view, event) => {
+        if (!onImageUpload) return false;
+        const items = event.clipboardData?.items;
+        if (!items) return false;
+
+        for (const item of Array.from(items)) {
+          if (item.type.startsWith("image/")) {
+            event.preventDefault();
+            const file = item.getAsFile();
+            if (!file) return false;
+            onImageUpload(file).then((url) => {
+              const { tr, selection } = view.state;
+              const node = view.state.schema.nodes.image.create({ src: url });
+              view.dispatch(tr.insert(selection.from, node));
+            });
+            return true;
+          }
+        }
+        return false;
+      },
     },
   });
 
   return (
     <div className="border border-light-gray rounded-xl bg-white overflow-hidden">
-      {editable && <TipTapToolbar editor={editor} />}
+      {editable && (
+        <TipTapToolbar editor={editor} onImageUpload={onImageUpload} />
+      )}
       <EditorContent editor={editor} />
     </div>
   );

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import TipTapEditor from "@/components/course/TipTapEditor";
 import Button from "@/components/common/Button";
+import { useAutoSave, TAutoSaveStatus } from "@/hooks/useAutoSave";
 import {
   getCourseDetail,
   createTopic,
@@ -13,12 +14,25 @@ import {
   createSubtopic,
   updateSubtopic,
   deleteSubtopic,
+  uploadImage,
 } from "@/services/teacherCourseService";
-import { ICourseTeacherDetail, ITopicTeacherDetail, ISubtopicContent } from "@/types";
+import { ICourseTeacherDetail, ITopicTeacherDetail } from "@/types";
 import type { JSONContent } from "@tiptap/react";
 
 interface ICourseContentProps {
   courseId: string;
+}
+
+function SaveStatusIndicator({ status }: { status: TAutoSaveStatus }) {
+  if (status === "idle") return null;
+  const text =
+    status === "saving"
+      ? "Saving..."
+      : status === "saved"
+        ? "All changes saved"
+        : "Save failed";
+  const color = status === "error" ? "text-red-600" : "text-dark-gray";
+  return <span className={`text-xs ${color} flex-shrink-0`}>{text}</span>;
 }
 
 const CourseContent: React.FC<ICourseContentProps> = ({ courseId }) => {
@@ -42,9 +56,42 @@ const CourseContent: React.FC<ICourseContentProps> = ({ courseId }) => {
   const [editingSubtopicId, setEditingSubtopicId] = useState<string | null>(null);
   const [editSubtopicTitle, setEditSubtopicTitle] = useState("");
 
-  // Content saving
-  const [isSavingContent, setIsSavingContent] = useState(false);
-  const [contentSaved, setContentSaved] = useState(false);
+  // ─── Auto-save for content ────────────────────────────────────────────────────
+
+  const contentSaveHandler = useCallback(
+    async (value: unknown) => {
+      if (!activeSubtopicId) return;
+      const content = value as Record<string, unknown>;
+      await updateSubtopic(activeSubtopicId, { content });
+      setCourse((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          topics: prev.topics.map((t) => ({
+            ...t,
+            subtopics: t.subtopics.map((s) =>
+              s.id === activeSubtopicId ? { ...s, content } : s
+            ),
+          })),
+        };
+      });
+    },
+    [activeSubtopicId]
+  );
+
+  const { trigger: triggerContentSave, status: contentSaveStatus } = useAutoSave({
+    onSave: contentSaveHandler,
+    delay: 1000,
+  });
+
+  // ─── Image upload handler ─────────────────────────────────────────────────────
+
+  const handleImageUpload = useCallback(async (file: File): Promise<string> => {
+    const result = await uploadImage(file, "course-content");
+    return result.url;
+  }, []);
+
+  // ─── Load course ──────────────────────────────────────────────────────────────
 
   const loadCourse = useCallback(async () => {
     setIsLoading(true);
@@ -119,7 +166,6 @@ const CourseContent: React.FC<ICourseContentProps> = ({ courseId }) => {
         if (!prev) return prev;
         return { ...prev, topics: prev.topics.filter((t) => t.id !== topicId) };
       });
-      // Clear active subtopic if it belonged to the deleted topic
       const topic = course?.topics.find((t) => t.id === topicId);
       if (topic?.subtopics.some((s) => s.id === activeSubtopicId)) {
         setActiveSubtopicId(null);
@@ -199,36 +245,14 @@ const CourseContent: React.FC<ICourseContentProps> = ({ courseId }) => {
     }
   };
 
-  // ─── Content save ─────────────────────────────────────────────────────────────
+  // ─── Content update handler (triggers auto-save) ──────────────────────────────
 
-  const handleContentSave = async (content: JSONContent) => {
-    if (!activeSubtopicId) return;
-    setIsSavingContent(true);
-    setContentSaved(false);
-    try {
-      await updateSubtopic(activeSubtopicId, {
-        content: content as Record<string, unknown>,
-      });
-      // Update local state
-      setCourse((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          topics: prev.topics.map((t) => ({
-            ...t,
-            subtopics: t.subtopics.map((s) =>
-              s.id === activeSubtopicId ? { ...s, content } : s
-            ),
-          })),
-        };
-      });
-      setContentSaved(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save content.");
-    } finally {
-      setIsSavingContent(false);
-    }
-  };
+  const handleContentUpdate = useCallback(
+    (content: JSONContent) => {
+      triggerContentSave(content);
+    },
+    [triggerContentSave]
+  );
 
   // ─── Render ───────────────────────────────────────────────────────────────────
 
@@ -498,18 +522,13 @@ const CourseContent: React.FC<ICourseContentProps> = ({ courseId }) => {
                 <h2 className="text-body font-semibold text-dark truncate">
                   {activeSubtopic.title}
                 </h2>
-                <span className="text-xs text-dark-gray flex-shrink-0 ml-2">
-                  {isSavingContent
-                    ? "Saving..."
-                    : contentSaved
-                      ? "Saved"
-                      : ""}
-                </span>
+                <SaveStatusIndicator status={contentSaveStatus} />
               </div>
               <TipTapEditor
                 key={activeSubtopicId}
                 content={activeSubtopic.content as JSONContent | null}
-                onUpdate={handleContentSave}
+                onUpdate={handleContentUpdate}
+                onImageUpload={handleImageUpload}
               />
             </div>
           ) : (
