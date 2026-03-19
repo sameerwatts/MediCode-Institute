@@ -96,32 +96,36 @@ const CourseForm: React.FC = () => {
           )}
 
           <FormInput
+            id="title"
             label="Course Title"
             placeholder="e.g. Introduction to Human Anatomy"
             error={errors.title?.message}
-            {...register("title")}
+            registration={register("title")}
           />
 
           <FormTextarea
+            id="description"
             label="Description"
             placeholder="Describe what students will learn in this course..."
             rows={4}
             error={errors.description?.message}
-            {...register("description")}
+            registration={register("description")}
           />
 
           <FormRadioGroup
+            name="category"
             label="Category"
             options={categoryOptions}
             error={errors.category?.message}
-            {...register("category")}
+            registration={register("category")}
           />
 
           <FormInput
+            id="thumbnail_url"
             label="Thumbnail URL (optional)"
             placeholder="https://example.com/image.png"
             error={errors.thumbnail_url?.message}
-            {...register("thumbnail_url")}
+            registration={register("thumbnail_url")}
           />
 
           <div className="flex gap-3 pt-2">
