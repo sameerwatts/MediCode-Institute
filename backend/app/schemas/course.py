@@ -164,3 +164,15 @@ class CourseCreateResponse(BaseModel):
 class CoursePublishResponse(BaseModel):
     message: str
     status: str
+
+
+# ─── Enrollment schemas ───────────────────────────────────────────────────────
+
+class EnrollResponse(BaseModel):
+    message: str = "Enrolled successfully"
+    enrolled_at: datetime
+
+
+class EnrollmentStatusResponse(BaseModel):
+    enrolled: bool
+    enrolled_at: Optional[datetime] = None

@@ -8,6 +8,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/enrollment-schemas] — 2026-03-19
+
+### Added
+- Enrollment Pydantic schemas in `backend/app/schemas/course.py`
+- `EnrollResponse`: success message + enrolled_at timestamp
+- `EnrollmentStatusResponse`: enrolled boolean + optional enrolled_at
+- PR 6/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/course-topic-subtopic-schemas] — 2026-03-19
 
 ### Added
