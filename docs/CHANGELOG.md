@@ -8,6 +8,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/course-content-page] — 2026-03-19
+
+### Added
+- Course content management page (`src/views/Teacher/CourseContent/`) — topic tree sidebar + TipTap editor pane
+- Topic CRUD: inline add/edit/delete topics with keyboard support (Enter to save, Escape to cancel)
+- Subtopic CRUD: inline add/edit/delete subtopics, click to select and open in editor
+- Content editing: TipTap editor loads subtopic content, saves on update
+- `app/teacher/courses/[courseId]/content/page.tsx` route
+- PR 24/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/tiptap-editor] — 2026-03-19
 
 ### Added
