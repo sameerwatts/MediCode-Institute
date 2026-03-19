@@ -7,3 +7,4 @@ from app.models.invite_token import InviteToken  # noqa: F401
 from app.models.course import Course  # noqa: F401
 from app.models.topic import Topic  # noqa: F401
 from app.models.subtopic import Subtopic  # noqa: F401
+from app.models.enrollment import Enrollment  # noqa: F401
