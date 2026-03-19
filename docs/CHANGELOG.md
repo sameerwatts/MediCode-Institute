@@ -8,6 +8,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/enrollment-model] — 2026-03-19
+
+### Added
+- `Enrollment` SQLAlchemy model (`backend/app/models/enrollment.py`) — `enrollments` table with UUID PK, student_id FK→users, course_id FK→courses, enrolled_at timestamp
+- UNIQUE constraint on (student_id, course_id) to prevent duplicate enrollments
+- Alembic migration `create_enrollments_table`
+- Registered Enrollment model in `backend/app/models/__init__.py`
+- PR 4/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/subtopic-model] — 2026-03-19
 
 ### Added
