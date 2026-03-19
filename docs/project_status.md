@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/teacher-layout-sidebar` — Teacher layout + sidebar variant (PR 18/27).
+`feature/teacher-dashboard-home` — Teacher dashboard home (PR 19/27).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -98,6 +98,7 @@
 - [x] Course management TypeScript types (PR 16/27 of course management feature)
 - [x] Frontend API services (PR 17/27 of course management feature)
 - [x] Teacher layout + sidebar variant (PR 18/27 of course management feature)
+- [x] Teacher dashboard home (PR 19/27 of course management feature)
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -119,7 +120,7 @@
   - [x] PR 16: Course types (frontend)
   - [x] PR 17: Frontend API services
   - [x] PR 18: Teacher layout + sidebar variant
-  - [ ] PR 19: Teacher dashboard home
+  - [x] PR 19: Teacher dashboard home
   - [ ] PR 20: Teacher courses list page
   - [ ] PR 21: Create course form
   - [ ] PR 22: Edit course + publish/unpublish
