@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/teacher-courses-list` — Teacher courses list page (PR 20/27).
+`feature/create-course-form` — Create course form (PR 21/27).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -100,6 +100,7 @@
 - [x] Teacher layout + sidebar variant (PR 18/27 of course management feature)
 - [x] Teacher dashboard home (PR 19/27 of course management feature)
 - [x] Teacher courses list page (PR 20/27 of course management feature)
+- [x] Create course form (PR 21/27 of course management feature)
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -123,7 +124,7 @@
   - [x] PR 18: Teacher layout + sidebar variant
   - [x] PR 19: Teacher dashboard home
   - [x] PR 20: Teacher courses list page
-  - [ ] PR 21: Create course form
+  - [x] PR 21: Create course form
   - [ ] PR 22: Edit course + publish/unpublish
   - [ ] PR 23: TipTap editor component
   - [ ] PR 24: Course content management page
