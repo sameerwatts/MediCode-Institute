@@ -8,6 +8,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/course-crud-service] — 2026-03-19
+
+### Added
+- Course CRUD service (`backend/app/services/course_service.py`) — create, read, update, delete courses with slug generation, ownership verification, pagination, publish/unpublish
+- PR 7/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/enrollment-schemas] — 2026-03-19
 
 ### Added
