@@ -8,6 +8,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/public-course-endpoints] — 2026-03-19
+
+### Added
+- Public course router (`backend/app/routers/courses.py`) — list published courses (paginated, filterable, searchable) and course detail with teacher name + TOC
+- Registered courses router in `backend/app/main.py`
+- PR 12/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/teacher-topic-subtopic-endpoints] — 2026-03-19
 
 ### Added
