@@ -1,0 +1,263 @@
+"""
+routers/teacher.py — Teacher endpoints for course management.
+
+All endpoints require teacher role (via require_teacher dependency).
+Ownership is verified for all course-specific operations.
+
+POST /api/teacher/courses                        — Create course
+GET  /api/teacher/courses                        — List my courses (paginated)
+GET  /api/teacher/courses/{course_id}            — Get course with topics/subtopics
+PUT  /api/teacher/courses/{course_id}            — Update course metadata
+DELETE /api/teacher/courses/{course_id}           — Delete course (cascades)
+POST /api/teacher/courses/{course_id}/publish     — Publish course
+POST /api/teacher/courses/{course_id}/unpublish   — Unpublish (back to draft)
+"""
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.orm import Session
+
+from app.database import get_db
+from app.dependencies.roles import require_teacher
+from app.models.user import User
+from app.schemas.course import (
+    CourseCreateRequest,
+    CourseCreateResponse,
+    CourseListItem,
+    CourseListResponse,
+    CoursePublishResponse,
+    CourseTeacherDetail,
+    CourseUpdateRequest,
+    TopicTeacherDetail,
+    SubtopicDetail,
+)
+from app.services import course_service
+
+
+router = APIRouter(prefix="/api/teacher", tags=["teacher"])
+
+PAGE_SIZE = 10
+
+
+def _get_owned_course(course_id: str, teacher_id, db: Session):
+    """Helper: fetch course and verify ownership, or raise 404/403."""
+    import uuid as _uuid
+    try:
+        cid = _uuid.UUID(course_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Course not found.",
+        )
+
+    course = course_service.get_course_by_id(db, cid)
+    if not course:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Course not found.",
+        )
+
+    if not course_service.verify_course_ownership(course, teacher_id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not own this course.",
+        )
+
+    return course
+
+
+@router.post("/courses", response_model=CourseCreateResponse, status_code=status.HTTP_201_CREATED)
+def create_course(
+    request: CourseCreateRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """Create a new draft course."""
+    course = course_service.create_course(
+        db,
+        teacher_id=current_user.id,
+        title=request.title,
+        description=request.description,
+        category=request.category,
+        thumbnail_url=request.thumbnail_url,
+    )
+    db.commit()
+
+    return CourseCreateResponse(
+        id=str(course.id),
+        slug=course.slug,
+    )
+
+
+@router.get("/courses", response_model=CourseListResponse)
+def list_my_courses(
+    page: int = Query(1, ge=1, description="Page number"),
+    status_filter: str = Query(None, alias="status", description="Filter by status (draft/published)"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """List the current teacher's courses, paginated."""
+    courses, total = course_service.list_teacher_courses(
+        db,
+        teacher_id=current_user.id,
+        page=page,
+        page_size=PAGE_SIZE,
+        status_filter=status_filter,
+    )
+
+    return CourseListResponse(
+        items=[
+            CourseListItem(
+                id=str(c.id),
+                title=c.title,
+                slug=c.slug,
+                description=c.description,
+                category=c.category,
+                thumbnail_url=c.thumbnail_url,
+                status=c.status,
+                created_at=c.created_at,
+            )
+            for c in courses
+        ],
+        total=total,
+        page=page,
+        page_size=PAGE_SIZE,
+        has_next=(page * PAGE_SIZE) < total,
+    )
+
+
+@router.get("/courses/{course_id}", response_model=CourseTeacherDetail)
+def get_course_detail(
+    course_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """Get full course detail with topics and subtopics for editing."""
+    course = _get_owned_course(course_id, current_user.id, db)
+
+    topics = course_service.list_topics_by_course(db, course.id)
+    topics_data = []
+    for topic in topics:
+        subtopics = course_service.list_subtopics_by_topic(db, topic.id)
+        topics_data.append(
+            TopicTeacherDetail(
+                id=str(topic.id),
+                title=topic.title,
+                order=topic.order,
+                subtopics=[
+                    SubtopicDetail(
+                        id=str(s.id),
+                        title=s.title,
+                        content=s.content,
+                        order=s.order,
+                        created_at=s.created_at,
+                        updated_at=s.updated_at,
+                    )
+                    for s in subtopics
+                ],
+            )
+        )
+
+    return CourseTeacherDetail(
+        id=str(course.id),
+        title=course.title,
+        slug=course.slug,
+        description=course.description,
+        category=course.category,
+        thumbnail_url=course.thumbnail_url,
+        status=course.status,
+        topics=topics_data,
+        created_at=course.created_at,
+        updated_at=course.updated_at,
+    )
+
+
+@router.put("/courses/{course_id}", response_model=CourseListItem)
+def update_course(
+    course_id: str,
+    request: CourseUpdateRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """Update course metadata."""
+    course = _get_owned_course(course_id, current_user.id, db)
+
+    course = course_service.update_course(
+        db,
+        course,
+        title=request.title,
+        description=request.description,
+        category=request.category,
+        thumbnail_url=request.thumbnail_url,
+    )
+    db.commit()
+
+    return CourseListItem(
+        id=str(course.id),
+        title=course.title,
+        slug=course.slug,
+        description=course.description,
+        category=course.category,
+        thumbnail_url=course.thumbnail_url,
+        status=course.status,
+        created_at=course.created_at,
+    )
+
+
+@router.delete("/courses/{course_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_course(
+    course_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """Delete a course and all its topics/subtopics."""
+    course = _get_owned_course(course_id, current_user.id, db)
+    course_service.delete_course(db, course)
+    db.commit()
+
+
+@router.post("/courses/{course_id}/publish", response_model=CoursePublishResponse)
+def publish_course(
+    course_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """Publish a draft course."""
+    course = _get_owned_course(course_id, current_user.id, db)
+
+    if course.status == "published":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Course is already published.",
+        )
+
+    course = course_service.publish_course(db, course)
+    db.commit()
+
+    return CoursePublishResponse(
+        message="Course published successfully.",
+        status=course.status,
+    )
+
+
+@router.post("/courses/{course_id}/unpublish", response_model=CoursePublishResponse)
+def unpublish_course(
+    course_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """Unpublish a course (back to draft)."""
+    course = _get_owned_course(course_id, current_user.id, db)
+
+    if course.status == "draft":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Course is already a draft.",
+        )
+
+    course = course_service.unpublish_course(db, course)
+    db.commit()
+
+    return CoursePublishResponse(
+        message="Course unpublished. Status set to draft.",
+        status=course.status,
+    )
