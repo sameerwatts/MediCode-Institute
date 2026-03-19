@@ -8,6 +8,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/supabase-storage-service] — 2026-03-19
+
+### Added
+- Supabase Storage settings in `backend/app/config.py` — `supabase_url`, `supabase_service_role_key`, `supabase_storage_bucket`
+- Storage service (`backend/app/services/storage_service.py`) — upload images to Supabase Storage, return public URLs
+- Updated `.env.example` with Supabase Storage env vars
+- PR 14/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/enrollment-subtopic-content-endpoints] — 2026-03-19
 
 ### Added
