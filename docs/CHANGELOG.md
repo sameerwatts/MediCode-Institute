@@ -8,6 +8,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/create-course-form] — 2026-03-19
+
+### Added
+- Create course form (`src/views/Teacher/CourseForm/`) — React Hook Form + Zod validation, title, description, category, optional thumbnail URL
+- `app/teacher/courses/new/page.tsx` route
+- PR 21/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/teacher-courses-list] — 2026-03-19
 
 ### Added
