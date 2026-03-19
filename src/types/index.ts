@@ -176,3 +176,88 @@ export interface IPaginatedStudents {
 }
 
 export type IStudentDetail = IStudentListItem;
+
+// ─── Course Management Types ──────────────────────────────────────────────────
+
+export type TCourseCategory = 'medical' | 'cs';
+export type TCourseStatus = 'draft' | 'published';
+
+export interface ISubtopicSummary {
+  id: string;
+  title: string;
+  order: number;
+}
+
+export interface ISubtopicContent {
+  id: string;
+  title: string;
+  content: Record<string, unknown> | null;
+  order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ITopicDetail {
+  id: string;
+  title: string;
+  order: number;
+  subtopics: ISubtopicSummary[];
+}
+
+export interface ITopicTeacherDetail {
+  id: string;
+  title: string;
+  order: number;
+  subtopics: ISubtopicContent[];
+}
+
+export interface ICourseSummary {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  category: TCourseCategory;
+  thumbnail_url: string | null;
+  status: TCourseStatus;
+  created_at: string;
+}
+
+export interface IPaginatedCourses {
+  items: ICourseSummary[];
+  total: number;
+  page: number;
+  page_size: number;
+  has_next: boolean;
+}
+
+export interface ICourseDetail {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  category: TCourseCategory;
+  thumbnail_url: string | null;
+  status: TCourseStatus;
+  teacher_name: string;
+  topics: ITopicDetail[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ICourseTeacherDetail {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  category: TCourseCategory;
+  thumbnail_url: string | null;
+  status: TCourseStatus;
+  topics: ITopicTeacherDetail[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IEnrollment {
+  enrolled: boolean;
+  enrolled_at: string | null;
+}
