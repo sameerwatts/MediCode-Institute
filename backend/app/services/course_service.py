@@ -1,5 +1,5 @@
 """
-services/course_service.py — Course CRUD operations.
+services/course_service.py — Course, Topic, and Subtopic CRUD operations.
 
 Covers:
 - Create course (with slug generation)
@@ -8,6 +8,8 @@ Covers:
 - Delete course (cascades to topics/subtopics)
 - List teacher's courses (paginated)
 - Publish / unpublish course
+- Topic CRUD: create, get, update, delete, list by course
+- Subtopic CRUD: create, get, update, delete, list by topic
 """
 
 import re
@@ -17,6 +19,8 @@ from typing import Optional
 from sqlalchemy.orm import Session
 
 from app.models.course import Course
+from app.models.topic import Topic
+from app.models.subtopic import Subtopic
 
 
 def _generate_slug(title: str) -> str:
@@ -131,3 +135,144 @@ def unpublish_course(db: Session, course: Course) -> Course:
     course.status = "draft"
     db.flush()
     return course
+
+
+# ─── Topic CRUD ────────────────────────────────────────────────────────────────
+
+def create_topic(
+    db: Session,
+    course_id: uuid.UUID,
+    title: str,
+) -> Topic:
+    """Create a topic at the end of the course's topic list. Caller commits."""
+    max_order = (
+        db.query(Topic.order)
+        .filter(Topic.course_id == course_id)
+        .order_by(Topic.order.desc())
+        .limit(1)
+        .scalar()
+    )
+    next_order = (max_order or 0) + 1
+
+    topic = Topic(
+        course_id=course_id,
+        title=title,
+        order=next_order,
+    )
+    db.add(topic)
+    db.flush()
+    return topic
+
+
+def get_topic_by_id(
+    db: Session,
+    topic_id: uuid.UUID,
+) -> Optional[Topic]:
+    """Get a topic by ID. Returns None if not found."""
+    return db.query(Topic).filter(Topic.id == topic_id).first()
+
+
+def update_topic(
+    db: Session,
+    topic: Topic,
+    title: Optional[str] = None,
+    order: Optional[int] = None,
+) -> Topic:
+    """Update topic title and/or order. Caller commits."""
+    if title is not None:
+        topic.title = title
+    if order is not None:
+        topic.order = order
+    db.flush()
+    return topic
+
+
+def delete_topic(db: Session, topic: Topic) -> None:
+    """Delete a topic. CASCADE removes subtopics. Caller commits."""
+    db.delete(topic)
+    db.flush()
+
+
+def list_topics_by_course(
+    db: Session,
+    course_id: uuid.UUID,
+) -> list[Topic]:
+    """List all topics for a course, ordered by `order`."""
+    return (
+        db.query(Topic)
+        .filter(Topic.course_id == course_id)
+        .order_by(Topic.order.asc())
+        .all()
+    )
+
+
+# ─── Subtopic CRUD ────────────────────────────────────────────────────────────
+
+def create_subtopic(
+    db: Session,
+    topic_id: uuid.UUID,
+    title: str,
+) -> Subtopic:
+    """Create a subtopic at the end of the topic's subtopic list. Caller commits."""
+    max_order = (
+        db.query(Subtopic.order)
+        .filter(Subtopic.topic_id == topic_id)
+        .order_by(Subtopic.order.desc())
+        .limit(1)
+        .scalar()
+    )
+    next_order = (max_order or 0) + 1
+
+    subtopic = Subtopic(
+        topic_id=topic_id,
+        title=title,
+        order=next_order,
+    )
+    db.add(subtopic)
+    db.flush()
+    return subtopic
+
+
+def get_subtopic_by_id(
+    db: Session,
+    subtopic_id: uuid.UUID,
+) -> Optional[Subtopic]:
+    """Get a subtopic by ID. Returns None if not found."""
+    return db.query(Subtopic).filter(Subtopic.id == subtopic_id).first()
+
+
+def update_subtopic(
+    db: Session,
+    subtopic: Subtopic,
+    title: Optional[str] = None,
+    content: Optional[dict] = None,
+    order: Optional[int] = None,
+) -> Subtopic:
+    """Update subtopic title, content, and/or order. Caller commits."""
+    if title is not None:
+        subtopic.title = title
+    if content is not None:
+        subtopic.content = content
+    if order is not None:
+        subtopic.order = order
+    db.flush()
+    return subtopic
+
+
+def delete_subtopic(db: Session, subtopic: Subtopic) -> None:
+    """Delete a subtopic. Caller commits."""
+    db.delete(subtopic)
+    db.flush()
+
+
+def list_subtopics_by_topic(
+    db: Session,
+    topic_id: uuid.UUID,
+) -> list[Subtopic]:
+    """List all subtopics for a topic, ordered by `order`."""
+    return (
+        db.query(Subtopic)
+        .filter(Subtopic.topic_id == topic_id)
+        .order_by(Subtopic.order.asc())
+        .all()
+    )
