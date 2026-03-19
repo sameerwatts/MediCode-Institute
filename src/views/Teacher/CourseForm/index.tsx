@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import FormInput from "@/components/common/FormInput";
 import FormTextarea from "@/components/common/FormTextarea";
 import FormRadioGroup from "@/components/common/FormRadioGroup";
 import Button from "@/components/common/Button";
+import { useAutoSave, TAutoSaveStatus } from "@/hooks/useAutoSave";
 import {
   createCourse,
   getCourseDetail,
@@ -43,6 +45,19 @@ const categoryOptions = [
   { label: "Computer Science", value: "cs" },
 ];
 
+function SaveStatusIndicator({ status }: { status: TAutoSaveStatus }) {
+  if (status === "idle") return null;
+  const text =
+    status === "saving"
+      ? "Saving..."
+      : status === "saved"
+        ? "All changes saved"
+        : "Save failed";
+  const color =
+    status === "error" ? "text-red-600" : "text-dark-gray";
+  return <span className={`text-xs ${color}`}>{text}</span>;
+}
+
 interface ICourseFormProps {
   courseId?: string;
 }
@@ -55,11 +70,13 @@ const CourseForm: React.FC<ICourseFormProps> = ({ courseId }) => {
   const [isPublishing, setIsPublishing] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [course, setCourse] = useState<ICourseTeacherDetail | null>(null);
+  const [isReady, setIsReady] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<CourseFormValues>({
     resolver: zodResolver(courseSchema),
@@ -69,6 +86,38 @@ const CourseForm: React.FC<ICourseFormProps> = ({ courseId }) => {
       category: undefined,
       thumbnail_url: "",
     },
+  });
+
+  const autoSaveHandler = useCallback(
+    async (value: unknown) => {
+      if (!courseId) return;
+      const data = value as CourseFormValues;
+      // Only save if fields pass basic validation
+      if (data.title.length < 3 || data.description.length < 10 || !data.category) return;
+      setServerError("");
+      try {
+        const result = await updateCourse(courseId, {
+          title: data.title,
+          description: data.description,
+          category: data.category,
+          thumbnail_url: data.thumbnail_url || undefined,
+        });
+        setCourse((prev) =>
+          prev ? { ...prev, ...result, topics: prev.topics } : prev
+        );
+      } catch (err) {
+        setServerError(
+          err instanceof Error ? err.message : "Failed to save course."
+        );
+        throw err;
+      }
+    },
+    [courseId]
+  );
+
+  const { trigger: triggerAutoSave, status: autoSaveStatus } = useAutoSave({
+    onSave: autoSaveHandler,
+    delay: 1000,
   });
 
   useEffect(() => {
@@ -85,6 +134,7 @@ const CourseForm: React.FC<ICourseFormProps> = ({ courseId }) => {
           category: data.category,
           thumbnail_url: data.thumbnail_url || "",
         });
+        setIsReady(true);
       } catch (err) {
         setServerError(
           err instanceof Error ? err.message : "Failed to load course."
@@ -97,32 +147,32 @@ const CourseForm: React.FC<ICourseFormProps> = ({ courseId }) => {
     loadCourse();
   }, [courseId, reset]);
 
+  // Auto-save on field changes in edit mode
+  useEffect(() => {
+    if (!isEditMode || !isReady) return;
+
+    const subscription = watch((values) => {
+      triggerAutoSave(values);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [isEditMode, isReady, watch, triggerAutoSave]);
+
   const onSubmit = async (data: CourseFormValues) => {
+    if (isEditMode) return; // Edit mode uses auto-save
     setServerError("");
     setIsSubmitting(true);
     try {
-      if (isEditMode && courseId) {
-        const result = await updateCourse(courseId, {
-          title: data.title,
-          description: data.description,
-          category: data.category,
-          thumbnail_url: data.thumbnail_url || undefined,
-        });
-        setCourse((prev) =>
-          prev ? { ...prev, ...result, topics: prev.topics } : prev
-        );
-      } else {
-        const result = await createCourse({
-          title: data.title,
-          description: data.description,
-          category: data.category,
-          thumbnail_url: data.thumbnail_url || undefined,
-        });
-        router.push(`/teacher/courses/${result.id}`);
-      }
+      const result = await createCourse({
+        title: data.title,
+        description: data.description,
+        category: data.category,
+        thumbnail_url: data.thumbnail_url || undefined,
+      });
+      router.push(`/teacher/courses/${result.id}`);
     } catch (err) {
       setServerError(
-        err instanceof Error ? err.message : "Failed to save course."
+        err instanceof Error ? err.message : "Failed to create course."
       );
     } finally {
       setIsSubmitting(false);
@@ -172,7 +222,8 @@ const CourseForm: React.FC<ICourseFormProps> = ({ courseId }) => {
           </p>
         </div>
         {isEditMode && course && (
-          <div className="flex items-center gap-3 self-start">
+          <div className="flex items-center gap-3 self-start flex-wrap">
+            <SaveStatusIndicator status={autoSaveStatus} />
             <span
               className={`px-3 py-1 rounded-full text-xs font-medium ${
                 course.status === "published"
@@ -244,18 +295,24 @@ const CourseForm: React.FC<ICourseFormProps> = ({ courseId }) => {
           />
 
           <div className="flex gap-3 pt-2">
-            <Button
-              type="submit"
-              variant="primary"
-              size="md"
-              disabled={isSubmitting}
-            >
-              {isSubmitting
-                ? "Saving..."
-                : isEditMode
-                  ? "Save Changes"
-                  : "Create Course"}
-            </Button>
+            {!isEditMode && (
+              <Button
+                type="submit"
+                variant="primary"
+                size="md"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Creating..." : "Create Course"}
+              </Button>
+            )}
+            {isEditMode && courseId && (
+              <Link
+                href={`/teacher/courses/${courseId}/content`}
+                className="inline-flex items-center px-4 py-2.5 bg-primary text-white text-sm-text font-medium rounded-lg hover:bg-primary/90 transition-colors"
+              >
+                Manage Content
+              </Link>
+            )}
             <Button
               type="button"
               variant="outline"
