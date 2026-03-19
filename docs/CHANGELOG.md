@@ -8,6 +8,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/edit-course-publish] — 2026-03-19
+
+### Changed
+- `CourseForm` now supports edit mode — accepts optional `courseId` prop, loads existing course data, saves changes via `updateCourse()`
+- Publish/unpublish toggle button with status badge in edit mode header
+
+### Added
+- `app/teacher/courses/[courseId]/page.tsx` — dynamic route for editing a course
+- PR 22/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/create-course-form] — 2026-03-19
 
 ### Added
