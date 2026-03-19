@@ -8,6 +8,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/topic-subtopic-crud-service] — 2026-03-19
+
+### Added
+- Topic CRUD functions in `course_service.py` — create (auto-ordered), get by ID, update, delete, list by course
+- Subtopic CRUD functions in `course_service.py` — create (auto-ordered), get by ID, update (title/content/order), delete, list by topic
+- PR 8/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/course-crud-service] — 2026-03-19
 
 ### Added
