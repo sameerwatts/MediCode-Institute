@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/course-types` — Course management TypeScript types (PR 16/27).
+`feature/frontend-api-services` — Frontend API services (PR 17/27).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -96,6 +96,7 @@
 - [x] Supabase Storage config + service (PR 14/27 of course management feature)
 - [x] Image upload endpoint (PR 15/27 of course management feature)
 - [x] Course management TypeScript types (PR 16/27 of course management feature)
+- [x] Frontend API services (PR 17/27 of course management feature)
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -115,7 +116,7 @@
   - [x] PR 14: Supabase Storage config + service
   - [x] PR 15: Image upload endpoint
   - [x] PR 16: Course types (frontend)
-  - [ ] PR 17: Frontend API services
+  - [x] PR 17: Frontend API services
   - [ ] PR 18: Teacher layout + sidebar variant
   - [ ] PR 19: Teacher dashboard home
   - [ ] PR 20: Teacher courses list page
