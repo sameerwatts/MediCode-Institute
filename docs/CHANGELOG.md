@@ -8,6 +8,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/subtopic-model] — 2026-03-19
+
+### Added
+- `Subtopic` SQLAlchemy model (`backend/app/models/subtopic.py`) — `subtopics` table with UUID PK, topic_id FK→topics (CASCADE delete), title, JSONB content for TipTap rich text, order (default 0), timestamps
+- Alembic migration `create_subtopics_table` — creates subtopics table with composite index on (topic_id, order) for efficient ordered listing
+- Registered Subtopic model in `backend/app/models/__init__.py`
+- PR 3/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/topic-model] — 2026-03-19
 
 ### Added
