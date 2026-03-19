@@ -8,6 +8,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/course-topic-subtopic-schemas] — 2026-03-19
+
+### Added
+- Pydantic schemas for Course, Topic, and Subtopic APIs (`backend/app/schemas/course.py`)
+- Course schemas: create/update requests, paginated list response, public detail (TOC), teacher detail (full content), create/publish responses
+- Topic schemas: create/update requests, summary, detail with subtopics, teacher detail with full content
+- Subtopic schemas: create/update requests, summary (TOC), detail with JSONB content
+- PR 5/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/enrollment-model] — 2026-03-19
 
 ### Added
