@@ -11,6 +11,12 @@ PUT  /api/teacher/courses/{course_id}            — Update course metadata
 DELETE /api/teacher/courses/{course_id}           — Delete course (cascades)
 POST /api/teacher/courses/{course_id}/publish     — Publish course
 POST /api/teacher/courses/{course_id}/unpublish   — Unpublish (back to draft)
+POST /api/teacher/courses/{course_id}/topics      — Create topic
+PUT  /api/teacher/topics/{topic_id}               — Update topic
+DELETE /api/teacher/topics/{topic_id}              — Delete topic
+POST /api/teacher/topics/{topic_id}/subtopics     — Create subtopic
+PUT  /api/teacher/subtopics/{subtopic_id}         — Update subtopic
+DELETE /api/teacher/subtopics/{subtopic_id}        — Delete subtopic
 """
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -27,8 +33,13 @@ from app.schemas.course import (
     CoursePublishResponse,
     CourseTeacherDetail,
     CourseUpdateRequest,
+    TopicCreateRequest,
+    TopicSummary,
     TopicTeacherDetail,
+    TopicUpdateRequest,
+    SubtopicCreateRequest,
     SubtopicDetail,
+    SubtopicUpdateRequest,
 )
 from app.services import course_service
 
@@ -261,3 +272,207 @@ def unpublish_course(
         message="Course unpublished. Status set to draft.",
         status=course.status,
     )
+
+
+# ─── Topic endpoints ──────────────────────────────────────────────────────────
+
+def _get_owned_topic(topic_id: str, teacher_id, db: Session):
+    """Helper: fetch topic, verify course ownership, or raise 404/403."""
+    import uuid as _uuid
+    try:
+        tid = _uuid.UUID(topic_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Topic not found.",
+        )
+
+    topic = course_service.get_topic_by_id(db, tid)
+    if not topic:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Topic not found.",
+        )
+
+    course = course_service.get_course_by_id(db, topic.course_id)
+    if not course or not course_service.verify_course_ownership(course, teacher_id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not own this course.",
+        )
+
+    return topic
+
+
+@router.post(
+    "/courses/{course_id}/topics",
+    response_model=TopicSummary,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_topic(
+    course_id: str,
+    request: TopicCreateRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """Create a new topic in a course."""
+    course = _get_owned_course(course_id, current_user.id, db)
+
+    topic = course_service.create_topic(
+        db,
+        course_id=course.id,
+        title=request.title,
+    )
+    db.commit()
+
+    return TopicSummary(
+        id=str(topic.id),
+        title=topic.title,
+        order=topic.order,
+    )
+
+
+@router.put("/topics/{topic_id}", response_model=TopicSummary)
+def update_topic(
+    topic_id: str,
+    request: TopicUpdateRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """Update a topic's title or order."""
+    topic = _get_owned_topic(topic_id, current_user.id, db)
+
+    topic = course_service.update_topic(
+        db,
+        topic,
+        title=request.title,
+        order=request.order,
+    )
+    db.commit()
+
+    return TopicSummary(
+        id=str(topic.id),
+        title=topic.title,
+        order=topic.order,
+    )
+
+
+@router.delete("/topics/{topic_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_topic(
+    topic_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """Delete a topic and all its subtopics."""
+    topic = _get_owned_topic(topic_id, current_user.id, db)
+    course_service.delete_topic(db, topic)
+    db.commit()
+
+
+# ─── Subtopic endpoints ───────────────────────────────────────────────────────
+
+def _get_owned_subtopic(subtopic_id: str, teacher_id, db: Session):
+    """Helper: fetch subtopic, verify course ownership via topic, or raise 404/403."""
+    import uuid as _uuid
+    try:
+        sid = _uuid.UUID(subtopic_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Subtopic not found.",
+        )
+
+    subtopic = course_service.get_subtopic_by_id(db, sid)
+    if not subtopic:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Subtopic not found.",
+        )
+
+    topic = course_service.get_topic_by_id(db, subtopic.topic_id)
+    if not topic:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Subtopic not found.",
+        )
+
+    course = course_service.get_course_by_id(db, topic.course_id)
+    if not course or not course_service.verify_course_ownership(course, teacher_id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not own this course.",
+        )
+
+    return subtopic
+
+
+@router.post(
+    "/topics/{topic_id}/subtopics",
+    response_model=SubtopicDetail,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_subtopic(
+    topic_id: str,
+    request: SubtopicCreateRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """Create a new subtopic in a topic."""
+    topic = _get_owned_topic(topic_id, current_user.id, db)
+
+    subtopic = course_service.create_subtopic(
+        db,
+        topic_id=topic.id,
+        title=request.title,
+    )
+    db.commit()
+
+    return SubtopicDetail(
+        id=str(subtopic.id),
+        title=subtopic.title,
+        content=subtopic.content,
+        order=subtopic.order,
+        created_at=subtopic.created_at,
+        updated_at=subtopic.updated_at,
+    )
+
+
+@router.put("/subtopics/{subtopic_id}", response_model=SubtopicDetail)
+def update_subtopic(
+    subtopic_id: str,
+    request: SubtopicUpdateRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """Update a subtopic's title, content, or order."""
+    subtopic = _get_owned_subtopic(subtopic_id, current_user.id, db)
+
+    subtopic = course_service.update_subtopic(
+        db,
+        subtopic,
+        title=request.title,
+        content=request.content,
+        order=request.order,
+    )
+    db.commit()
+
+    return SubtopicDetail(
+        id=str(subtopic.id),
+        title=subtopic.title,
+        content=subtopic.content,
+        order=subtopic.order,
+        created_at=subtopic.created_at,
+        updated_at=subtopic.updated_at,
+    )
+
+
+@router.delete("/subtopics/{subtopic_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_subtopic(
+    subtopic_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_teacher),
+):
+    """Delete a subtopic."""
+    subtopic = _get_owned_subtopic(subtopic_id, current_user.id, db)
+    course_service.delete_subtopic(db, subtopic)
+    db.commit()
