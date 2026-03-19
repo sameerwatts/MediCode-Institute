@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/course-content-page` — Course content management page (PR 24/27).
+`feature/auto-save-image-upload` — Auto-save everywhere + image upload in editor (PR 25/27).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -104,6 +104,7 @@
 - [x] Edit course + publish/unpublish (PR 22/27 of course management feature)
 - [x] TipTap editor component + packages (PR 23/27 of course management feature)
 - [x] Course content management page (PR 24/27 of course management feature)
+- [x] Auto-save everywhere + image upload in editor (PR 25/27 of course management feature)
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -131,7 +132,7 @@
   - [x] PR 22: Edit course + publish/unpublish
   - [x] PR 23: TipTap editor component
   - [x] PR 24: Course content management page
-  - [ ] PR 25: Auto-save everywhere + image upload in editor
+  - [x] PR 25: Auto-save everywhere + image upload in editor
   - [ ] PR 26: Course detail page + enrollment
   - [ ] PR 27: Subtopic reader page
 - [ ] Quiz-taking functionality
@@ -161,4 +162,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-19 (feature: Course content management page — PR 24/27 of course management)
+2026-03-19 (feature: Auto-save everywhere + image upload in editor — PR 25/27 of course management)

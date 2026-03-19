@@ -8,6 +8,21 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/auto-save-image-upload] — 2026-03-19
+
+### Added
+- `useAutoSave` hook (`src/hooks/useAutoSave.ts`) — generic debounced auto-save with status tracking (idle/saving/saved/error)
+- Image upload in TipTap editor — toolbar button opens file picker, plus drag-and-drop and paste support via `onImageUpload` prop
+- `SaveStatusIndicator` component — persistent "Saving..." / "All changes saved" / "Save failed" indicator
+- "Manage Content" link on edit course page → navigates to content management page
+- PR 25/27 of course management feature (see `docs/course-management-architecture.md`)
+
+### Changed
+- `CourseForm` (edit mode) — replaced Save button with auto-save on field change (~1s debounce), save status in header
+- `CourseContent` — content editor uses auto-save instead of immediate save on every keystroke
+- `TipTapEditor` — accepts `onImageUpload` prop for file-based image insertion
+- `TipTapToolbar` — Image button triggers file upload when `onImageUpload` available, falls back to URL prompt
+
 ## [feature/course-content-page] — 2026-03-19
 
 ### Added
