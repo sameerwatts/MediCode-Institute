@@ -8,6 +8,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/image-upload-endpoint] — 2026-03-19
+
+### Added
+- `POST /api/teacher/upload-image` endpoint in `backend/app/routers/teacher.py` — validates file type + size (5 MB max), uploads to Supabase Storage, returns public URL
+- PR 15/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/supabase-storage-service] — 2026-03-19
 
 ### Added

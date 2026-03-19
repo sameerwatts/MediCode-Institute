@@ -17,9 +17,10 @@ DELETE /api/teacher/topics/{topic_id}              — Delete topic
 POST /api/teacher/topics/{topic_id}/subtopics     — Create subtopic
 PUT  /api/teacher/subtopics/{subtopic_id}         — Update subtopic
 DELETE /api/teacher/subtopics/{subtopic_id}        — Delete subtopic
+POST /api/teacher/upload-image                     — Upload image to Supabase Storage
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -476,3 +477,47 @@ def delete_subtopic(
     subtopic = _get_owned_subtopic(subtopic_id, current_user.id, db)
     course_service.delete_subtopic(db, subtopic)
     db.commit()
+
+
+# ─── Image upload ──────────────────────────────────────────────────────────────
+
+ALLOWED_IMAGE_TYPES = {"image/png", "image/jpeg", "image/gif", "image/webp", "image/svg+xml"}
+MAX_IMAGE_SIZE = 5 * 1024 * 1024  # 5 MB
+
+
+@router.post("/upload-image")
+async def upload_image(
+    file: UploadFile = File(...),
+    folder: str = Query("images", description="Storage subfolder (images, thumbnails, content)"),
+    current_user: User = Depends(require_teacher),
+):
+    """Upload an image to Supabase Storage. Returns the public URL."""
+    if file.content_type not in ALLOWED_IMAGE_TYPES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid file type '{file.content_type}'. Allowed: PNG, JPEG, GIF, WebP, SVG.",
+        )
+
+    file_bytes = await file.read()
+
+    if len(file_bytes) > MAX_IMAGE_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="File too large. Maximum size is 5 MB.",
+        )
+
+    from app.services.storage_service import upload_image as storage_upload
+
+    try:
+        url = storage_upload(
+            file_bytes=file_bytes,
+            original_filename=file.filename or "upload.png",
+            folder=folder,
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Upload failed: {str(e)}",
+        )
+
+    return {"url": url}
