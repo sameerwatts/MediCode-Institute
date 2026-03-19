@@ -8,6 +8,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/teacher-courses-list] — 2026-03-19
+
+### Added
+- Teacher courses list page (`src/views/Teacher/CoursesList/`) — status filter, course cards with thumbnails and badges, pagination, empty state
+- `app/teacher/courses/page.tsx` route
+- PR 20/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/teacher-dashboard-home] — 2026-03-19
 
 ### Added
