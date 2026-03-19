@@ -5,3 +5,4 @@ from app.models.user import User  # noqa: F401
 from app.models.teacher_application import TeacherApplication  # noqa: F401
 from app.models.invite_token import InviteToken  # noqa: F401
 from app.models.course import Course  # noqa: F401
+from app.models.topic import Topic  # noqa: F401
