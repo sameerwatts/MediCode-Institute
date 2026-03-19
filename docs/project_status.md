@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/topic-subtopic-crud-service` — Topic + Subtopic CRUD service (PR 8/27).
+`feature/public-queries-enrollment-service` — Public queries + Enrollment service (PR 9/27).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -88,6 +88,7 @@
 - [x] Enrollment Pydantic schemas (PR 6/27 of course management feature)
 - [x] Course CRUD service (PR 7/27 of course management feature)
 - [x] Topic + Subtopic CRUD service (PR 8/27 of course management feature)
+- [x] Public queries + Enrollment service (PR 9/27 of course management feature)
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -99,7 +100,7 @@
   - [x] PR 6: Enrollment schemas
   - [x] PR 7: Course CRUD service
   - [x] PR 8: Topic + Subtopic CRUD service
-  - [ ] PR 9: Public queries + Enrollment service
+  - [x] PR 9: Public queries + Enrollment service
   - [ ] PR 10: Teacher course CRUD endpoints
   - [ ] PR 11: Teacher topic + subtopic endpoints
   - [ ] PR 12: Public course list + detail endpoints
