@@ -8,6 +8,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/teacher-course-endpoints] — 2026-03-19
+
+### Added
+- Teacher course CRUD router (`backend/app/routers/teacher.py`) — create, list, detail, update, delete, publish, unpublish endpoints with role + ownership enforcement
+- Registered teacher router in `backend/app/main.py`
+- PR 10/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/public-queries-enrollment-service] — 2026-03-19
 
 ### Added
