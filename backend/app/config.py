@@ -29,6 +29,11 @@ class Settings(BaseSettings):
     google_client_id: str = ""
     google_client_secret: str = ""
 
+    # Supabase Storage — for course image uploads
+    supabase_url: str = ""
+    supabase_service_role_key: str = ""
+    supabase_storage_bucket: str = "course-images"
+
     # How long (seconds) after a rejection before the same email can re-apply
     rejection_cooldown_seconds: int = 60
 
