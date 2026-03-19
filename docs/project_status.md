@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/subtopic-model` — Subtopic model + migration (PR 3/27).
+`feature/enrollment-model` — Enrollment model + migration (PR 4/27).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -83,13 +83,14 @@
 - [x] `Course` SQLAlchemy model + Alembic migration (PR 1/27 of course management feature)
 - [x] `Topic` SQLAlchemy model + Alembic migration (PR 2/27 of course management feature)
 - [x] `Subtopic` SQLAlchemy model + Alembic migration (PR 3/27 of course management feature)
+- [x] `Enrollment` SQLAlchemy model + Alembic migration (PR 4/27 of course management feature)
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
   - [x] PR 1: Course model + migration
   - [x] PR 2: Topic model + migration
   - [x] PR 3: Subtopic model + migration
-  - [ ] PR 4: Enrollment model + migration
+  - [x] PR 4: Enrollment model + migration
   - [ ] PR 5: Course, Topic, Subtopic schemas
   - [ ] PR 6: Enrollment schemas
   - [ ] PR 7: Course CRUD service
