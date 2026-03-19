@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/teacher-course-endpoints` — Teacher course CRUD endpoints (PR 10/27).
+`feature/teacher-topic-subtopic-endpoints` — Teacher topic + subtopic endpoints (PR 11/27).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -90,6 +90,7 @@
 - [x] Topic + Subtopic CRUD service (PR 8/27 of course management feature)
 - [x] Public queries + Enrollment service (PR 9/27 of course management feature)
 - [x] Teacher course CRUD endpoints (PR 10/27 of course management feature)
+- [x] Teacher topic + subtopic endpoints (PR 11/27 of course management feature)
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -103,7 +104,7 @@
   - [x] PR 8: Topic + Subtopic CRUD service
   - [x] PR 9: Public queries + Enrollment service
   - [x] PR 10: Teacher course CRUD endpoints
-  - [ ] PR 11: Teacher topic + subtopic endpoints
+  - [x] PR 11: Teacher topic + subtopic endpoints
   - [ ] PR 12: Public course list + detail endpoints
   - [ ] PR 13: Enrollment + subtopic content endpoints
   - [ ] PR 14: Supabase Storage config + service

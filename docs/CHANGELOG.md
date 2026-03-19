@@ -8,6 +8,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/teacher-topic-subtopic-endpoints] — 2026-03-19
+
+### Added
+- Teacher topic + subtopic endpoints in `backend/app/routers/teacher.py` — create/update/delete topics and subtopics with ownership verification up the chain
+- PR 11/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/teacher-course-endpoints] — 2026-03-19
 
 ### Added
