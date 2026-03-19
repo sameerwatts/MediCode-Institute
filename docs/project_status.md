@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/image-upload-endpoint` — Image upload endpoint (PR 15/27).
+`feature/course-types` — Course management TypeScript types (PR 16/27).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -95,6 +95,7 @@
 - [x] Enrollment + subtopic content endpoints (PR 13/27 of course management feature)
 - [x] Supabase Storage config + service (PR 14/27 of course management feature)
 - [x] Image upload endpoint (PR 15/27 of course management feature)
+- [x] Course management TypeScript types (PR 16/27 of course management feature)
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -113,7 +114,7 @@
   - [x] PR 13: Enrollment + subtopic content endpoints
   - [x] PR 14: Supabase Storage config + service
   - [x] PR 15: Image upload endpoint
-  - [ ] PR 16: Course types (frontend)
+  - [x] PR 16: Course types (frontend)
   - [ ] PR 17: Frontend API services
   - [ ] PR 18: Teacher layout + sidebar variant
   - [ ] PR 19: Teacher dashboard home

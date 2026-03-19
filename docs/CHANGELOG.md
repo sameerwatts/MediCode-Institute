@@ -8,6 +8,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/course-types] — 2026-03-19
+
+### Added
+- Course management TypeScript types in `src/types/index.ts` — ICourseSummary, ICourseDetail, ICourseTeacherDetail, ITopicDetail, ITopicTeacherDetail, ISubtopicSummary, ISubtopicContent, IEnrollment, IPaginatedCourses
+- PR 16/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/image-upload-endpoint] — 2026-03-19
 
 ### Added
