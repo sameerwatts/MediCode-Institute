@@ -8,6 +8,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/teacher-layout-sidebar] — 2026-03-19
+
+### Added
+- `teacher` variant in AppSidebar with Dashboard + My Courses navigation
+- TeacherHeader component (`src/components/teacher/TeacherHeader/`)
+- TeacherLayout view (`src/views/Teacher/TeacherLayout/`) — role-gated shell with sidebar + header
+- `app/teacher/layout.tsx` route layout
+- PR 18/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/frontend-api-services] — 2026-03-19
 
 ### Added

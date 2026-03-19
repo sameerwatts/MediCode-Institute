@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { navLinks } from "@/data/navigation";
 import AppSidebarFooter from "./AppSidebarFooter";
 
-type TVariant = "public" | "admin";
+type TVariant = "public" | "admin" | "teacher";
 
 interface INavItem {
   label: string;
@@ -59,6 +59,24 @@ const VARIANT_CONFIG: Record<TVariant, IVariantConfig> = {
     ],
     isActiveMatch: (pathname, href) => pathname.startsWith(href),
   },
+  teacher: {
+    wrapperClasses:
+      "absolute inset-y-0 left-0 z-10 w-[80%] bg-dark flex flex-col md:relative md:z-auto md:w-60 md:flex-shrink-0",
+    brandSubtitle: "Teacher Panel",
+    borderColor: "border-dark-gray",
+    activeItemClasses: "bg-primary text-white",
+    inactiveItemClasses: "text-gray hover:bg-dark-gray/40 hover:text-white",
+    linkPaddingX: "px-3",
+    navClasses: "flex-1 px-3 py-4 space-y-1",
+    navItems: [
+      { label: "Dashboard", href: "/teacher" },
+      { label: "My Courses", href: "/teacher/courses" },
+    ],
+    isActiveMatch: (pathname, href) =>
+      href === "/teacher"
+        ? pathname === "/teacher"
+        : pathname.startsWith(href),
+  },
 };
 
 const AppSidebar: React.FC<IAppSidebarProps> = ({ variant, onClose }) => {
@@ -81,7 +99,7 @@ const AppSidebar: React.FC<IAppSidebarProps> = ({ variant, onClose }) => {
     }, 200);
   };
 
-  const Tag: React.ElementType = variant === "admin" ? "aside" : "div";
+  const Tag: React.ElementType = variant === "public" ? "div" : "aside";
 
   return (
     <Tag className={config.wrapperClasses}>
@@ -105,7 +123,11 @@ const AppSidebar: React.FC<IAppSidebarProps> = ({ variant, onClose }) => {
       <nav
         className={config.navClasses}
         aria-label={
-          variant === "admin" ? "Admin navigation" : "Mobile navigation"
+          variant === "admin"
+            ? "Admin navigation"
+            : variant === "teacher"
+              ? "Teacher navigation"
+              : "Mobile navigation"
         }
       >
         {config.navItems.map((item) => {

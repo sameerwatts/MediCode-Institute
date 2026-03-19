@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/common/Button';
 
 interface IAppSidebarFooterProps {
-  variant: 'public' | 'admin';
+  variant: 'public' | 'admin' | 'teacher';
   onClose: () => void;
   borderColor: string;
 }
@@ -102,7 +102,7 @@ const AdminFooter: React.FC<{ onClose: () => void; borderColor: string }> = ({
 );
 
 const AppSidebarFooter: React.FC<IAppSidebarFooterProps> = ({ variant, onClose, borderColor }) => {
-  if (variant === 'admin') {
+  if (variant === 'admin' || variant === 'teacher') {
     return <AdminFooter onClose={onClose} borderColor={borderColor} />;
   }
   return <PublicFooter onClose={onClose} borderColor={borderColor} />;
