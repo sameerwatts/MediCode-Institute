@@ -61,6 +61,14 @@ const Navbar: React.FC = () => {
                     Admin Dashboard
                   </Link>
                 )}
+                {user?.role === 'teacher' && (
+                  <Link
+                    href="/teacher"
+                    className="text-sm-text font-semibold text-primary hover:text-primary-dark transition-colors"
+                  >
+                    Teacher Dashboard
+                  </Link>
+                )}
                 <span className="text-sm-text font-semibold text-dark-gray">{user?.name}</span>
                 <Button variant="outline" size="sm" onClick={logout}>
                   Sign Out
