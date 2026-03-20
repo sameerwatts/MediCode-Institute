@@ -1,10 +1,13 @@
-import Quiz from '@/views/Quiz';
+import { notFound } from 'next/navigation';
 
-export const metadata = {
-  title: 'Practice Quizzes | MediCode Institute',
-  description: 'Test your knowledge with our interactive medical and CS quizzes.',
-};
+// TODO: Re-enable when quiz page is ready
+// import Quiz from '@/views/Quiz';
+
+// export const metadata = {
+//   title: 'Practice Quizzes | MediCode Institute',
+//   description: 'Test your knowledge with our interactive medical and CS quizzes.',
+// };
 
 export default function QuizPage() {
-  return <Quiz />;
+  notFound();
 }
