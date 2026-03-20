@@ -68,8 +68,6 @@ describe('AppSidebar — public variant', () => {
     expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'All Courses' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'About' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Quiz' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Blogs' })).toBeInTheDocument();
   });
 
   it('renders nav links with correct hrefs', () => {

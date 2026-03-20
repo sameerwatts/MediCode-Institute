@@ -8,6 +8,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [improvement/hide-quiz-blog-pages] — 2026-03-21
+
+### Changed
+- Temporarily hidden Quiz and Blog pages from navigation (navbar, footer) and routes (return 404)
+- All quiz/blog code preserved in comments with TODO markers for future re-enabling
+
 ## [feature/courses-listing-api-integration] — 2026-03-21
 
 ### Changed

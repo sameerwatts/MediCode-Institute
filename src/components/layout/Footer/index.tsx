@@ -26,7 +26,8 @@ const Footer: React.FC = () => {
           <Link href="/" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Home</Link>
           <Link href="/courses" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">All Courses</Link>
           <Link href="/about" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">About Us</Link>
-          <Link href="/blogs" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Blog</Link>
+          {/* TODO: Re-enable when blog page is ready */}
+          {/* <Link href="/blogs" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Blog</Link> */}
           {showTeacherLink && (
             <Link href="/become-a-teacher" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Become a Teacher</Link>
           )}
@@ -36,7 +37,8 @@ const Footer: React.FC = () => {
           <h4 className="text-white text-body font-bold mb-4">Categories</h4>
           <Link href="/courses" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Medical Sciences</Link>
           <Link href="/courses" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Computer Science</Link>
-          <Link href="/quiz" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Practice Quizzes</Link>
+          {/* TODO: Re-enable when quiz page is ready */}
+          {/* <Link href="/quiz" className="block text-sm-text py-1 transition-colors duration-200 hover:text-white">Practice Quizzes</Link> */}
         </div>
 
         <div>

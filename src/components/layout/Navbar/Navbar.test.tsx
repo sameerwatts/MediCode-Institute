@@ -42,8 +42,6 @@ describe('Navbar', () => {
     expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('All Courses')).toBeInTheDocument();
     expect(screen.getByText('About')).toBeInTheDocument();
-    expect(screen.getByText('Quiz')).toBeInTheDocument();
-    expect(screen.getByText('Blogs')).toBeInTheDocument();
   });
 
   it('renders navigation links with correct hrefs', () => {
@@ -51,8 +49,6 @@ describe('Navbar', () => {
     expect(screen.getByText('Home').closest('a')).toHaveAttribute('href', '/');
     expect(screen.getByText('All Courses').closest('a')).toHaveAttribute('href', '/courses');
     expect(screen.getByText('About').closest('a')).toHaveAttribute('href', '/about');
-    expect(screen.getByText('Quiz').closest('a')).toHaveAttribute('href', '/quiz');
-    expect(screen.getByText('Blogs').closest('a')).toHaveAttribute('href', '/blogs');
   });
 
   it('renders the hamburger menu button', () => {
