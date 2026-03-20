@@ -110,6 +110,7 @@
 - [x] Subtopic reader page with TipTap renderer + prev/next navigation (PR 27/27 of course management feature)
 - [x] 393 tests passing across 44 suites (15 new subtopic reader tests)
 - [x] **Course Management System complete (27/27 PRs merged)**
+- [x] Teacher Dashboard nav link added to Navbar + mobile sidebar for teacher-role users
 - [x] Fixed TipTap SSR hydration crash — `immediatelyRender: false` in TipTapEditor + TipTapRenderer
 
 ## What's Next
