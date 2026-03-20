@@ -32,6 +32,7 @@ const TipTapRenderer: React.FC<ITipTapRendererProps> = ({ content }) => {
       TableHeader,
     ],
     content: content || { type: "doc", content: [{ type: "paragraph" }] },
+    immediatelyRender: false,
     editable: false,
     editorProps: {
       attributes: {
