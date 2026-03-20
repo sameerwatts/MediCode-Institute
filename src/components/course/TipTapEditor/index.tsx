@@ -52,6 +52,7 @@ const TipTapEditor: React.FC<ITipTapEditorProps> = ({
       type: "doc",
       content: [{ type: "paragraph" }],
     },
+    immediatelyRender: false,
     editable,
     onUpdate: ({ editor: ed }) => {
       onUpdate?.(ed.getJSON());

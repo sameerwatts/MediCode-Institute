@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/subtopic-reader-page` — Subtopic reader page (PR 27/27 — final PR of course management).
+`fix/tiptap-ssr-hydration` — Fix TipTap SSR hydration error in editor and renderer.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -110,6 +110,7 @@
 - [x] Subtopic reader page with TipTap renderer + prev/next navigation (PR 27/27 of course management feature)
 - [x] 393 tests passing across 44 suites (15 new subtopic reader tests)
 - [x] **Course Management System complete (27/27 PRs merged)**
+- [x] Fixed TipTap SSR hydration crash — `immediatelyRender: false` in TipTapEditor + TipTapRenderer
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -167,4 +168,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-20 (feature: Subtopic reader page — PR 27/27 of course management — **Course Management System complete!**)
+2026-03-20 (fix: TipTap SSR hydration crash in editor and renderer)

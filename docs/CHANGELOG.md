@@ -8,6 +8,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [fix/tiptap-ssr-hydration] — 2026-03-20
+
+### Fixed
+- TipTap editor and renderer crash on SSR/hydration — added `immediatelyRender: false` to both `TipTapEditor` and `TipTapRenderer` `useEditor` calls
+
 ## [feature/subtopic-reader-page] — 2026-03-20
 
 ### Added
