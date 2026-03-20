@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/courses-listing-api-integration` — Wire courses listing page to API with links to course detail/enrollment.
+`improvement/hide-quiz-blog-pages` — Temporarily hide quiz and blog pages (routes return 404, links removed from nav/footer).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -114,6 +114,7 @@
 - [x] Fixed TipTap SSR hydration crash — `immediatelyRender: false` in TipTapEditor + TipTapRenderer
 - [x] Publish/unpublish button added to course content management page header
 - [x] Courses listing page wired to API — students can browse published courses and click through to enroll
+- [x] Quiz and Blog pages temporarily hidden (nav links removed, routes return 404, code preserved for future re-enabling)
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -171,4 +172,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-21 (feature: courses listing API integration — student enrollment flow complete)
+2026-03-21 (improvement: quiz and blog pages temporarily hidden)
