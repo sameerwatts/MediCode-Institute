@@ -1,17 +1,12 @@
 import React from 'react';
-import Link from 'next/link';
 import SectionHeading from '@/components/common/SectionHeading';
-import CourseCard from '@/components/course/CourseCard';
-import Button from '@/components/common/Button';
-import { courses } from '@/data/courses';
 import WelcomeBanner from '@/components/common/WelcomeBanner';
 import HeroSection from './HeroSection';
 import FeaturesSection from './FeaturesSection';
+import PopularCourses from './PopularCourses';
 import StatsSection from './StatsSection';
 import CTASection from './CTASection';
 import TeacherCTASection from './TeacherCTASection';
-
-const popularCourses = courses.slice(0, 3);
 
 const Home: React.FC = () => {
   return (
@@ -21,22 +16,7 @@ const Home: React.FC = () => {
 
       <FeaturesSection />
 
-      <section className="py-section px-6 max-w-[1200px] mx-auto">
-        <SectionHeading
-          title="Popular Courses"
-          subtitle="Start learning with our most enrolled courses"
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {popularCourses.map((course) => (
-            <CourseCard key={course.id} course={course} />
-          ))}
-        </div>
-        <div className="text-center mt-8">
-          <Link href="/courses">
-            <Button variant="outline">View All Courses</Button>
-          </Link>
-        </div>
-      </section>
+      <PopularCourses />
 
       <section className="py-section px-6 max-w-[1200px] mx-auto">
         <SectionHeading
