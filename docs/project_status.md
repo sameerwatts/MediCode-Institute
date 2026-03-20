@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`fix/tiptap-ssr-hydration` — Fix TipTap SSR hydration error in editor and renderer.
+`improvement/content-page-publish-button` — Add publish/unpublish button to content management page.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -112,6 +112,7 @@
 - [x] **Course Management System complete (27/27 PRs merged)**
 - [x] Teacher Dashboard nav link added to Navbar + mobile sidebar for teacher-role users
 - [x] Fixed TipTap SSR hydration crash — `immediatelyRender: false` in TipTapEditor + TipTapRenderer
+- [x] Publish/unpublish button added to course content management page header
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -169,4 +170,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-20 (fix: TipTap SSR hydration crash in editor and renderer)
+2026-03-20 (improvement: publish/unpublish button on content management page)

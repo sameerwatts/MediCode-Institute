@@ -8,6 +8,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [improvement/content-page-publish-button] — 2026-03-20
+
+### Changed
+- Added publish/unpublish toggle and status badge to course content management page header — teachers can publish directly while editing content without navigating back to Edit Details
+
 ## [fix/tiptap-ssr-hydration] — 2026-03-20
 
 ### Fixed

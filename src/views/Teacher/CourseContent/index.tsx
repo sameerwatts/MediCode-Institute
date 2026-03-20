@@ -15,6 +15,8 @@ import {
   updateSubtopic,
   deleteSubtopic,
   uploadImage,
+  publishCourse,
+  unpublishCourse,
 } from "@/services/teacherCourseService";
 import { ICourseTeacherDetail, ITopicTeacherDetail } from "@/types";
 import type { JSONContent } from "@tiptap/react";
@@ -83,6 +85,28 @@ const CourseContent: React.FC<ICourseContentProps> = ({ courseId }) => {
     onSave: contentSaveHandler,
     delay: 1000,
   });
+
+  // ─── Publish / Unpublish ─────────────────────────────────────────────────────
+
+  const [isPublishing, setIsPublishing] = useState(false);
+
+  const handleTogglePublish = async () => {
+    if (!course) return;
+    setIsPublishing(true);
+    try {
+      if (course.status === "published") {
+        await unpublishCourse(courseId);
+        setCourse((prev) => (prev ? { ...prev, status: "draft" } : prev));
+      } else {
+        await publishCourse(courseId);
+        setCourse((prev) => (prev ? { ...prev, status: "published" } : prev));
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update publish status.");
+    } finally {
+      setIsPublishing(false);
+    }
+  };
 
   // ─── Image upload handler ─────────────────────────────────────────────────────
 
@@ -282,7 +306,32 @@ const CourseContent: React.FC<ICourseContentProps> = ({ courseId }) => {
           <h1 className="text-h3 font-bold text-dark">Course Content</h1>
           <p className="text-sm-text text-dark-gray mt-1">{course.title}</p>
         </div>
-        <div className="flex gap-2 self-start">
+        <div className="flex items-center gap-2 self-start flex-wrap">
+          <span
+            className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+              course.status === "published"
+                ? "bg-green-100 text-green-700"
+                : "bg-yellow-100 text-yellow-700"
+            }`}
+          >
+            {course.status}
+          </span>
+          <button
+            type="button"
+            onClick={handleTogglePublish}
+            disabled={isPublishing}
+            className={`px-3 py-1.5 text-sm-text font-medium rounded-lg transition-colors ${
+              course.status === "published"
+                ? "border border-light-gray text-dark-gray hover:bg-light"
+                : "bg-primary text-white hover:bg-primary-dark"
+            } disabled:opacity-50`}
+          >
+            {isPublishing
+              ? "Updating..."
+              : course.status === "published"
+                ? "Unpublish"
+                : "Publish"}
+          </button>
           <Link
             href={`/teacher/courses/${courseId}`}
             className="inline-flex items-center px-4 py-2 text-sm-text font-medium rounded-lg border border-light-gray text-dark-gray hover:bg-light transition-colors"
