@@ -8,6 +8,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [fix/teacher-dashboard-nav-link] — 2026-03-20
+
+### Fixed
+- Missing "Teacher Dashboard" navigation link for teacher-role users in desktop Navbar and mobile sidebar
+- Added 6 new tests for teacher nav link visibility (3 Navbar + 3 AppSidebar)
+
 ## [feature/subtopic-reader-page] — 2026-03-20
 
 ### Added
