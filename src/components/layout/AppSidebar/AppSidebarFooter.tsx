@@ -43,6 +43,19 @@ const PublicFooter: React.FC<{ onClose: () => void; borderColor: string }> = ({
               Admin Dashboard
             </Link>
           )}
+          {user?.role === 'teacher' && (
+            <Link
+              href="/teacher"
+              onClick={onClose}
+              className={`block px-4 py-2.5 rounded-lg text-sm-text transition-colors duration-200 hover:text-primary hover:bg-light ${
+                pathname.startsWith('/teacher')
+                  ? 'font-semibold text-primary bg-primary-light'
+                  : 'font-medium text-dark-gray'
+              }`}
+            >
+              Teacher Dashboard
+            </Link>
+          )}
           <div className="flex items-center justify-between px-2">
             <span className="text-sm-text font-semibold text-dark">{user?.name}</span>
             <button

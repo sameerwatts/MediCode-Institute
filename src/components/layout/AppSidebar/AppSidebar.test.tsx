@@ -36,6 +36,12 @@ const adminUser = {
   name: 'Admin User',
 };
 
+const teacherUser = {
+  ...studentUser,
+  role: 'teacher' as const,
+  name: 'Dr. Teacher',
+};
+
 beforeEach(() => {
   jest.clearAllMocks();
   (useAuth as jest.Mock).mockReturnValue({ ...defaultAuth });
@@ -162,6 +168,11 @@ describe('AppSidebar — public variant', () => {
       expect(screen.queryByRole('link', { name: 'Admin Dashboard' })).not.toBeInTheDocument();
     });
 
+    it('does not show Teacher Dashboard link for student users', () => {
+      render(<AppSidebar variant="public" onClose={onClose} />);
+      expect(screen.queryByRole('link', { name: 'Teacher Dashboard' })).not.toBeInTheDocument();
+    });
+
     it('calls logout and onClose when sign out is clicked', async () => {
       const logoutMock = jest.fn();
       (useAuth as jest.Mock).mockReturnValue({
@@ -197,6 +208,34 @@ describe('AppSidebar — public variant', () => {
         'href',
         '/admin/teacher-requests',
       );
+    });
+  });
+
+  describe('when authenticated as teacher', () => {
+    beforeEach(() => {
+      (useAuth as jest.Mock).mockReturnValue({
+        ...defaultAuth,
+        isAuthenticated: true,
+        user: teacherUser,
+      });
+    });
+
+    it('shows Teacher Dashboard link', () => {
+      render(<AppSidebar variant="public" onClose={onClose} />);
+      expect(screen.getByRole('link', { name: 'Teacher Dashboard' })).toBeInTheDocument();
+    });
+
+    it('Teacher Dashboard link points to /teacher', () => {
+      render(<AppSidebar variant="public" onClose={onClose} />);
+      expect(screen.getByRole('link', { name: 'Teacher Dashboard' })).toHaveAttribute(
+        'href',
+        '/teacher',
+      );
+    });
+
+    it('does not show Admin Dashboard link for teacher users', () => {
+      render(<AppSidebar variant="public" onClose={onClose} />);
+      expect(screen.queryByRole('link', { name: 'Admin Dashboard' })).not.toBeInTheDocument();
     });
   });
 

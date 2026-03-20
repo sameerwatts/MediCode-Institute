@@ -133,6 +133,43 @@ describe('Navbar', () => {
       render(<Navbar />);
       expect(screen.queryByRole('link', { name: 'Admin Dashboard' })).not.toBeInTheDocument();
     });
+
+    it('does not show Teacher Dashboard link for non-teacher users', () => {
+      render(<Navbar />);
+      expect(screen.queryByRole('link', { name: 'Teacher Dashboard' })).not.toBeInTheDocument();
+    });
+  });
+
+  describe('when authenticated as teacher', () => {
+    const teacherUser = {
+      id: 't1',
+      name: 'Dr. Teacher',
+      email: 'teacher@test.com',
+      role: 'teacher' as const,
+      created_at: '',
+    };
+
+    beforeEach(() => {
+      (useAuth as jest.Mock).mockReturnValue({
+        ...defaultAuthState,
+        isLoading: false,
+        isAuthenticated: true,
+        user: teacherUser,
+      });
+    });
+
+    it('shows Teacher Dashboard link for teacher users', () => {
+      render(<Navbar />);
+      expect(screen.getByRole('link', { name: 'Teacher Dashboard' })).toHaveAttribute(
+        'href',
+        '/teacher',
+      );
+    });
+
+    it('does not show Admin Dashboard link for teacher users', () => {
+      render(<Navbar />);
+      expect(screen.queryByRole('link', { name: 'Admin Dashboard' })).not.toBeInTheDocument();
+    });
   });
 
   describe('when authenticated as admin', () => {
