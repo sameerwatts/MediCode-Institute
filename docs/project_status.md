@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/course-detail-enrollment` — Course detail page + enrollment (PR 26/27).
+`feature/subtopic-reader-page` — Subtopic reader page (PR 27/27 — final PR of course management).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -107,6 +107,9 @@
 - [x] Auto-save everywhere + image upload in editor (PR 25/27 of course management feature)
 - [x] Course detail page + enrollment (PR 26/27 of course management feature)
 - [x] 378 tests passing across 42 suites (22 new course detail + enrollment tests)
+- [x] Subtopic reader page with TipTap renderer + prev/next navigation (PR 27/27 of course management feature)
+- [x] 393 tests passing across 44 suites (15 new subtopic reader tests)
+- [x] **Course Management System complete (27/27 PRs merged)**
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -136,7 +139,7 @@
   - [x] PR 24: Course content management page
   - [x] PR 25: Auto-save everywhere + image upload in editor
   - [x] PR 26: Course detail page + enrollment
-  - [ ] PR 27: Subtopic reader page
+  - [x] PR 27: Subtopic reader page
 - [ ] Quiz-taking functionality
 - [ ] Blog detail page (`/blogs/[slug]`)
 
@@ -164,4 +167,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-20 (feature: Course detail page + enrollment — PR 26/27 of course management)
+2026-03-20 (feature: Subtopic reader page — PR 27/27 of course management — **Course Management System complete!**)

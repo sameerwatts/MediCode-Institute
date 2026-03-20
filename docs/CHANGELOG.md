@@ -8,6 +8,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/subtopic-reader-page] — 2026-03-20
+
+### Added
+- Subtopic reader page (`src/views/Courses/SubtopicReader/`) — enrollment-gated lesson viewer with breadcrumb, topic label, numbered title, prev/next lesson navigation
+- `TipTapRenderer` component (`src/components/course/TipTapRenderer/`) — read-only TipTap renderer with syntax highlighting, images, and tables
+- Dynamic route `app/(public)/courses/[slug]/learn/[subtopicId]/page.tsx` for lesson pages
+- 15 new tests (3 TipTapRenderer + 12 SubtopicReader) — 393 total passing
+- PR 27/27 of course management feature — **Course Management System complete!**
+
 ## [feature/course-detail-enrollment] — 2026-03-20
 
 ### Added
