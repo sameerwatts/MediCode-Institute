@@ -8,6 +8,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/courses-listing-api-integration] — 2026-03-21
+
+### Changed
+- Courses listing page (`/courses`) now fetches published courses from the API instead of showing static dummy data
+- Each course card links to `/courses/[slug]` detail page where students can enroll
+- Category filter (All / Medical / CS) sends filter param to API
+- Courses without thumbnails show a gradient placeholder with first letter
+- Loading and error states added to courses listing
+- 13 new tests (replaced 6 dummy-data tests) — 407 total passing
+
 ## [improvement/content-page-publish-button] — 2026-03-20
 
 ### Changed

@@ -1,53 +1,164 @@
 import React from 'react';
-import { render, screen } from '@/test-utils';
+import { render, screen, waitFor } from '@/test-utils';
 import userEvent from '@testing-library/user-event';
 import Courses from './index';
+import * as courseService from '@/services/courseService';
+
+jest.mock('@/services/courseService');
+const mockListCourses = jest.mocked(courseService.listCourses);
+
+const mockCourses = [
+  {
+    id: '1',
+    title: 'Intro to Anatomy',
+    slug: 'intro-to-anatomy',
+    description: 'Learn anatomy basics.',
+    category: 'medical' as const,
+    thumbnail_url: null,
+    status: 'published' as const,
+    created_at: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: '2',
+    title: 'React Fundamentals',
+    slug: 'react-fundamentals',
+    description: 'Learn React from scratch.',
+    category: 'cs' as const,
+    thumbnail_url: 'https://example.com/react.png',
+    status: 'published' as const,
+    created_at: '2026-01-02T00:00:00Z',
+  },
+];
+
+const paginatedResponse = {
+  items: mockCourses,
+  total: 2,
+  page: 1,
+  page_size: 20,
+  has_next: false,
+};
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockListCourses.mockResolvedValue(paginatedResponse);
+});
 
 describe('Courses', () => {
-  beforeEach(() => {
+  it('shows loading state initially', () => {
+    mockListCourses.mockReturnValue(new Promise(() => {}));
     render(<Courses />);
+    expect(screen.getByText('Loading courses...')).toBeInTheDocument();
   });
 
-  it('renders the page heading', () => {
-    expect(screen.getByText('All Courses')).toBeInTheDocument();
+  it('renders the page heading', async () => {
+    render(<Courses />);
+    expect(await screen.findByText('All Courses')).toBeInTheDocument();
   });
 
-  it('renders all filter tabs', () => {
+  it('renders all filter tabs', async () => {
+    render(<Courses />);
+    await screen.findByText('Intro to Anatomy');
     expect(screen.getByRole('button', { name: 'All' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Medical' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'CS' })).toBeInTheDocument();
   });
 
-  it('shows all 6 courses by default', () => {
-    expect(screen.getByText('Complete Human Anatomy')).toBeInTheDocument();
-    expect(screen.getByText('Clinical Cardiology Essentials')).toBeInTheDocument();
-    expect(screen.getByText('Pharmacology Made Easy')).toBeInTheDocument();
-    expect(screen.getByText('React & TypeScript Masterclass')).toBeInTheDocument();
-    expect(screen.getByText('Data Structures & Algorithms')).toBeInTheDocument();
-    expect(screen.getByText('Machine Learning with Python')).toBeInTheDocument();
+  it('renders courses from API after loading', async () => {
+    render(<Courses />);
+    expect(await screen.findByText('Intro to Anatomy')).toBeInTheDocument();
+    expect(screen.getByText('React Fundamentals')).toBeInTheDocument();
   });
 
-  it('filters to only medical courses when Medical tab is clicked', async () => {
+  it('shows course descriptions', async () => {
+    render(<Courses />);
+    expect(await screen.findByText('Learn anatomy basics.')).toBeInTheDocument();
+    expect(screen.getByText('Learn React from scratch.')).toBeInTheDocument();
+  });
+
+  it('renders courses as links to detail pages', async () => {
+    render(<Courses />);
+    await screen.findByText('Intro to Anatomy');
+    const links = screen.getAllByRole('link');
+    const anatomyLink = links.find(
+      (l) => l.getAttribute('href') === '/courses/intro-to-anatomy'
+    );
+    const reactLink = links.find(
+      (l) => l.getAttribute('href') === '/courses/react-fundamentals'
+    );
+    expect(anatomyLink).toBeTruthy();
+    expect(reactLink).toBeTruthy();
+  });
+
+  it('shows category badges', async () => {
+    render(<Courses />);
+    await screen.findByText('Intro to Anatomy');
+    // Filter button + badge = 2 each
+    expect(screen.getAllByText('Medical')).toHaveLength(2);
+    expect(screen.getAllByText('CS')).toHaveLength(2);
+  });
+
+  it('calls listCourses with category when filter clicked', async () => {
+    render(<Courses />);
+    await screen.findByText('Intro to Anatomy');
+
+    mockListCourses.mockResolvedValue({
+      ...paginatedResponse,
+      items: [mockCourses[0]],
+    });
+
     await userEvent.click(screen.getByRole('button', { name: 'Medical' }));
-    expect(screen.getByText('Complete Human Anatomy')).toBeInTheDocument();
-    expect(screen.getByText('Clinical Cardiology Essentials')).toBeInTheDocument();
-    expect(screen.getByText('Pharmacology Made Easy')).toBeInTheDocument();
-    expect(screen.queryByText('React & TypeScript Masterclass')).not.toBeInTheDocument();
-    expect(screen.queryByText('Data Structures & Algorithms')).not.toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(mockListCourses).toHaveBeenCalledWith({ category: 'medical' });
+    });
   });
 
-  it('filters to only CS courses when CS tab is clicked', async () => {
-    await userEvent.click(screen.getByRole('button', { name: 'CS' }));
-    expect(screen.getByText('React & TypeScript Masterclass')).toBeInTheDocument();
-    expect(screen.getByText('Data Structures & Algorithms')).toBeInTheDocument();
-    expect(screen.getByText('Machine Learning with Python')).toBeInTheDocument();
-    expect(screen.queryByText('Complete Human Anatomy')).not.toBeInTheDocument();
-  });
+  it('calls listCourses without category when All filter clicked', async () => {
+    render(<Courses />);
+    await screen.findByText('Intro to Anatomy');
 
-  it('shows all courses again when All tab is clicked after filtering', async () => {
     await userEvent.click(screen.getByRole('button', { name: 'Medical' }));
+    await waitFor(() => {
+      expect(mockListCourses).toHaveBeenCalledWith({ category: 'medical' });
+    });
+
+    mockListCourses.mockClear();
     await userEvent.click(screen.getByRole('button', { name: 'All' }));
-    expect(screen.getByText('Complete Human Anatomy')).toBeInTheDocument();
-    expect(screen.getByText('React & TypeScript Masterclass')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(mockListCourses).toHaveBeenCalledWith(undefined);
+    });
+  });
+
+  it('shows empty message when no courses returned', async () => {
+    mockListCourses.mockResolvedValue({
+      ...paginatedResponse,
+      items: [],
+      total: 0,
+    });
+    render(<Courses />);
+    expect(
+      await screen.findByText('No courses found in this category.')
+    ).toBeInTheDocument();
+  });
+
+  it('shows error message when API fails', async () => {
+    mockListCourses.mockRejectedValue(new Error('Network error'));
+    render(<Courses />);
+    expect(await screen.findByText('Network error')).toBeInTheDocument();
+  });
+
+  it('shows placeholder for courses without thumbnail', async () => {
+    render(<Courses />);
+    await screen.findByText('Intro to Anatomy');
+    // Course without thumbnail should show first letter
+    expect(screen.getByText('I')).toBeInTheDocument();
+  });
+
+  it('shows thumbnail image when course has one', async () => {
+    render(<Courses />);
+    await screen.findByText('React Fundamentals');
+    const img = screen.getByAltText('React Fundamentals');
+    expect(img).toHaveAttribute('src', 'https://example.com/react.png');
   });
 });
