@@ -8,6 +8,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/course-detail-enrollment] — 2026-03-20
+
+### Added
+- Course detail page (`src/views/Courses/CourseDetail/`) — public course info with category badge, teacher name, topic/lesson counts, thumbnail, breadcrumb navigation
+- `TopicAccordion` component (`src/components/course/TopicAccordion/`) — expandable topic list with subtopic access (locked for guests, "Read" links for enrolled students)
+- Enrollment flow — guests redirected to login, authenticated users enroll for free, enrolled badge displays enrollment date
+- Dynamic route `app/(public)/courses/[slug]/page.tsx` for public course pages
+- 22 new tests (8 TopicAccordion + 14 CourseDetail) — 378 total passing
+- PR 26/27 of course management feature (see `docs/course-management-architecture.md`)
+
 ## [feature/auto-save-image-upload] — 2026-03-19
 
 ### Added
