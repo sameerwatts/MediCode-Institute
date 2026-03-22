@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`improvement/hide-quiz-blog-pages` — Temporarily hide quiz and blog pages (routes return 404, links removed from nav/footer).
+`feature/parallax-homepage` — Add parallax scrolling effects and scroll-reveal animations to the homepage.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -115,6 +115,7 @@
 - [x] Publish/unpublish button added to course content management page header
 - [x] Courses listing page wired to API — students can browse published courses and click through to enroll
 - [x] Quiz and Blog pages temporarily hidden (nav links removed, routes return 404, code preserved for future re-enabling)
+- [x] Parallax scrolling on homepage — Hero/Stats/CTA with fixed background images, scroll-reveal animations on content sections
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -172,4 +173,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-21 (improvement: quiz and blog pages temporarily hidden)
+2026-03-23 (feature: parallax scrolling effects on homepage)
