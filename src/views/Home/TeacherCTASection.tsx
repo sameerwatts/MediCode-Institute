@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
+import ScrollReveal from '@/components/common/ScrollReveal';
 
 const TeacherCTASection: React.FC = () => {
   const { user } = useAuth();
@@ -12,6 +13,7 @@ const TeacherCTASection: React.FC = () => {
 
   return (
     <section className="py-section px-6">
+      <ScrollReveal>
       <div className="max-w-[1200px] mx-auto rounded-xl bg-gradient-to-br from-secondary to-secondary-dark p-12 text-center text-white">
         <h2 className="text-h2 font-extrabold mb-4">Share Your Expertise</h2>
         <p className="text-body opacity-90 mb-8 max-w-[600px] mx-auto leading-relaxed">
@@ -25,6 +27,7 @@ const TeacherCTASection: React.FC = () => {
           Apply to Teach
         </Link>
       </div>
+      </ScrollReveal>
     </section>
   );
 };
