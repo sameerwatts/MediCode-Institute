@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import SectionHeading from '@/components/common/SectionHeading';
+import ScrollReveal from '@/components/common/ScrollReveal';
 
 interface IFeature {
   icon: string;
@@ -37,20 +40,23 @@ const features: IFeature[] = [
 const FeaturesSection: React.FC = () => {
   return (
     <section className="py-section px-6 max-w-[1200px] mx-auto">
-      <SectionHeading
-        title="Why Choose MediCode?"
-        subtitle="Everything you need for a successful learning journey"
-      />
+      <ScrollReveal>
+        <SectionHeading
+          title="Why Choose MediCode?"
+          subtitle="Everything you need for a successful learning journey"
+        />
+      </ScrollReveal>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {features.map((feature) => (
-          <div
-            key={feature.title}
-            className="bg-white p-8 rounded-lg shadow-md text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
-          >
-            <div className="text-[2.5rem] mb-4">{feature.icon}</div>
-            <h3 className="text-h4 text-dark mb-2">{feature.title}</h3>
-            <p className="text-sm-text text-dark-gray leading-normal">{feature.description}</p>
-          </div>
+        {features.map((feature, index) => (
+          <ScrollReveal key={feature.title} delay={index}>
+            <div
+              className="bg-white p-8 rounded-lg shadow-md text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-lg h-full"
+            >
+              <div className="text-[2.5rem] mb-4">{feature.icon}</div>
+              <h3 className="text-h4 text-dark mb-2">{feature.title}</h3>
+              <p className="text-sm-text text-dark-gray leading-normal">{feature.description}</p>
+            </div>
+          </ScrollReveal>
         ))}
       </div>
     </section>

@@ -8,6 +8,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/parallax-homepage] — 2026-03-23
+
+### Added
+- Parallax scrolling effect on homepage — Hero, Stats, and CTA sections now have fixed background images with dark overlays
+- Scroll-reveal animations — Features, Popular Courses, Categories, and Teacher CTA sections fade/slide into view on scroll
+- Reusable `ParallaxSection` and `ScrollReveal` components + `useScrollReveal` hook
+- 3 high-quality Unsplash background images (medical tech, library, students collaborating)
+- Mobile fallback for iOS Safari (disables `background-attachment: fixed`)
+- IntersectionObserver mock in test setup for compatibility
+
 ## [improvement/hide-quiz-blog-pages] — 2026-03-21
 
 ### Changed

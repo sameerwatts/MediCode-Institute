@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import SectionHeading from "@/components/common/SectionHeading";
+import ScrollReveal from "@/components/common/ScrollReveal";
 import Button from "@/components/common/Button";
 import { listCourses } from "@/services/courseService";
 import { ICourseSummary } from "@/types";
@@ -51,11 +52,11 @@ const PopularCourses: React.FC = () => {
         subtitle="Start learning with our most enrolled courses"
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {courses.map((course) => (
+        {courses.map((course, index) => (
+          <ScrollReveal key={course.id} delay={index}>
           <Link
-            key={course.id}
             href={`/courses/${course.slug}`}
-            className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+            className="block bg-white rounded-lg shadow-md overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
           >
             {course.thumbnail_url ? (
               <div className="relative h-[180px]">
@@ -98,6 +99,7 @@ const PopularCourses: React.FC = () => {
               </span>
             </div>
           </Link>
+          </ScrollReveal>
         ))}
       </div>
       <div className="text-center mt-8">
