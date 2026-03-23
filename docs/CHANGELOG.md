@@ -8,6 +8,20 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/forgot-password] — 2026-03-23
+
+### Added
+- Password reset flow — "Forgot your password?" link on login page, email-based reset via Resend
+- `PasswordResetToken` model + Alembic migration — single-use, 15-minute expiry tokens
+- `password_reset_service.py` — token generation, validation, consumption (follows InviteToken pattern)
+- `send_password_reset()` in email service — styled HTML email with reset button via Resend
+- `POST /api/auth/forgot-password` — public endpoint, prevents user enumeration with generic response
+- `POST /api/auth/reset-password` — validates token, hashes new password, marks token used
+- `/forgot-password` page — email form with success/error states
+- `/reset-password` page — token validation, password + confirm form, auto-redirect to login
+- `forgotPassword()` and `resetPassword()` in `authService.ts`
+- 10 new frontend tests (ForgotPassword + ResetPassword views) — 418 total passing
+
 ## [feature/parallax-homepage] — 2026-03-23
 
 ### Added

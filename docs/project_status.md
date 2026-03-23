@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/parallax-homepage` — Add parallax scrolling effects and scroll-reveal animations to the homepage.
+`feature/forgot-password` — Email-based password reset flow (forgot password + reset password pages).
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -116,6 +116,7 @@
 - [x] Courses listing page wired to API — students can browse published courses and click through to enroll
 - [x] Quiz and Blog pages temporarily hidden (nav links removed, routes return 404, code preserved for future re-enabling)
 - [x] Parallax scrolling on homepage — Hero/Stats/CTA with fixed background images, scroll-reveal animations on content sections
+- [x] Forgot password flow — email-based password reset via Resend (PasswordResetToken model, 2 API endpoints, 2 frontend pages, 418 tests passing)
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -173,4 +174,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-23 (feature: parallax scrolling effects on homepage)
+2026-03-23 (feature: forgot password flow)
