@@ -86,6 +86,27 @@ export async function validateInviteToken(token: string): Promise<IInviteValidat
   }
 }
 
+export async function forgotPassword(email: string): Promise<{ message: string }> {
+  try {
+    const res = await api.post<{ message: string }>('/auth/forgot-password', { email });
+    return res.data;
+  } catch (err) {
+    return toError(err, 'Failed to send reset link. Please try again.');
+  }
+}
+
+export async function resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
+  try {
+    const res = await api.post<{ message: string }>('/auth/reset-password', {
+      token,
+      new_password: newPassword,
+    });
+    return res.data;
+  } catch (err) {
+    return toError(err, 'Failed to reset password. Please try again.');
+  }
+}
+
 export async function logout(): Promise<void> {
   // FastAPI responds with delete_cookie() — the browser discards both tokens.
   await api.post('/auth/logout');

@@ -119,6 +119,35 @@ def send_application_approved(
     _send(applicant_email, "You're Approved! — MediCode Institute", html)
 
 
+def send_password_reset(
+    email: str,
+    name: str,
+    reset_token: str,
+) -> None:
+    """Send password reset email with a link to reset the password."""
+    reset_url = f"{settings.frontend_url}/reset-password?token={reset_token}"
+
+    html = f"""
+    <h2>Reset Your Password</h2>
+    <p>Hi {name},</p>
+    <p>We received a request to reset your password for your MediCode Institute account.</p>
+    <p>Click the button below to set a new password:</p>
+    <p>
+        <a href="{reset_url}"
+           style="display:inline-block;padding:12px 24px;background:#2563EB;color:#fff;
+                  text-decoration:none;border-radius:6px;font-weight:bold;">
+            Reset Password
+        </a>
+    </p>
+    <p><strong>This link expires in 15 minutes.</strong>
+    If it expires, you can request a new one from the login page.</p>
+    <p>If you didn't request this, you can safely ignore this email.</p>
+    <p>Best regards,<br>MediCode Institute Team</p>
+    """
+
+    _send(email, "Reset Your Password — MediCode Institute", html)
+
+
 def send_application_rejected(
     applicant_email: str,
     applicant_name: str,

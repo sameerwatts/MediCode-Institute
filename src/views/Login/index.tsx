@@ -132,6 +132,12 @@ const Login: React.FC = () => {
             registration={register('password')}
           />
 
+          <div className="flex justify-end mt-1 mb-2">
+            <Link href="/forgot-password" className="text-primary text-sm-text hover:underline">
+              Forgot your password?
+            </Link>
+          </div>
+
           <Button
             type="submit"
             variant="primary"
