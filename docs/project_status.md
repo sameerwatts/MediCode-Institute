@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`feature/forgot-password` — Email-based password reset flow (forgot password + reset password pages).
+`improvement/autofill-teacher-application` — Auto-fill name/email for logged-in students on Become a Teacher form.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -117,6 +117,7 @@
 - [x] Quiz and Blog pages temporarily hidden (nav links removed, routes return 404, code preserved for future re-enabling)
 - [x] Parallax scrolling on homepage — Hero/Stats/CTA with fixed background images, scroll-reveal animations on content sections
 - [x] Forgot password flow — email-based password reset via Resend (PasswordResetToken model, 2 API endpoints, 2 frontend pages, 418 tests passing)
+- [x] Teacher application form auto-fills name/email for logged-in students (read-only fields)
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -174,4 +175,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-23 (feature: forgot password flow)
+2026-03-24 (improvement: autofill teacher application for logged-in students)

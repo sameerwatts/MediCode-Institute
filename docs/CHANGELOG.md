@@ -8,6 +8,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [improvement/autofill-teacher-application] — 2026-03-24
+
+### Changed
+- Teacher application form auto-fills Full Name and Email Address for logged-in students (read-only, cannot be changed)
+- 3 new tests for autofill behavior — 421 total passing
+
 ## [feature/forgot-password] — 2026-03-23
 
 ### Added

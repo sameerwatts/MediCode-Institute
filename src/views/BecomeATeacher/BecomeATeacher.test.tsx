@@ -200,4 +200,38 @@ describe('BecomeATeacher', () => {
     render(<BecomeATeacher />);
     expect(screen.getByRole('heading', { name: /Become a Teacher/i })).toBeInTheDocument();
   });
+
+  it('auto-fills name and email for logged-in students', () => {
+    mockUseAuth.mockReturnValue({
+      user: { id: '3', name: 'Jane Student', email: 'jane@test.com', role: 'student', created_at: '' },
+      isLoading: false,
+      isAuthenticated: true,
+      login: jest.fn(),
+      signup: jest.fn(),
+      logout: jest.fn(),
+    });
+    render(<BecomeATeacher />);
+    expect(screen.getByLabelText('Full Name')).toHaveValue('Jane Student');
+    expect(screen.getByLabelText('Email Address')).toHaveValue('jane@test.com');
+  });
+
+  it('makes name and email read-only for logged-in students', () => {
+    mockUseAuth.mockReturnValue({
+      user: { id: '3', name: 'Jane Student', email: 'jane@test.com', role: 'student', created_at: '' },
+      isLoading: false,
+      isAuthenticated: true,
+      login: jest.fn(),
+      signup: jest.fn(),
+      logout: jest.fn(),
+    });
+    render(<BecomeATeacher />);
+    expect(screen.getByLabelText('Full Name')).toHaveAttribute('readonly');
+    expect(screen.getByLabelText('Email Address')).toHaveAttribute('readonly');
+  });
+
+  it('does not make name and email read-only for guests', () => {
+    render(<BecomeATeacher />);
+    expect(screen.getByLabelText('Full Name')).not.toHaveAttribute('readonly');
+    expect(screen.getByLabelText('Email Address')).not.toHaveAttribute('readonly');
+  });
 });
