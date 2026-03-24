@@ -20,7 +20,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import admin, auth, applications, courses, teacher
+from app.routers import admin, auth, applications, courses, password_reset, teacher
 
 
 app = FastAPI(
@@ -45,6 +45,7 @@ app.include_router(applications.router)
 app.include_router(admin.router)
 app.include_router(teacher.router)
 app.include_router(courses.router)
+app.include_router(password_reset.router)
 
 
 @app.get("/", tags=["health"])
