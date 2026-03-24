@@ -62,12 +62,15 @@ const BecomeATeacher: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [applicationId, setApplicationId] = useState('');
 
+  const isLoggedIn = !!user;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<ApplicationFormValues>({
     resolver: zodResolver(applicationSchema),
+    defaultValues: user ? { name: user.name, email: user.email } : undefined,
   });
 
   const onSubmit = async (data: ApplicationFormValues) => {
@@ -157,7 +160,7 @@ const BecomeATeacher: React.FC = () => {
               type="text"
               placeholder="Dr. Jane Smith"
               error={errors.name?.message}
-              registration={register('name')}
+              registration={{ ...register('name'), readOnly: isLoggedIn }}
             />
             <FormInput
               id="email"
@@ -165,7 +168,7 @@ const BecomeATeacher: React.FC = () => {
               type="email"
               placeholder="you@example.com"
               error={errors.email?.message}
-              registration={register('email')}
+              registration={{ ...register('email'), readOnly: isLoggedIn }}
             />
             <FormInput
               id="phone"
