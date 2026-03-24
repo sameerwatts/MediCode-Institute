@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -67,11 +67,17 @@ const BecomeATeacher: React.FC = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ApplicationFormValues>({
     resolver: zodResolver(applicationSchema),
-    defaultValues: user ? { name: user.name, email: user.email } : undefined,
   });
+
+  useEffect(() => {
+    if (user) {
+      reset({ name: user.name, email: user.email });
+    }
+  }, [user, reset]);
 
   const onSubmit = async (data: ApplicationFormValues) => {
     setServerError('');
