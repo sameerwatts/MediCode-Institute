@@ -15,13 +15,10 @@ const mockGetSubtopicContent = jest.mocked(courseService.getSubtopicContent);
 const mockGetEnrollmentStatus = jest.mocked(courseService.getEnrollmentStatus);
 
 const mockPush = jest.fn();
+const mockRouter = { push: mockPush, replace: jest.fn(), back: jest.fn() };
 
 jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(() => ({
-    push: mockPush,
-    replace: jest.fn(),
-    back: jest.fn(),
-  })),
+  useRouter: jest.fn(() => mockRouter),
   usePathname: jest.fn(() => '/courses/anatomy-101/learn/s1'),
   useSearchParams: jest.fn(() => new URLSearchParams()),
 }));
