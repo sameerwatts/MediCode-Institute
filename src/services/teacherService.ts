@@ -13,6 +13,21 @@ function toError(err: unknown, fallback: string): never {
   throw new Error(err instanceof Error ? err.message : fallback);
 }
 
+import { ITeacher } from '@/types';
+
+interface TeacherListResponse {
+  items: ITeacher[];
+}
+
+export async function listTeachers(): Promise<ITeacher[]> {
+  try {
+    const res = await api.get<TeacherListResponse>('/teachers');
+    return res.data.items;
+  } catch (err) {
+    return toError(err, 'Failed to load teachers.');
+  }
+}
+
 export interface IOnboardingData {
   bio: string;
   designation: string;

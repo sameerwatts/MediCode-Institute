@@ -8,6 +8,18 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+## [feature/fetch-teachers-from-db] — 2026-03-26
+
+### Added
+- `GET /api/teachers` public backend endpoint — joins `users` (role=teacher) with `teacher_applications` (status=registered) to serve teacher profiles
+- `teacher.py` Pydantic schema, `teacher_public_service.py` service, `teachers.py` router (backend)
+- `listTeachers()` in `teacherService.ts` (frontend)
+
+### Changed
+- About page "Meet Our Team" section now fetches teachers from the database instead of static frontend data
+- About page converted to client component with loading, error, and empty states
+- About tests updated to mock API calls — 424 total passing
+
 ## [improvement/autofill-teacher-application] — 2026-03-24
 
 ### Changed
