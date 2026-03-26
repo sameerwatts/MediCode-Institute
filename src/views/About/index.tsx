@@ -1,7 +1,10 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import SectionHeading from '@/components/common/SectionHeading';
 import Button from '@/components/common/Button';
-import { teachers } from '@/data/teachers';
+import { ITeacher } from '@/types';
+import { listTeachers } from '@/services/teacherService';
 import TeacherCard from './TeacherCard';
 
 interface IOfferItem {
@@ -34,6 +37,17 @@ const offerings: IOfferItem[] = [
 ];
 
 const About: React.FC = () => {
+  const [teachers, setTeachers] = useState<ITeacher[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    listTeachers()
+      .then(setTeachers)
+      .catch((err: Error) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <>
       {/* Mission / Vision */}
@@ -79,11 +93,22 @@ const About: React.FC = () => {
       {/* Team */}
       <section className="py-section px-6 max-w-[1200px] mx-auto">
         <SectionHeading title="Meet Our Team" subtitle="Learn from the best in their fields" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {teachers.map((teacher) => (
-            <TeacherCard key={teacher.id} teacher={teacher} />
-          ))}
-        </div>
+        {loading && (
+          <p className="text-center text-dark-gray">Loading teachers...</p>
+        )}
+        {error && (
+          <p className="text-center text-red-600">Failed to load teachers.</p>
+        )}
+        {!loading && !error && teachers.length === 0 && (
+          <p className="text-center text-dark-gray">No teachers available yet.</p>
+        )}
+        {!loading && !error && teachers.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {teachers.map((teacher) => (
+              <TeacherCard key={teacher.id} teacher={teacher} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Contact CTA */}
