@@ -4,7 +4,7 @@
 **Course Management System** — 27-PR feature (see `docs/course-management-architecture.md`).
 
 ## Current Branch
-`improvement/autofill-teacher-application` — Auto-fill name/email for logged-in students on Become a Teacher form.
+`feature/fetch-teachers-from-db` — About page "Meet Our Team" fetches teachers from database via new public API endpoint.
 
 ## What's Done
 - [x] Git repo initialized and pushed to GitHub (SSH)
@@ -118,6 +118,8 @@
 - [x] Parallax scrolling on homepage — Hero/Stats/CTA with fixed background images, scroll-reveal animations on content sections
 - [x] Forgot password flow — email-based password reset via Resend (PasswordResetToken model, 2 API endpoints, 2 frontend pages, 418 tests passing)
 - [x] Teacher application form auto-fills name/email for logged-in students (read-only fields)
+- [x] About page "Meet Our Team" fetches teachers from DB via `GET /api/teachers` (replaces static data)
+- [x] 424 tests passing across 46 suites
 
 ## What's Next
 - [ ] **Course Management System (27 PRs):** see `docs/course-management-architecture.md`
@@ -175,4 +177,4 @@
 - **Production URL:** Vercel (auto-deploys from `main`)
 
 ## Last Updated
-2026-03-24 (improvement: autofill teacher application for logged-in students)
+2026-03-26 (feature: fetch teachers from DB for About page "Meet Our Team")
